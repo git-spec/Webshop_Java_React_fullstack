@@ -1,4 +1,4 @@
-#BACKEND
+### BACKEND ###
 /backend/target/
 /backend/!.mvn/wrapper/maven-wrapper.jar
 /backend/!**/src/main/**/target/
@@ -6,6 +6,19 @@
 /backend/.mvn
 /backend/mvnw
 /backend/mvnw.cmd
+
+### FRONTEND ###
+/frontend/node_modules
+/frontend/dist
+/frontend/dist-ssr
+/frontend/*.local
+/frontend/logs
+/frontend/*.log
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/pnpm-debug.log*
+/frontend/lerna-debug.log*
 
 ### STS ###
 .apt_generated
@@ -34,3 +47,13 @@ build/
 
 ### VS Code ###
 .vscode/
+.vscode/*
+
+# Editor directories and files
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
