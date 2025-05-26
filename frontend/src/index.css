@@ -3,3 +3,227 @@
   padding: 0;
   box-sizing: border-box;
 }
+@font-face {
+  font-family: 'SourceSans3'; /* Choose a descriptive name */
+  src: local('Source_Sans_3/static/SourceSans3-Black.ttf'), /* Or other font formats */
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Black.ttf') format('truetype'); /* Provide fallback formats */
+  font-weight: 900; /* Or any other relevant attributes */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-BlackItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-Bold.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-BoldItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-ExtraBold.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-ExtraBoldItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-ExtraLight.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-ExtraLightItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-Italic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-Light.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-LightItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-Medium.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-MediumItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-Regular.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Sans_3/static/SourceSans3-SemiBold.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSans3';
+  src: local('Source_Serif_3/static/SourceSans3-SemiBoldItalic.ttf'),
+  url('./assets/fonts/Source_Sans_3/static/SourceSans3-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Black.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-BlackItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Bold.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-BoldItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-ExtraBold.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-ExtraBoldItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-ExtraLight.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-ExtraLightItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Italic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Light.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-LightItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Medium.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-MediumItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-Regular.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Serif_4/static/SourceSerif4-SemiBold.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceSerif4';
+  src: local('Source_Sans_4/static/SourceSerif4-SemiBoldItalic.ttf'),
+  url('./assets/fonts/Source_Serif_4/static/SourceSerif4-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
