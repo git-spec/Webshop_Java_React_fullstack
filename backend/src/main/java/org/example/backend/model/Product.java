@@ -1,9 +1,9 @@
-package org.example.backend.models;
+package org.example.backend.model;
+
+import org.example.backend.model.dto.ProductDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import org.example.backend.models.dto.ProductDTO;
 
 
 @Data

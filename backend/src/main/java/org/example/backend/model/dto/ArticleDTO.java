@@ -1,14 +1,16 @@
-package org.example.backend.models;
+package org.example.backend.model.dto;
 
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import java.math.BigDecimal;
+
+import org.example.backend.model.Currency;
+import org.example.backend.model.Product;
 
 
 @Data
 @AllArgsConstructor
-public class Article {
-    private final String id;
+public class ArticleDTO {
     private final String number;
     private final Product product;
     private final BigDecimal price;

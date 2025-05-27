@@ -1,4 +1,4 @@
-package org.example.backend.models;
+package org.example.backend.model;
 
 public record Measure(
     int number,

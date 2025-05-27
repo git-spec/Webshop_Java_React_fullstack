@@ -1,4 +1,4 @@
-package org.example.backend.models;
+package org.example.backend.model;
 
 public enum Category {
   COSMETIC("Cosmetic"),

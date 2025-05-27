@@ -1,12 +1,12 @@
-package org.example.backend.models.dto;
+package org.example.backend.model.dto;
+
+import org.example.backend.model.Category;
+import org.example.backend.model.Family;
+import org.example.backend.model.Group;
+import org.example.backend.model.ProductFeatures;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import org.example.backend.models.Group;
-import org.example.backend.models.Family;
-import org.example.backend.models.Category;
-import org.example.backend.models.ProductFeatures;
 
 
 @Data
