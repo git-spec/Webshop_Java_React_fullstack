@@ -4,7 +4,7 @@ import lombok.Getter;
 
 
 @Getter
-public enum Colors {
+public enum Color {
     BLACK("Black"),
     WHITE("White"),
     RED("Red"),
@@ -22,7 +22,7 @@ public enum Colors {
 
     private final String value;
 
-    Colors(String value) {
+    Color(String value) {
         this.value = value;
     }
 }

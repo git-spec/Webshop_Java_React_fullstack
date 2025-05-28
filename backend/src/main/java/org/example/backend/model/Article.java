@@ -2,9 +2,12 @@ package org.example.backend.model;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
 
+@Builder
 @Data
 @AllArgsConstructor
 public class Article {

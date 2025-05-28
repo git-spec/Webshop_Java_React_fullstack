@@ -1,11 +1,13 @@
 package org.example.backend.model;
 
-import org.example.backend.model.dto.ProductDTO;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 
+@Builder
 @Data
 @AllArgsConstructor
 public class Product {
@@ -17,4 +19,5 @@ public class Product {
     private final Family family;
     private final ProductFeatures features;
     private final String description;
+    private final List<String> images;
 }
