@@ -19,5 +19,5 @@ public class Product {
     private final Family family;
     private final ProductFeatures features;
     private final String description;
-    private final List<String> images;
+    private final Images images;
 }

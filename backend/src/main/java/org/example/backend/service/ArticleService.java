@@ -13,7 +13,7 @@ import org.example.backend.repository.ArticleRepo;
 public class ArticleService {
     private final ArticleRepo articleRepo;
 
-    public List<Article> getAllArticles() {
+    public List<Article> getArticles() {
         return articleRepo.findAll();
     }
 }

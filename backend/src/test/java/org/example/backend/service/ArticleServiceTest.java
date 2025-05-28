@@ -19,6 +19,7 @@ import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
 import org.example.backend.model.Family;
 import org.example.backend.model.Group;
+import org.example.backend.model.Images;
 import org.example.backend.model.Measure;
 import org.example.backend.model.Product;
 import org.example.backend.model.Unit;
@@ -47,8 +48,10 @@ public class ArticleServiceTest {
                 .family(Family.CHAIR)
                 .features(feat1)
                 .description("Description")
-                .images(List.of(
-                    "http://image.test"
+                .images(new Images(
+                    "http://image1.test",
+                    "http://image2.test",
+                    "http://image3.test"
                 ))
                 .build();
 
@@ -75,7 +78,7 @@ public class ArticleServiceTest {
         List<Article> expected = articles;
         when(articleRepo.findAll()).thenReturn(articles);
         // WHEN
-        List<Article> actual = articleService.getAllArticles();
+        List<Article> actual = articleService.getArticles();
         // THEN
         assertEquals(expected, actual);
     }
@@ -85,7 +88,7 @@ public class ArticleServiceTest {
         // GIVEN
         when(articleRepo.findAll()).thenReturn(List.of());
         // WHEN
-        List<Article> actual = articleService.getAllArticles();
+        List<Article> actual = articleService.getArticles();
         // THEN
         assertEquals(List.of(), actual);
         verify(articleRepo).findAll();
