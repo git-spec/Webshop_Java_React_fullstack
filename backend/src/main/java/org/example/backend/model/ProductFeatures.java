@@ -1,8 +1,10 @@
 package org.example.backend.model;
 
+import java.util.List;
+
 
 public record ProductFeatures(   
     Dimension dimension,
     Measure weight,
-    Colors colors
+    List<Color> colors
 ) {}
