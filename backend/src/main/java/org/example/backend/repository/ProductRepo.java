@@ -7,8 +7,9 @@ import java.util.List;
 
 
 @Repository
-public interface ArticleRepo extends MongoRepository<Article, String> {
+public interface ProductRepo extends MongoRepository<Article, String> {
     List<Article> findAllByProductCategory(String category);
     List<Article> findAllByProductGroup(String group);
     List<Article> findAllByProductFamily(String family);
+    boolean existsByProductCategory(String category);
 }
