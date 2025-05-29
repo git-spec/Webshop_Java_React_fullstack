@@ -1,0 +1,119 @@
+package org.example.backend.service;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.example.backend.exception.CategoryNotFoundException;
+import org.example.backend.model.Product;
+import org.example.backend.model.Category;
+import org.example.backend.model.Color;
+import org.example.backend.model.Currency;
+import org.example.backend.model.Dimension;
+import org.example.backend.model.Family;
+import org.example.backend.model.Group;
+import org.example.backend.model.Images;
+import org.example.backend.model.Measure;
+import org.example.backend.model.Unit;
+import org.example.backend.model.ProductFeatures;
+import org.example.backend.repository.ProductRepo;
+
+
+@ExtendWith(MockitoExtension.class)
+public class ProductServiceTest {
+    @Mock
+    private ProductRepo productRepo;
+    @InjectMocks
+    private ProductService productService;
+
+    Measure measure1 = new Measure(
+                                    50,
+                                    Unit.CM
+                                );
+    ProductFeatures feat1 = new ProductFeatures(
+                        new Dimension(measure1, measure1, measure1),
+                        new Measure(10, Unit.KG),
+                        List.of(Color.OAK, Color.BEECH, Color.BLACK)
+                    );
+                
+    Product prod1 = 
+            Product.builder()
+                .id("id1")
+                .name("Prod1")
+                .number("456")
+                .category(Category.FURNITURE)
+                .group(Group.SEATING)
+                .family(Family.CHAIR)
+                .features(feat1)
+                .info("Info")
+                .description("Description")
+                .images(new Images(
+                    "http://image1.test",
+                    "http://image2.test",
+                    "http://image3.test"
+                ))
+                .price(BigDecimal.valueOf(123.45))
+                .currency(Currency.EUR)
+                .amount(100)
+                .build();
+    
+    @Test
+    void getAllProducts_shouldReturnListOfProduct_whenProductsExist() {
+        // GIVEN  
+        when(productRepo.findAll()).thenReturn(List.of(prod1));
+        // WHEN
+        List<Product> actual = productService.getProducts();
+        // THEN
+        assertEquals(List.of(prod1), actual);
+        verify(productRepo).findAll();
+    }
+    
+    @Test
+    void getAllProducts_shouldReturnEmtyArray_whenNoProductsExist() {
+        // GIVEN
+        when(productRepo.findAll()).thenReturn(List.of());
+        // WHEN
+        List<Product> actual = productService.getProducts();
+        // THEN
+        assertEquals(List.of(), actual);
+        verify(productRepo).findAll();
+    }
+
+    @Test
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() {
+        // GIVEN
+        when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of(prod1));
+        // WHEN
+        List<Product> actual = productService.getProductsByCategory(Category.FURNITURE.toString());
+        // THEN
+        assertEquals(List.of(prod1), actual);
+        verify(productRepo).findAllByCategory(Category.FURNITURE.toString());
+    }
+
+    @Test
+    void getProductsByCategory_shouldReturnEmtyArray_whenNoCategoriesExist() {
+        // GIVEN
+        when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
+        // WHEN
+        List<Product> actual = productService.getProductsByCategory(Category.FURNITURE.toString());
+        // THEN
+        assertEquals(List.of(), actual);
+        verify(productRepo).findAllByCategory(Category.FURNITURE.toString());
+    }
+
+    @Test
+    void getProductsByCategory_shouldThrowCategoryNotFoundException_whenInvalidCategory() {
+        // WHEN // THEN
+        assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByCategory("FEHLER"));
+    }
+}
