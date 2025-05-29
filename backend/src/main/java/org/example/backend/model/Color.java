@@ -15,6 +15,7 @@ public enum Color {
     VIOLETT("Violett"),
     BROWN("Braun"),
     OAK("Oak"),
+    ASH("Ash"),
     BEECH("Beech"),
     WALNUT("Walnut"),
     SPRUCE("Spruce"),

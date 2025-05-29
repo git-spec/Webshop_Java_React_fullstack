@@ -14,6 +14,7 @@ public class Product {
     private final String id;      
     private final String number;
     private final String name;
+    private final String manufacturer;
     private final Category category;
     private final Group group;
     private final Family family;
