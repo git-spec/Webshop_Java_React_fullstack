@@ -3,6 +3,9 @@ package org.example.backend.controller;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +50,7 @@ public class ArticleControllerTest {
     Product prod1 = 
             Product.builder()
                 .id("prod_id1")
+                .number("456")
                 .name("Prod1")
                 .category(Category.FURNITURE)
                 .group(Group.SEATING)
@@ -67,13 +71,16 @@ public class ArticleControllerTest {
             .currency(Currency.EUR)
             .amount(100)
             .build();
+    List<Article> articles = List.of(article);
+    @Autowired
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void getArticles_shouldReturnListOfArticle_whenIsCalled() throws Exception {
         // GIVEN
         articleRepo.save(article);
         // THEN
-        mockMvc.perform(get("/api/articles"))
+        String actualString = mockMvc.perform(get("/api/articles"))
             .andExpect(status().isOk())
             .andExpect(content().json(
             """
@@ -84,6 +91,7 @@ public class ArticleControllerTest {
                         "product": 
                             {
                                 "id": "prod_id1",
+                                "number": "456",
                                 "name": "Prod1",
                                 "category": "FURNITURE",
                                 "group": "SEATING",
@@ -133,6 +141,9 @@ public class ArticleControllerTest {
                     }
                 ]
             """
-        ));
+        ))
+        .andReturn().getResponse().getContentAsString();
+        List<Article> actual = objectMapper.readValue(actualString, new TypeReference<List<Article>>() {});	
+
+        assertEquals(articles, actual);
     }
-}
