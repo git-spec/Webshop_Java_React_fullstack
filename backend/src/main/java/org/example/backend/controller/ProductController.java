@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.example.backend.service.ProductService;
-import org.example.backend.model.Article;
+import org.example.backend.model.Product;
 import org.example.backend.model.Category;
 
 
@@ -21,13 +21,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/articles")
-    public List<Article> getArticles() {
-        return productService.getArticles();
+    @GetMapping("/products")
+    public List<Product> getProducts() {
+        return productService.getProducts();
     }
 
-    @GetMapping("/articles/{category}")
-    public List<Article> getArticlesByCategory(@PathVariable String category) {
-        return productService.getArticlesByCategory(category);
+    @GetMapping("/products/{category}")
+    public List<Product> getProductsByCategory(@PathVariable String category) {
+        return productService.getProductsByCategory(category);
     }
 }
