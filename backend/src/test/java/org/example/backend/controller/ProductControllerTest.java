@@ -1,16 +1,16 @@
 package org.example.backend.controller;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,6 +37,8 @@ public class ProductControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ProductRepo articleRepo;
+    @Autowired
+    ObjectMapper objectMapper = new ObjectMapper();
     Measure measure1 = new Measure(
                                     50,
                                     Unit.CM
@@ -71,152 +73,26 @@ public class ProductControllerTest {
             .currency(Currency.EUR)
             .amount(100)
             .build();
-    List<Article> articles = List.of(article);
-    @Autowired
-    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void getArticles_shouldReturnListOfArticle_whenIsCalled() throws Exception {
         // GIVEN
         articleRepo.save(article);
+        List<Article> expected = Collections.singletonList(article);
         // THEN
-        String actualString = mockMvc.perform(get("/api/articles"))
+        mockMvc.perform(get("/api/articles"))
             .andExpect(status().isOk())
-            .andExpect(content().json(
-            """
-                [
-                    {
-                        "id": "id1",
-                        "number": "123",
-                        "product": 
-                            {
-                                "id": "prod_id1",
-                                "number": "456",
-                                "name": "Prod1",
-                                "category": "FURNITURE",
-                                "group": "SEATING",
-                                "family": "CHAIR",
-                                "features": 
-                                        {
-                                            "dimension": {
-                                                "width": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    },
-                                                "length": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    },
-                                                "height": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    }
-                                            },
-                                            "weight":
-                                                {
-                                                    "number": 10,
-                                                    "unit": "KG"
-                                                },
-                                            "colors":
-                                                [
-                                                    "OAK",
-                                                    "BEECH",
-                                                    "BLACK"
-                                                ]
-                                        },
-                                "description": "Description",
-                                "images":
-                                    {
-                                       "small": "http://image1.test",                   
-                                       "medium": "http://image2.test",                    
-                                       "large": "http://image3.test"                    
-                                    }
-                            },
-                        "price": 123.45,
-                        "currency": "EUR",
-                        "amount": 100
-                    }
-                ]
-            """
-        ))
-        .andReturn().getResponse().getContentAsString();
-        List<Article> actual = objectMapper.readValue(actualString, new TypeReference<List<Article>>() {});	
-
-        assertEquals(articles, actual);
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     @Test
     void getArticlesByCategory_shouldReturnListOfCategory_whenGetCategory() throws Exception {
         // GIVEN
         articleRepo.save(article);
-        // THEN
-        String actualString = mockMvc.perform(get("/api/articles/furniture"))
+        List<Article> expected = Collections.singletonList(article);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/articles/furniture"))
             .andExpect(status().isOk())
-            .andExpect(content().json(
-            """
-                [
-                    {
-                        "id": "id1",
-                        "number": "123",
-                        "product": 
-                            {
-                                "id": "prod_id1",
-                                "name": "Prod1",
-                                "category": "FURNITURE",
-                                "group": "SEATING",
-                                "family": "CHAIR",
-                                "features": 
-                                        {
-                                            "dimension": {
-                                                "width": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    },
-                                                "length": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    },
-                                                "height": 
-                                                    {
-                                                        "number": 50,
-                                                        "unit": "CM"
-                                                    }
-                                            },
-                                            "weight":
-                                                {
-                                                    "number": 10,
-                                                    "unit": "KG"
-                                                },
-                                            "colors":
-                                                [
-                                                    "OAK",
-                                                    "BEECH",
-                                                    "BLACK"
-                                                ]
-                                        },
-                                "description": "Description",
-                                "images":
-                                    {
-                                       "small": "http://image1.test",                   
-                                       "medium": "http://image2.test",                    
-                                       "large": "http://image3.test"                    
-                                    }
-                            },
-                        "price": 123.45,
-                        "currency": "EUR",
-                        "amount": 100
-                    }
-                ]
-            """
-        ))
-        .andReturn().getResponse().getContentAsString();
-        List<Article> actual = objectMapper.readValue(actualString, new TypeReference<List<Article>>() {});	
-
-        assertEquals(articles, actual);
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 }
