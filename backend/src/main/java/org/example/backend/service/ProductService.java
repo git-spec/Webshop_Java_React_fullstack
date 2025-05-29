@@ -13,23 +13,23 @@ import org.example.backend.exception.CategoryNotFoundException;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepo articleRepo;
+    private final ProductRepo productRepo;
 
     private static final String CATEGORY_NOT_FOUND_MESSAGE_FORMAT = "Kategorie %s existiert nicht.";
 
     public List<Product> getProducts() {
-        return articleRepo.findAll();
+        return productRepo.findAll();
     }
 
     /**
-     * Gets articles by category.
+     * Gets products by category.
      * @param category
      */
     public List<Product> getProductsByCategory(String category) {
         // Gets enum of string.
         try {
             Category categoryEnum = Category.valueOf(category.toUpperCase());
-            return articleRepo.findAllByCategory(categoryEnum.toString());
+            return productRepo.findAllByCategory(categoryEnum.toString());
         } catch (Exception e) {
             throw new CategoryNotFoundException(CATEGORY_NOT_FOUND_MESSAGE_FORMAT, category);
         }
