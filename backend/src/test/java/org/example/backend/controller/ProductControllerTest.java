@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.example.backend.model.Article;
+import org.example.backend.model.Product;
 import org.example.backend.model.Category;
 import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
@@ -23,7 +23,6 @@ import org.example.backend.model.Family;
 import org.example.backend.model.Group;
 import org.example.backend.model.Images;
 import org.example.backend.model.Measure;
-import org.example.backend.model.Product;
 import org.example.backend.model.ProductFeatures;
 import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
@@ -36,7 +35,7 @@ public class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ProductRepo articleRepo;
+    private ProductRepo prod1Repo;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
     Measure measure1 = new Measure(
@@ -51,47 +50,43 @@ public class ProductControllerTest {
               
     Product prod1 = 
             Product.builder()
-                .id("prod_id1")
+                .id("id1")
                 .number("456")
                 .name("Prod1")
                 .category(Category.FURNITURE)
                 .group(Group.SEATING)
                 .family(Family.CHAIR)
                 .features(feat1)
+                .info("Info")
                 .description("Description")
                 .images(new Images(
                     "http://image1.test",
                     "http://image2.test",
                     "http://image3.test"
                 ))
+                .price(BigDecimal.valueOf(123.45))
+                .currency(Currency.EUR)
+                .amount(100)
                 .build();
-    Article article = Article.builder()
-            .id("id1")
-            .number("123")
-            .product(prod1)
-            .price(BigDecimal.valueOf(123.45))
-            .currency(Currency.EUR)
-            .amount(100)
-            .build();
 
     @Test
-    void getArticles_shouldReturnListOfArticle_whenIsCalled() throws Exception {
+    void getProducts_shouldReturnListOfProduct_whenIsCalled() throws Exception {
         // GIVEN
-        articleRepo.save(article);
-        List<Article> expected = Collections.singletonList(article);
+        prod1Repo.save(prod1);
+        List<Product> expected = Collections.singletonList(prod1);
         // THEN
-        mockMvc.perform(get("/api/articles"))
+        mockMvc.perform(get("/api/products"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     @Test
-    void getArticlesByCategory_shouldReturnListOfCategory_whenGetCategory() throws Exception {
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws Exception {
         // GIVEN
-        articleRepo.save(article);
-        List<Article> expected = Collections.singletonList(article);
+        prod1Repo.save(prod1);
+        List<Product> expected = Collections.singletonList(prod1);
         // WHEN // THEN
-        mockMvc.perform(get("/api/articles/furniture"))
+        mockMvc.perform(get("/api/products/furniture"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
