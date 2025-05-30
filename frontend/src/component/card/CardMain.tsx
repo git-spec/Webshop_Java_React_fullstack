@@ -20,15 +20,15 @@ type Props = {
     content: ReactNode;
     actions?: ReactNode;
     actionAreaPath?: string;
-    state: unknown;
+    state?: unknown;
 };
 
 
 function CardMain({header, media, content, actions, actionAreaPath, state}: Readonly<Props>) {
     const template = 
         <Fragment>
-            {header && <CardHeader props={header} />}
-            {media && <CardMedia component={'img'} alt={media.name} />}
+            {header && <CardHeader>{header}</CardHeader>}
+            {media && <CardMedia component={'img'} alt={media.name} image={media.path} />}
             <CardContent>
                 {content}
             </CardContent>
@@ -38,32 +38,19 @@ function CardMain({header, media, content, actions, actionAreaPath, state}: Read
     return (
         <>
             <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}}}>
-                {actionAreaPath ? <CardActionArea>
+                {actionAreaPath ? 
+                        <CardActionArea>
                             <Link to={actionAreaPath} state={{state}} style={{textDecoration: 'none'}}>
                             {template}
-                                {/* <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" color={'#765638'}>
-                                        {recipe.name}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                        {recipe.description}
-                                    </Typography>
-                                    <Box component={'div'} sx={{display: 'flex', alignItems: 'center'}}>
-                                        <Typography variant="caption" fontSize={'inherit'} sx={{color: 'text.secondary', paddingTop: '2px'}}>
-                                            {recipe.duration} Min.
-                                        </Typography>
-                                        <TimerOutlinedIcon fontSize={'small'} sx={{marginLeft: '.2rem', color: '#765638'}}></TimerOutlinedIcon>
-                                    </Box>
-                                </CardContent> */}
                             </Link>
                         </CardActionArea>
                     :
                         template
                 }
             </Card>
-            {actions && <CardActions props={actions} />}
+            {actions && <CardActions>{actions}</CardActions>}
         </>
     );
 }
 
-export default Card;
+export default CardMain;
