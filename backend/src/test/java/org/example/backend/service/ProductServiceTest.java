@@ -17,11 +17,11 @@ import java.util.List;
 import org.example.backend.exception.CategoryNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.Category;
+import org.example.backend.model.Family;
+import org.example.backend.model.Group;
 import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
-import org.example.backend.model.Family;
-import org.example.backend.model.Group;
 import org.example.backend.model.Images;
 import org.example.backend.model.Material;
 import org.example.backend.model.Measure;
@@ -111,7 +111,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnEmtyArray_whenNoCategoriesExist() {
+    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
         // WHEN
@@ -125,5 +125,33 @@ public class ProductServiceTest {
     void getProductsByCategory_shouldThrowCategoryNotFoundException_whenInvalidCategory() {
         // WHEN // THEN
         assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByCategory("FEHLER"));
+    }
+
+    @Test
+    void getProductsByGroup_shouldReturnListOfGroup_whenGetGroup() {
+        // GIVEN
+        when(productRepo.findAllByGroup(Group.SEATING.toString())).thenReturn(List.of(prod1));
+        // WHEN
+        List<Product> actual = productService.getProductsByGroup(Group.SEATING.toString());
+        // THEN
+        assertEquals(List.of(prod1), actual);
+        verify(productRepo).findAllByGroup(Group.SEATING.toString());
+    }
+
+    @Test
+    void getProductsByGroup_shouldReturnEmptyArray_whenNoGroupExist() {
+        // GIVEN
+        when(productRepo.findAllByGroup(Group.SEATING.toString())).thenReturn(List.of());
+        // WHEN
+        List<Product> actual = productService.getProductsByGroup(Group.SEATING.toString());
+        // THEN
+        assertEquals(List.of(), actual);
+        verify(productRepo).findAllByGroup(Group.SEATING.toString());
+    }
+
+    @Test
+    void getProductsByGroup_shouldThrowGroupNotFoundException_whenInvalidGroup() {
+        // WHEN // THEN
+        assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByGroup("FEHLER"));
     }
 }
