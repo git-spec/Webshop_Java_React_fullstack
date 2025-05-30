@@ -2,15 +2,19 @@ package org.example.backend.model;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-
+@Document("products")
 @Builder
 @Data
 @AllArgsConstructor
 public class Product {
+    @Id
     private final String id;      
     private final String number;
     private final String name;

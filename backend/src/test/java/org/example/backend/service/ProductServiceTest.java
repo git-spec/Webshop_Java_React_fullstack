@@ -58,7 +58,7 @@ public class ProductServiceTest {
     Product prod1 = 
             Product.builder()
                 .id("1536716")
-                .number("1790")
+                .number("1990")
                 .name("Lara Chair")
                 .manufacturer("Erol")
                 .category(Category.FURNITURE)
