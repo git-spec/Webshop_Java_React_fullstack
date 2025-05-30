@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import org.example.backend.service.ProductService;
 import org.example.backend.model.Product;
-import org.example.backend.model.Category;
 
 
 @RestController

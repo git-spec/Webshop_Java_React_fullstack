@@ -23,6 +23,7 @@ import org.example.backend.model.Dimension;
 import org.example.backend.model.Family;
 import org.example.backend.model.Group;
 import org.example.backend.model.Images;
+import org.example.backend.model.Material;
 import org.example.backend.model.Measure;
 import org.example.backend.model.Unit;
 import org.example.backend.model.ProductFeatures;
@@ -36,21 +37,30 @@ public class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
 
-    Measure measure1 = new Measure(
-                                    50,
+    Measure width = new Measure(
+                                    49,
+                                    Unit.CM
+                                );
+    Measure length = new Measure(
+                                    45,
+                                    Unit.CM
+                                );
+    Measure height = new Measure(
+                                    78,
                                     Unit.CM
                                 );
     ProductFeatures feat1 = new ProductFeatures(
-                        new Dimension(measure1, measure1, measure1),
-                        new Measure(10, Unit.KG),
-                        List.of(Color.OAK, Color.BEECH, Color.BLACK)
-                    );
-                
+                        new Dimension(width, length, height),
+                        new Measure(6, Unit.KG),
+                        List.of(Material.OAK, Material.ASH),
+                        List.of(Color.OAK, Color.ASH, Color.BLACK)
+                    );          
     Product prod1 = 
             Product.builder()
-                .id("id1")
-                .name("Prod1")
-                .number("456")
+                .id("1536716")
+                .number("1990")
+                .name("Lara Chair")
+                .manufacturer("Erol")
                 .category(Category.FURNITURE)
                 .group(Group.SEATING)
                 .family(Family.CHAIR)
@@ -58,12 +68,12 @@ public class ProductServiceTest {
                 .info("Info")
                 .description("Description")
                 .images(new Images(
-                    "http://image1.test",
+                    "/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg",
                     "http://image2.test",
-                    "http://image3.test"
+                    "/public/large/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"
                 ))
-                .price(BigDecimal.valueOf(123.45))
-                .currency(Currency.EUR)
+                .price(BigDecimal.valueOf(370))
+                .currency(Currency.GBP)
                 .amount(100)
                 .build();
     
