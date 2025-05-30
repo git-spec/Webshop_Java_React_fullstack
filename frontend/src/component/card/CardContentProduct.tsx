@@ -1,24 +1,11 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-type Props = {
-    name: string;
-    features: {
-        dimension: {
-            width: {number: number, unit: string};
-            height: {number: number, unit: string};
-            length: {number: number, unit: string};
-        };
-        weight: {number: number, unit: string};
-        colors: string[];
-    };
-    info: string;
-    price: number;
-    currency: string;
-};
+import type { IProduct } from "@/interface/IProduct";
+import { getCurrencyIcon } from "@/util";
 
 
-function CardContentProduct(props: Readonly<Props>) {
+function CardContentProduct(props: Readonly<IProduct>) {
 
     return (
         <>
@@ -28,12 +15,12 @@ function CardContentProduct(props: Readonly<Props>) {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {props.info}
             </Typography>
-            <Box component={'div'} sx={{display: 'flex', alignItems: 'center'}}>
+            <Box component={'div'} sx={{display: 'flex', alignItems: 'center', marginTop: 1}}>
                 <Typography variant="caption" fontSize={'inherit'} sx={{color: 'text.secondary', paddingTop: '2px'}}>
                     {props.price}
                 </Typography>
-                <Typography variant="caption" fontSize={'inherit'} sx={{color: 'text.secondary', paddingTop: '2px'}}>
-                    {props.currency}
+                <Typography variant="caption" fontSize={'inherit'} sx={{color: 'text.secondary', paddingTop: '2px', marginLeft: '.3rem'}}>
+                    {getCurrencyIcon(props.currency)}
                 </Typography>
             </Box>
         </>
