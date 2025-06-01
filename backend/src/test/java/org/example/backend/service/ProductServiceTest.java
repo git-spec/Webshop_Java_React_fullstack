@@ -3,7 +3,6 @@ package org.example.backend.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.example.backend.exception.ArgumentNotFoundException;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Color;
@@ -99,7 +98,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws NotFoundException {
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of(prod1));
         // WHEN
@@ -110,7 +109,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() throws NotFoundException {
+    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
         // WHEN
@@ -121,13 +120,13 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldThrowArgumentNotFoundException_whenInvalidCategory() {
+    void getProductsByCategory_shouldThrowIllegalArgumentException_whenInvalidCategory() {
         // WHEN // THEN
-        assertThrows(ArgumentNotFoundException.class, () -> productService.getProductsByCategory("FEHLER"));
+        assertThrows(IllegalArgumentException.class, () -> productService.getProductsByCategory("FEHLER"));
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException {
+    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() {
         // GIVEN
         when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
         // WHEN
@@ -138,7 +137,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() throws NotFoundException {
+    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() {
         // GIVEN
         when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of());
         // WHEN
@@ -149,10 +148,10 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldThrowArgumentNotFoundException_whenInvalidGroup() {
+    void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
         // WHEN // THEN
         assertThrows(
-            ArgumentNotFoundException.class, 
+            IllegalArgumentException.class, 
             () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
         );
     }
