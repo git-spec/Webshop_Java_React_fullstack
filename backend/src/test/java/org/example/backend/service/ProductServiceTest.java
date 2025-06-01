@@ -1,33 +1,32 @@
 package org.example.backend.service;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.example.backend.exception.CategoryNotFoundException;
-import org.example.backend.model.Product;
+import org.example.backend.exception.ArgumentNotFoundException;
+import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
-import org.example.backend.model.Family;
-import org.example.backend.model.Group;
 import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
+import org.example.backend.model.Family;
+import org.example.backend.model.Group;
 import org.example.backend.model.Images;
 import org.example.backend.model.Material;
 import org.example.backend.model.Measure;
-import org.example.backend.model.Unit;
+import org.example.backend.model.Product;
 import org.example.backend.model.ProductFeatures;
+import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +99,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() {
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws NotFoundException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of(prod1));
         // WHEN
@@ -111,7 +110,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() {
+    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() throws NotFoundException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
         // WHEN
@@ -122,36 +121,39 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldThrowCategoryNotFoundException_whenInvalidCategory() {
+    void getProductsByCategory_shouldThrowArgumentNotFoundException_whenInvalidCategory() {
         // WHEN // THEN
-        assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByCategory("FEHLER"));
+        assertThrows(ArgumentNotFoundException.class, () -> productService.getProductsByCategory("FEHLER"));
     }
 
     @Test
-    void getProductsByGroup_shouldReturnListOfGroup_whenGetGroup() {
+    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException {
         // GIVEN
-        when(productRepo.findAllByGroup(Group.SEATING.toString())).thenReturn(List.of(prod1));
+        when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
         // WHEN
-        List<Product> actual = productService.getProductsByGroup(Group.SEATING.toString());
+        List<Product> actual = productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
         // THEN
         assertEquals(List.of(prod1), actual);
-        verify(productRepo).findAllByGroup(Group.SEATING.toString());
+        verify(productRepo).findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
     }
 
     @Test
-    void getProductsByGroup_shouldReturnEmptyArray_whenNoGroupExist() {
+    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() throws NotFoundException {
         // GIVEN
-        when(productRepo.findAllByGroup(Group.SEATING.toString())).thenReturn(List.of());
+        when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of());
         // WHEN
-        List<Product> actual = productService.getProductsByGroup(Group.SEATING.toString());
+        List<Product> actual = productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
         // THEN
         assertEquals(List.of(), actual);
-        verify(productRepo).findAllByGroup(Group.SEATING.toString());
+        verify(productRepo).findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
     }
 
     @Test
-    void getProductsByGroup_shouldThrowGroupNotFoundException_whenInvalidGroup() {
+    void getProductsByCategoryAndGroup_shouldThrowArgumentNotFoundException_whenInvalidGroup() {
         // WHEN // THEN
-        assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByGroup("FEHLER"));
+        assertThrows(
+            ArgumentNotFoundException.class, 
+            () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
+        );
     }
 }
