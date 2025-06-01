@@ -1,6 +1,10 @@
 package org.example.backend.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
@@ -8,16 +12,12 @@ import org.example.backend.model.Product;
 import org.example.backend.model.Category;
 import org.example.backend.model.Group;
 import org.example.backend.repository.ProductRepo;
-import org.example.backend.exception.CategoryNotFoundException;
 
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepo productRepo;
-
-    private static final String CATEGORY_NOT_FOUND_MESSAGE_FORMAT = "Kategorie %s existiert nicht.";
-    private static final String GROUP_NOT_FOUND_MESSAGE_FORMAT = "KGruppe %s existiert nicht.";
 
     public List<Product> getProducts() {
         return productRepo.findAll();
@@ -26,28 +26,23 @@ public class ProductService {
     /**
      * Gets products by category.
      * @param category
+     * @throws IllegalArgumentException 
      */
     public List<Product> getProductsByCategory(String category) {
         // Gets enum of string.
-        try {
-            Category categoryEnum = Category.valueOf(category.toUpperCase());
-            return productRepo.findAllByCategory(categoryEnum.toString());
-        } catch (Exception e) {
-            throw new CategoryNotFoundException(CATEGORY_NOT_FOUND_MESSAGE_FORMAT, category);
-        }
+        Category categoryEnum = Category.valueOf(category.toUpperCase());
+        return productRepo.findAllByCategory(categoryEnum.toString());
     }
 
     /**
      * Gets products by group.
      * @param group
+     * @throws IllegalArgumentException 
      */
-    public List<Product> getProductsByGroup(String group) {
+    public List<Product> getProductsByCategoryAndGroup(String category, String group) {
         // Gets enum of string.
-        try {
-            Group groupEnum = Group.valueOf(group.toUpperCase());
-            return productRepo.findAllByGroup(groupEnum.toString());
-        } catch (Exception e) {
-            throw new CategoryNotFoundException(GROUP_NOT_FOUND_MESSAGE_FORMAT, group);
-        }
+        Category categoryEnum = Category.valueOf(category.toUpperCase());
+        Group groupEnum = Group.valueOf(group.toUpperCase());
+        return productRepo.findByCategoryAndGroup(categoryEnum.toString(), groupEnum.toString());
     }
 }
