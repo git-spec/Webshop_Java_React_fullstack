@@ -12,9 +12,9 @@ function App() {
           Hello World!
       </p>
       <Routes>
-            <Route path={'/products/:categotry'} element={<Products />} />
-            <Route path={'/products/:group'} element={<Products />} />
-            <Route path={'/products/:family'} element={<Products />} />
+            <Route path={'/products/:category/:group/:family'} element={<Products />} />
+            <Route path={'/products/:category/:group'} element={<Products />} />
+            <Route path={'/products/:category'} element={<Products />} />
             <Route path="/products" element={<Products />} />
       </Routes>
     </>
