@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ProductRepo extends MongoRepository<Product, String> {
     List<Product> findAllByCategory(String category);
-    List<Product> findAllByGroup(String group);
-    List<Product> findAllByFamily(String family);
+    List<Product> findAllByCategoryAndGroup(String category, String group);
     boolean existsByCategory(String category);
+    boolean existsByCategoryAndGroup(String category, String group);
 }

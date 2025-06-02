@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -100,5 +101,36 @@ public class ProductControllerTest {
         mockMvc.perform(get("/api/products/furniture"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductsByCategory_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/{category}", "invalid"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        List<Product> expected = Collections.singletonList(prod1);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/furniture/seating"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
     }
 }
