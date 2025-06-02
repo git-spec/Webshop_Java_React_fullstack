@@ -19,6 +19,7 @@ import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -98,60 +99,68 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() {
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws NotFoundException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of(prod1));
+
         // WHEN
         List<Product> actual = productService.getProductsByCategory(Category.FURNITURE.toString());
         // THEN
-        assertEquals(List.of(prod1), actual);
         verify(productRepo).findAllByCategory(Category.FURNITURE.toString());
+        assertDoesNotThrow(() -> productService.getProductsByCategory(Category.FURNITURE.toString()));
+        assertEquals(List.of(prod1), actual);
     }
 
     @Test
-    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() {
+    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() throws NotFoundException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
         // WHEN
         List<Product> actual = productService.getProductsByCategory(Category.FURNITURE.toString());
         // THEN
-        assertEquals(List.of(), actual);
         verify(productRepo).findAllByCategory(Category.FURNITURE.toString());
+        assertDoesNotThrow(() -> productService.getProductsByCategory(Category.FURNITURE.toString()));
+        assertEquals(List.of(), actual);
     }
 
     @Test
     void getProductsByCategory_shouldThrowIllegalArgumentException_whenInvalidCategory() {
         // WHEN // THEN
-        assertThrows(IllegalArgumentException.class, () -> productService.getProductsByCategory("FEHLER"));
+        NotFoundException exception = assertThrows(
+            NotFoundException.class, 
+            () -> productService.getProductsByCategory("FEHLER")
+        );
+        assertEquals("Seite nicht gefunden.", exception.getMessage());
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() {
+    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException {
         // GIVEN
-        when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
+        when(productRepo.findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
         // WHEN
         List<Product> actual = productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
         // THEN
+        verify(productRepo).findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
         assertEquals(List.of(prod1), actual);
-        verify(productRepo).findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() {
+    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() throws NotFoundException {
         // GIVEN
-        when(productRepo.findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of());
+        when(productRepo.findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of());
         // WHEN
         List<Product> actual = productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
         // THEN
+        verify(productRepo).findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
+        assertDoesNotThrow(() -> productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString()));
         assertEquals(List.of(), actual);
-        verify(productRepo).findByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
     }
 
     @Test
     void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
         // WHEN // THEN
         assertThrows(
-            IllegalArgumentException.class, 
+            NotFoundException.class, 
             () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
         );
     }
