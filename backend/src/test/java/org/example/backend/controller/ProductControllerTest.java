@@ -104,12 +104,13 @@ public class ProductControllerTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnBadRequest_whenGetInvalidCategory() throws Exception {
+    void getProductsByCategory_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.error").value("NotFoundException"));
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
     }
 
     @Test
@@ -121,5 +122,15 @@ public class ProductControllerTest {
         mockMvc.perform(get("/api/products/furniture/seating"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
     }
 }
