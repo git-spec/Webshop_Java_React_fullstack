@@ -37,8 +37,20 @@ public class ProductController {
     }
 
     @GetMapping("/products/{category}/{group}")
-    public List<Product> getProductsByCategoryAndGroup(@PathVariable String category, @PathVariable String group) throws NotFoundException {
+    public List<Product> getProductsByCategoryAndGroup(
+        @PathVariable String category, 
+        @PathVariable String group
+    ) throws NotFoundException {
         return productService.getProductsByCategoryAndGroup(category, group);
+    }
+
+    @GetMapping("/products/{category}/{group}/{family}")
+    public List<Product> getProductsByCategoryAndGroupAndFamily(
+        @PathVariable String category, 
+        @PathVariable String group, 
+        @PathVariable String family
+    ) throws NotFoundException {
+        return productService.getProductsByCategoryAndGroupAndFamily(category, group, family);
     }
 
     /**
