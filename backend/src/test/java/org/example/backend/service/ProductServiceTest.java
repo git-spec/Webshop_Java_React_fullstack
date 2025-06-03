@@ -158,10 +158,78 @@ public class ProductServiceTest {
 
     @Test
     void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
+        // GIVEN
+        String expected = "Seite nicht gefunden.";
         // WHEN // THEN
-        assertThrows(
+        NotFoundException result = assertThrows(
             NotFoundException.class, 
             () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
         );
+        assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfFamily_whenGetFamily() throws NotFoundException {
+        // GIVEN
+        when(
+            productRepo.findAllByCategoryAndGroupAndFamily(Category.FURNITURE.toString(), 
+            Group.SEATING.toString(), 
+            Family.CHAIR.toString())).thenReturn(List.of(prod1)
+        );
+        // WHEN
+        List<Product> actual = productService.getProductsByCategoryAndGroupAndFamily(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString(),
+            Family.CHAIR.toString()
+        );
+        // THEN
+        verify(productRepo).findAllByCategoryAndGroupAndFamily(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString(), 
+            Family.CHAIR.toString()
+        );
+        assertEquals(List.of(prod1), actual);
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnEmptyArray_whenNoFamilyExist() throws NotFoundException {
+        // GIVEN
+        when(productRepo.findAllByCategoryAndGroupAndFamily(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString(), 
+            Family.CHAIR.toString())
+        ).thenReturn(List.of());
+        // WHEN
+        List<Product> actual = productService.getProductsByCategoryAndGroupAndFamily(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString(), 
+            Family.CHAIR.toString()
+        );
+        // THEN
+        verify(productRepo).findAllByCategoryAndGroupAndFamily(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString(), 
+            Family.CHAIR.toString()
+        );
+        assertDoesNotThrow(
+            () -> productService.getProductsByCategoryAndGroupAndFamily(
+                Category.FURNITURE.toString(), 
+                Group.SEATING.toString(), 
+                Family.CHAIR.toString()
+            )
+        );
+        assertEquals(List.of(), actual);
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldThrowNotFoundException_whenInvalidFamily() {
+        // GIVEN
+        String expected = "Seite nicht gefunden.";
+        // WHEN // THEN
+        NotFoundException result = assertThrows(
+            NotFoundException.class, 
+            () -> productService.getProductsByCategoryAndGroupAndFamily("FURNITURE", "SEATING", "FEHLER")
+        );
+        assertEquals(expected, result.getMessage());
     }
 }

@@ -3,8 +3,12 @@ package org.example.backend.controller;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.example.backend.model.Product;
+import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
@@ -129,6 +134,29 @@ public class ProductControllerTest {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
             .andExpect(status().isNotFound())
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfGroup_whenGetGroup() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        List<Product> expected = Collections.singletonList(prod1);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/furniture/seating/chair"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
+            .andExpect(status().isNotFound())
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.error").value("NotFoundException"))
             .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));

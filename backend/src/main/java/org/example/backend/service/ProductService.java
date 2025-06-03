@@ -1,17 +1,13 @@
 package org.example.backend.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.example.backend.model.Product;
-import org.example.backend.model.dto.ErrorDTO;
 import org.example.backend.model.Category;
 import org.example.backend.model.Group;
+import org.example.backend.model.Family;
 import org.example.backend.repository.ProductRepo;
 import org.example.backend.exception.NotFoundException;
 
@@ -44,6 +40,7 @@ public class ProductService {
 
     /**
      * Gets products by group.
+     * @param category
      * @param group
      * @throws NotFoundException 
      */
@@ -53,6 +50,33 @@ public class ProductService {
             Category categoryEnum = Category.valueOf(category.toUpperCase());
             Group groupEnum = Group.valueOf(group.toUpperCase());
             return productRepo.findAllByCategoryAndGroup(categoryEnum.toString(), groupEnum.toString());
+        } catch(IllegalArgumentException e) {
+            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
+        }
+    }
+
+    /**
+     * Gets products by family.
+     * @param category
+     * @param group
+     * @param family
+     * @throws NotFoundException 
+     */
+    public List<Product> getProductsByCategoryAndGroupAndFamily(
+        String category, 
+        String group, 
+        String family
+    ) throws NotFoundException {
+        // Gets enum of string.
+        try {
+            Category categoryEnum = Category.valueOf(category.toUpperCase());
+            Group groupEnum = Group.valueOf(group.toUpperCase());
+            Family familyEnum = Family.valueOf(family.toUpperCase());
+            return productRepo.findAllByCategoryAndGroupAndFamily(
+                categoryEnum.toString(), 
+                groupEnum.toString(), 
+                familyEnum.toString()
+            );
         } catch(IllegalArgumentException e) {
             throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
         }
