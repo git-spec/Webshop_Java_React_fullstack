@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 export const globalTheme = createTheme({
     typography: {
-        fontFamily: 'SourceSerif4, SansSans3',
+        fontFamily: 'SourceSerif4, SourceSans3',
     },
     components: {
       //   MuiCssBaseline: {
