@@ -1,0 +1,1 @@
+export type AnchorType = 'top' | 'left' | 'bottom' | 'right';
