@@ -133,4 +133,25 @@ public class ProductControllerTest {
             .andExpect(jsonPath("$.error").value("NotFoundException"))
             .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
     }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfGroup_whenGetGroup() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        List<Product> expected = Collections.singletonList(prod1);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/furniture/seating/chair"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.error").value("NotFoundException"))
+            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+    }
 }
