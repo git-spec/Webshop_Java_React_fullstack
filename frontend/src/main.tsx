@@ -5,7 +5,7 @@ import {ThemeProvider} from '@mui/material/styles';
 
 import './index.css';
 import App from './App.tsx';
-import {globalTheme} from "./themes/globalTheme.ts";
+import {globalTheme} from "./theme/globalTheme.ts";
 import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(

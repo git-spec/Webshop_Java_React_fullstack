@@ -22,7 +22,7 @@ function Products() {
 
   return (
     <Container>
-        <Box sx={{paddingTop: 12}}>
+        <Box sx={{paddingTop: 4}}>
             <Grid container columnSpacing={2} rowSpacing={4}>
               {
               products?.map((product: IProduct) => {
