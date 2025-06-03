@@ -158,11 +158,14 @@ public class ProductServiceTest {
 
     @Test
     void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
+        // GIVEN
+        String expected = "Seite nicht gefunden.";
         // WHEN // THEN
-        assertThrows(
+        NotFoundException result = assertThrows(
             NotFoundException.class, 
             () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
         );
+        assertEquals(expected, result.getMessage());
     }
 
     @Test
@@ -220,10 +223,13 @@ public class ProductServiceTest {
 
     @Test
     void getProductsByCategoryAndGroupAndFamily_shouldThrowNotFoundException_whenInvalidFamily() {
+        // GIVEN
+        String expected = "Seite nicht gefunden.";
         // WHEN // THEN
-        assertThrows(
+        NotFoundException result = assertThrows(
             NotFoundException.class, 
             () -> productService.getProductsByCategoryAndGroupAndFamily("FURNITURE", "SEATING", "FEHLER")
         );
+        assertEquals(expected, result.getMessage());
     }
 }
