@@ -1,15 +1,10 @@
 package org.example.backend.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.example.backend.model.Product;
-import org.example.backend.model.dto.ErrorDTO;
 import org.example.backend.model.Category;
 import org.example.backend.model.Group;
 import org.example.backend.model.Family;
