@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
@@ -20,6 +21,7 @@ import org.example.backend.repository.ProductRepo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -231,5 +233,41 @@ public class ProductServiceTest {
             () -> productService.getProductsByCategoryAndGroupAndFamily("FURNITURE", "SEATING", "FEHLER")
         );
         assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductByID_shouldReturnProduct_whenGetID() {
+        // GIVEN
+        String id = "1536716";
+        // WHEN
+        when(productRepo.findById(id)).thenReturn(Optional.of(prod1));
+        Optional<Product> actual = productService.getProductByID(id);
+        // THEN
+        assertEquals(Optional.of(prod1), actual);
+    }
+
+    @Test
+    void getProductByID_shouldReturnEmptyOptional_whenNotFound() {
+        // GIVEN
+        String id = "15161718";
+        // WHEN
+        when(productRepo.findById(id)).thenReturn(Optional.empty());
+        Optional<Product> actual = productService.getProductByID(id);
+        // THEN
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void getProductByID_shouldThrowException_whenIDisNull() {
+        // GIVEN
+        String id = null;
+        // WHEN
+        when(productRepo.findById(id)).thenThrow(IllegalArgumentException.class);
+        // THEN
+        IllegalArgumentException result = assertThrows(
+            IllegalArgumentException.class, 
+            () -> productService.getProductByID(id)
+        );
+        assertNotNull(result);
     }
 }
