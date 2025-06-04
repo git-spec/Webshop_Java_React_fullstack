@@ -60,7 +60,7 @@ export default function Header() {
         <ThemeProvider theme={headerTheme}>
             {/* Sidebar */}
             <SwipeDrawer anchor={'left'} open={isSidebarOpen} onOpen={onSidebarOpen}>
-                <ListNested data={sidebarItems} />
+                <ListNested data={sidebarItems} handleClick={onSidebarOpen} />
             </SwipeDrawer>
             <AppBar style={{position: 'static', height: '4rem'}}>
                 <LayoutContainer>
