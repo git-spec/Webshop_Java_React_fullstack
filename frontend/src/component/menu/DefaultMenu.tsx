@@ -14,8 +14,6 @@ function DefaultMenu({id, anchorEl, onClose}: Readonly<Props>) {
     const isOpen = Boolean(anchorEl);
 
     useEffect(() => {
-        console.log(anchorEl);
-        
         if (anchorEl) {
             anchor = anchorEl;
         }
