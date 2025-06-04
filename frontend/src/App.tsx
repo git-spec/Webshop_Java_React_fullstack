@@ -16,7 +16,7 @@ export default function App() {
         <Route path={'/:category/:group/:family'} element={<Products />} />
         <Route path={'/:category/:group'} element={<Products />} />
         <Route path={'/:category'} element={<Products />} />
-        <Route path="/:name/:id" element={<Product />} />
+        <Route path="/:id" element={<Product />} />
         <Route path="/" element={<Home />} />
       </Route>
     </Routes>
