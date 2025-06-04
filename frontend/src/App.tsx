@@ -3,22 +3,22 @@ import {Routes, Route} from "react-router-dom";
 import './App.css';
 import Products from "./page/Products.tsx";
 import RootLayout from "./component/layout/RootLayout.tsx";
+import Home from "./page/Home.tsx";
+import Product from "./page/Product.tsx";
 
 
-function App() {
+export default function App() {
 
   return (
     <Routes>
       {/*APP RootLayout*/}
       <Route element={<RootLayout />}>
-        <Route path={'/products/:category/:group/:family'} element={<Products />} />
-        <Route path={'/products/:category/:group'} element={<Products />} />
-        <Route path={'/products/:category'} element={<Products />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/" element={<Products />} />
+        <Route path={'/:category/:group/:family'} element={<Products />} />
+        <Route path={'/:category/:group'} element={<Products />} />
+        <Route path={'/:category'} element={<Products />} />
+        <Route path="/:name/:id" element={<Product />} />
+        <Route path="/" element={<Home />} />
       </Route>
     </Routes>
   )
 }
-
-export default App
