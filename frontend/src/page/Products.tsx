@@ -18,9 +18,9 @@ function Products() {
     axios.get('/api/products').then(res => {
       const filteredProducts = res.data.filter(
         (product: IProduct) => 
-          product.category === category &&
-          product.group === group &&
-          product.family === family
+          product.category.toLowerCase() === category &&
+          product.group.toLowerCase() === group &&
+          product.family.toLowerCase() === family
       );
       setProducts(filteredProducts);
     }).catch(err => console.log(err));
