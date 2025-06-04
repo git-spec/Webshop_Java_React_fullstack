@@ -1,19 +1,16 @@
 import { Outlet } from "react-router-dom";
 
-import LayoutContainer from "../share/LayoutContainer";
 import Header from "../ui/Header";
 
 
-function RootLayout() {    
+export default function RootLayout() {    
     return (
         <>
             <Header />
-            <main>
+            <main style={{paddingTop: '2rem'}}>
                 <Outlet />
             </main>
             <footer></footer>
         </>
     );
 }
-
-export default RootLayout;
