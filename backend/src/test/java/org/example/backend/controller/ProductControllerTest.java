@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.example.backend.model.Product;
+import org.assertj.core.error.OptionalShouldBeEmpty;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Color;
@@ -45,6 +47,7 @@ public class ProductControllerTest {
     private ProductRepo prod1Repo;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
+    String id = "1536716";
     Measure width = new Measure(
                                     49,
                                     Unit.CM
@@ -62,11 +65,10 @@ public class ProductControllerTest {
                         new Measure(10, Unit.KG),
                         List.of(Material.OAK, Material.ASH),
                         List.of(Color.OAK, Color.ASH, Color.BLACK)
-                    );
-              
+                    );        
     Product prod1 = 
             Product.builder()
-                .id("1536716")
+                .id(id)
                 .number("1990")
                 .name("Lara Chair")
                 .manufacturer("Erol")
@@ -160,5 +162,26 @@ public class ProductControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.error").value("NotFoundException"))
             .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+    }
+
+    @Test
+    void getProductByID_shouldReturnProduct_whenGetID() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        Optional<Product> expected = Optional.of(prod1);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/product/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    void getProductByID_shouldReturnEmptyOptional_whenGetInvalidID() throws Exception {
+        // GIVEN
+        Optional<Object> expected = Optional.empty();
+        // WHEN // THEN
+        mockMvc.perform(get("/api/product/{id}", "123"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 }

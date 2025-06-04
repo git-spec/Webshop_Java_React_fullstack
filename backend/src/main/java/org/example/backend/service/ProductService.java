@@ -3,6 +3,7 @@ package org.example.backend.service;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 import org.example.backend.model.Product;
 import org.example.backend.model.Category;
@@ -80,5 +81,9 @@ public class ProductService {
         } catch(IllegalArgumentException e) {
             throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
         }
+    }
+
+    public Optional<Product> getProductByID(String id) {
+        return productRepo.findById(id);
     }
 }

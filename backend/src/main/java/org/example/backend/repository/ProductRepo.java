@@ -11,7 +11,4 @@ public interface ProductRepo extends MongoRepository<Product, String> {
     List<Product> findAllByCategory(String category);
     List<Product> findAllByCategoryAndGroup(String category, String group);
     List<Product> findAllByCategoryAndGroupAndFamily(String category, String group, String family);
-    boolean existsByCategory(String category);
-    boolean existsByCategoryAndGroup(String category, String group);
-    boolean existsByCategoryAndGroupAndFamily(String category, String group, String family);
 }

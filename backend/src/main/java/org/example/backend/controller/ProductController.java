@@ -1,6 +1,12 @@
 package org.example.backend.controller;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.example.backend.exception.NotFoundException;
+import org.example.backend.model.Product;
+import org.example.backend.model.dto.ErrorDTO;
+import org.example.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,11 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import org.example.backend.exception.NotFoundException;
-import org.example.backend.model.Product;
-import org.example.backend.model.dto.ErrorDTO;
-import org.example.backend.service.ProductService;
 
 
 @RestController
@@ -51,6 +52,11 @@ public class ProductController {
         @PathVariable String family
     ) throws NotFoundException {
         return productService.getProductsByCategoryAndGroupAndFamily(category, group, family);
+    }
+
+    @GetMapping("/product/{id}")
+    public Optional<Product> getProductByID(@PathVariable String id) {
+        return productService.getProductByID(id);
     }
 
     /**
