@@ -13,10 +13,9 @@ export default function App() {
     <Routes>
       {/*APP RootLayout*/}
       <Route element={<RootLayout />}>
-        <Route path={'/:category/:group/:family'} element={<Products />} />
-        <Route path={'/:category/:group'} element={<Products />} />
-        <Route path={'/:category'} element={<Products />} />
-        <Route path="/:id" element={<Product />} />
+        <Route path={'/products/:category/:group/:family'} element={<Products />} />
+        <Route path={'/products/:category/:group'} element={<Products />} />
+        <Route path="/product/:id" element={<Product />} />
         <Route path="/" element={<Home />} />
       </Route>
     </Routes>

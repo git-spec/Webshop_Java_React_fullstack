@@ -40,7 +40,8 @@ function Products() {
                     key={product.id} 
                     media={{name: product.name, path: product.images.small}} 
                     content={<CardContentProduct {...product} />}
-                    actionAreaPath={`/${product.name}/${product.id}`} 
+                    state={product}
+                    actionAreaPath={`/product/${product.id}`} 
                   />
               })
               }
