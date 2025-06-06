@@ -14,40 +14,42 @@ export default function Slider({images}: Readonly<Props>) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div>
-        <PragraphContainer>
+    <Stack sx={{alignItems: 'center'}}>
             <Box component={'div'} 
                 sx={{
-                        width: '100%', 
+                        width: {sm: '100%', md: '80%', lg: '70%'}, 
                         height: '400px', 
                         backgroundImage: `url(${images[currentIndex]})`, 
                         backgroundRepeat: 'no-repeat', 
                         backgroundPosition: 'center', 
-                        backgroundSize: 'cover'
+                        backgroundSize: 'cover',
+                        mb: 4
                     }} 
             />
-        </PragraphContainer>
-        <PragraphContainer>
             <Stack direction="row" sx={{justifyContent: 'center'}} spacing={2}>
                 {!!images.length && images.map((image, index) => {
                     return (
                         <Button
                             key={image + '_' + index} 
                             onClick={() => {setCurrentIndex(index)}} 
-                            variant={'text'}
-                            sx={{borderRadius: '50%'}}
+                            sx={
+                                {
+                                    borderRadius: '50%', 
+                                    border: '1px solid #d7b86f',
+                                    '&:hover': {backgroundColor: 'rgba(215, 184, 111, 0.1)'}
+                                }
+                            }
                             disableRipple
                         >
                             <AvatarCaption 
                                 name={image} 
                                 image={image} 
-                                size={'5rem'} 
+                                size={'4rem'} 
                             />
                         </Button>
                     )
                 })}
             </Stack>
-        </PragraphContainer>
-    </div>
+    </Stack>
   );
 }
