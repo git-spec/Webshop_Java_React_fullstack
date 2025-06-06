@@ -38,7 +38,7 @@ function Products() {
               products?.map((product: IProduct) => {
                   return <CardMain 
                     key={product.id} 
-                    media={{name: product.name, path: product.images.small}} 
+                    media={{name: product.name, path: product.images.small[0]}} 
                     content={<CardContentProduct {...product} />}
                     state={product}
                     actionAreaPath={`/product/${product.id}`} 

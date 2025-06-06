@@ -69,10 +69,11 @@ public class ProductServiceTest {
                 .info("Info")
                 .description("Description")
                 .images(new Images(
-                    "/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg",
-                    "http://image2.test",
-                    "/public/large/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"
-                ))
+                        List.of("/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"),
+                        List.of("http://imag)e2.test"),
+                        List.of("/public/large/lara/Lara--1990--chair--cutoutAngle-2--Ash--)M.jpg")
+                    )
+                )
                 .price(BigDecimal.valueOf(370))
                 .currency(Currency.GBP)
                 .amount(100)

@@ -31,9 +31,9 @@ export interface IProduct {
     info: string;
     description: string;
     images: {
-        small: string;
-        medium: string;
-        large: string;
+        small: string[];
+        medium: string[];
+        large: string[];
     };
     price: number;
     currency: string;
