@@ -5,21 +5,22 @@ import lombok.Getter;
 
 @Getter
 public enum Color {
-    BLACK("Black"),
-    WHITE("White"),
-    RED("Red"),
-    BLUE("Blue"),
-    GREEN("Green"),
-    YELLOW("Yellow"),
-    ORANGE("Orange"),
-    VIOLETT("Violett"),
-    BROWN("Braun"),
-    OAK("Oak"),
-    ASH("Ash"),
-    BEECH("Beech"),
-    WALNUT("Walnut"),
-    SPRUCE("Spruce"),
-    LARCH("Larch");
+    BLACK("black"),
+    WHITE("white"),
+    RED("red"),
+    BLUE("blue"),
+    GREEN("green"),
+    YELLOW("yellow"),
+    ORANGE("orange"),
+    VIOLETT("violett"),
+    BROWN("braun"),
+    OAK("oak"),
+    ASH("ash"),
+    ASH_BLACK("ash stained black"),
+    BEECH("beech"),
+    WALNUT("walnut"),
+    SPRUCE("spruce"),
+    LARCH("larch");
 
     private final String value;
 

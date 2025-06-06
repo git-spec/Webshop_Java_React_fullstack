@@ -8,7 +8,7 @@ type Props = {
 
 function LayoutContainer({children}: Readonly<Props>) {
     return (
-        <Container>
+        <Container sx={{px: {md: 8}}}>
             {children}
         </Container>
     )

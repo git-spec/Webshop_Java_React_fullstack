@@ -11,17 +11,17 @@ export const sidebarItems: INavItem[] = [
         subnav: [
             {
                 name: "Stühle",
-                path: "/furniture/seating/chair",
+                path: "/products/furniture/seating/chair",
                 pl: "1rem"
             },
             {
                 name: "Hocker",
-                path: "/furniture/seating/stool",
+                path: "/products/furniture/seating/stool",
                 pl: "1rem"
             },
             {
                 name: "Sofas",
-                path: "/furniture/seating/sofa",
+                path: "/products/furniture/seating/sofa",
                 pl: "1rem"
             }
         ]
@@ -31,22 +31,22 @@ export const sidebarItems: INavItem[] = [
         subnav: [
             {
                 name: "Regale",
-                path: "/furniture/storage/shelve",
+                path: "/products/furniture/storage/shelve",
                 pl: "1rem"
             },
             {
                 name: "Schränke",
-                path: "/furniture/storage/cupboard",
+                path: "/products/furniture/storage/cupboard",
                 pl: "1rem"
             },
             {
                 name: "Kommoden",
-                path: "/furniture/storage/comode",
+                path: "/products/furniture/storage/comode",
                 pl: "1rem"
             },
             {
                 name: "Anrichten",
-                path: "/furniture/storage/sideboard",
+                path: "/products/furniture/storage/sideboard",
                 pl: "1rem"
             }
         ]

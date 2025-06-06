@@ -1,5 +1,5 @@
 package org.example.backend.model;
 
-public record Images(String small, String medium, String large) {
+import java.util.List;
 
-}
+public record Images(List<String> small, List<String> medium, List<String> large) {}

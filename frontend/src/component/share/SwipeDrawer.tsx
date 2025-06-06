@@ -1,7 +1,7 @@
 import {useEffect, useState, type ReactNode} from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
-import type { AnchorType } from "../type/AnchorType";
+import type { AnchorType } from "../../type/AnchorType";
 
 type Props = {
     anchor: AnchorType

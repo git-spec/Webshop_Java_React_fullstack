@@ -2,6 +2,7 @@ export interface IProduct {
     id: string;
     number: string;
     name: string;
+    manufacturer: string;
     category: string;
     group: string;
     family: string;
@@ -30,9 +31,9 @@ export interface IProduct {
     info: string;
     description: string;
     images: {
-        small: string;
-        medium: string;
-        large: string;
+        small: string[];
+        medium: string[];
+        large: string[];
     };
     price: number;
     currency: string;
