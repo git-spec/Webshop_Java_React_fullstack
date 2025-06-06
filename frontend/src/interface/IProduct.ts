@@ -2,6 +2,7 @@ export interface IProduct {
     id: string;
     number: string;
     name: string;
+    manufacturer: string;
     category: string;
     group: string;
     family: string;
