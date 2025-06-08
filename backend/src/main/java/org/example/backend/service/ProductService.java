@@ -21,6 +21,8 @@ public class ProductService {
     private static final String NOT_FOUND_MESSAGE_FORMAT = "Seite nicht gefunden.";
 
     public List<Product> getProducts() {
+        // const List<Product> products = productRepo.findAll();
+        // System.out.println(products);
         return productRepo.findAll();
     }
 

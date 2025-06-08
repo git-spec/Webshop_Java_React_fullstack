@@ -11,15 +11,19 @@ public enum Material {
     WALNUT("Walnut"),
     SPRUCE("Spruce"),
     LARCH("Larch"),
+    METAL("Metal"),
     IRON("Iron"),
     STEEL("Steel"),
     STAINLESS("Stainless Steel"),
     ALUMINIUM("Aluminium"),
     GLASS("Glass"),
     WOOL("Wool"),
+    VIRGIN_WOOL("Virgin Wool"),
     LINEN("Linen"),
     COTTON("Cotton"),
-    LINOLEUM("Linoleum");
+    LEATHER("Leather"),
+    LINOLEUM("Linoleum"),
+    PLASTIC("Plastic");
 
     private final String value;
 

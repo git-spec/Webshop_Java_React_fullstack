@@ -1,7 +1,7 @@
 package org.example.backend.model;
 
 public record Measure(
-    int number,
+    double number,
     Unit unit
 ) {
 

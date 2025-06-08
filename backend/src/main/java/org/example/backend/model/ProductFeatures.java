@@ -7,5 +7,5 @@ public record ProductFeatures(
     Dimension dimension,
     Measure weight,
     List<Material> materials,
-    List<Color> colors
+    List<String> colors
 ) {}

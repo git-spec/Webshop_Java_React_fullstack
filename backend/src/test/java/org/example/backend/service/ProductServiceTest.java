@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
-import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
 import org.example.backend.model.Family;
@@ -54,7 +53,7 @@ public class ProductServiceTest {
                         new Dimension(width, length, height),
                         new Measure(6, Unit.KG),
                         List.of(Material.OAK, Material.ASH),
-                        List.of(Color.OAK, Color.ASH, Color.BLACK)
+                        List.of("oak", "ash", "black")
                     );          
     Product prod1 = 
             Product.builder()
