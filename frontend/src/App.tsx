@@ -39,7 +39,7 @@ export default function App() {
           <Route element={<RootLayout />}>
             <Route path={'/products/:category/:group/:family'} element={<Products />} />
             <Route path={'/products/:category/:group'} element={<Products />} />
-            {/* <Route path="/product/:id" element={<Product addToCart={handleCart} />} /> */}
+            <Route path="/product/:id" element={<Product addToCart={handleCart} />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/" element={<Home />} />
           </Route>

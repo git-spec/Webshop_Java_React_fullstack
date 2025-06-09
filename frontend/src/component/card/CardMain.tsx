@@ -44,7 +44,11 @@ function CardMain({header, media, content, actions, actionAreaPath, state}: Read
             <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}, minHeight: '20rem'}}>
                 {actionAreaPath ? 
                         <CardActionArea sx={{height: '100%'}}>
-                            <Link to={actionAreaPath} state={{state}} style={{textDecoration: 'none', display: 'block', height: 'inherit'}}>
+                            <Link 
+                                to={actionAreaPath} 
+                                state={state} 
+                                style={{textDecoration: 'none', display: 'block', height: 'inherit'}}
+                            >
                             {template}
                             </Link>
                         </CardActionArea>

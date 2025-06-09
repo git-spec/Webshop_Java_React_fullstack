@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 
-import type { IProduct } from "@/interface/IProduct";
+import type { ICart } from "@/interface/ICart";
 import {colorItems} from "@data/colorData.ts";
 import LayoutContainer from "@/component/share/LayoutContainer";
 import { getMajuscule, getUnitIcon } from "@/util";
@@ -17,30 +17,43 @@ import AvatarCaption from "@/component/AvatarCaption";
 import ButtonAction from "@/component/ButtonAction";
 import Slider from "@/component/Slider";
 
+type Props = {
+    addToCart: (product: ICart) => void;
+};
 
-export default function Product() {
+
+export default function Product({addToCart}: Readonly<Props>) {
     const id = useParams();
     const path = '/api/product/';
-    const [product, setProduct] = useState<IProduct>();
+    const [product, setProduct] = useState<ICart>();
     const location = useLocation();
-    const stateProduct: IProduct = location.state?.product as IProduct;
-    const [amount, setAmount] = useState<string>();
+    const stateProduct: ICart = location.state?.product as ICart;
+    const [selColor, setSelColor] = useState<string>();
+    const [amount, setAmount] = useState<string>('0');
     const [total, setTotal] = useState<number>();
 
     useEffect(() => {
         if (stateProduct) {
-            console.log(stateProduct);
-            
+            // Sets first color selected.
+            setSelColor(stateProduct.features.colors[0]);
+            // Gets state of product card.
             setProduct(stateProduct);
         } else {
-            console.log(id);
-            
+            // Gets product by id.
             getProduct(id);
         };
     }, [id]);
 
     const getProduct = (id: Readonly<Params<string>>) => {
-        axios.get(path + id.id).then(res => setProduct(res.data)).catch(err => console.log(err));
+        axios.get(path + id.id).then(res => 
+            {
+                const product = res.data as ICart;
+                // Sets first color selected.
+                setSelColor(product.features.colors[0]);
+                // Sets product.
+                setProduct(product);
+            }
+        ).catch(err => console.log(err));
     }
 
     const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +61,19 @@ export default function Product() {
         setAmount(amount);
         setTotal(product ? +amount * product.price : 0)
     };
+
+    const handleColor = (color: string) => {
+        setSelColor(color);
+    };
+
+    const handleCart = (cartEntry: ICart) => {
+        selColor && (cartEntry.color = selColor);
+        amount && (cartEntry.amount = +amount);
+        addToCart(cartEntry);
+
+        console.log(cartEntry);
+        
+    }
 
     return (
         <LayoutContainer>
@@ -101,6 +127,8 @@ export default function Product() {
                                         caption={colorItem.caption} 
                                         size={colorItem.size} 
                                         filter={colorItem.filter}
+                                        select={selColor === colorItem.name}
+                                        click={(color) => handleColor(color)}
                                     />
                                 )
                             })}
@@ -145,7 +173,7 @@ export default function Product() {
                     </PragraphContainer>
                     {/* Action */}
                     <Stack>
-                        <ButtonAction value={'Kaufen'} color="success" click={() => {}} />
+                        {product && <ButtonAction value={'Zum Warenkorb'} color="success" click={() => handleCart(product)} />}
                     </Stack>
                 </Grid>
                 {/* Description */}
