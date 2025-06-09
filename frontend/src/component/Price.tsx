@@ -16,7 +16,8 @@ export default function Price({value, currency, justify, underline}: Readonly<Pr
         <Stack direction={'row'} sx={{justifyContent: `${justify}`}}>
             <Typography 
                 component={'span'} 
-                fontSize={'inherit'} 
+                fontSize={'inherit'}  
+                color={'#765638'}
                 sx={
                     {
                         paddingTop: '2px', textDecoration: underline ? 'underline' : 'none', 
@@ -26,7 +27,12 @@ export default function Price({value, currency, justify, underline}: Readonly<Pr
             >
             {value}
             </Typography>
-            <Typography component={'span'} fontSize={'inherit'} sx={{paddingTop: '2px', marginLeft: '.3rem'}}>
+            <Typography 
+                component={'span'} 
+                fontSize={'inherit'}  
+                color={'#765638'}
+                sx={{paddingTop: '2px', marginLeft: '.3rem'}}
+            >
                 {getCurrencyIcon(currency)}
             </Typography>
         </Stack>
