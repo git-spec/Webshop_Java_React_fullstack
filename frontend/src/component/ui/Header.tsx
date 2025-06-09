@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {ThemeProvider} from '@mui/material/styles';
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,6 +16,7 @@ import {sidebarItems} from "@data/navData.ts";
 import DefaultMenu from "@/component/menu/DefaultMenu";
 import SwipeDrawer from "../share/SwipeDrawer";
 import LayoutContainer from "@/component/share/LayoutContainer";
+import {CartContext} from "@/App";
 import ListNested from "../share/ListNested";
 import { headerTheme } from "@/theme/headerTheme";
 
@@ -30,6 +32,8 @@ export default function Header() {
     // const isMobileMenuOpen = Boolean(mobileAnchorEl);
     const menuId = 'primary-search-account-menu';
     // const mobileMenuId = 'primary-search-account-menu-mobile';
+    const cart = useContext(CartContext);
+    const navigate = useNavigate();
 
     const onSidebarOpen = useCallback(() => {
         setSidebarAnchorEl(null);
@@ -62,7 +66,7 @@ export default function Header() {
             <SwipeDrawer anchor={'left'} open={isSidebarOpen} onOpen={onSidebarOpen}>
                 <ListNested data={sidebarItems} handleClick={onSidebarOpen} />
             </SwipeDrawer>
-            <AppBar style={{position: 'static', height: '4rem'}}>
+            <AppBar position="sticky" style={{height: '4rem'}}>
                 <LayoutContainer>
                     <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}} disableGutters>
                         {/* Menu Button for Sidebar */}
@@ -88,8 +92,13 @@ export default function Header() {
                         {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}> */}
                         <Box>
                             {/* Cart */}
-                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={0} color="error">
+                            <IconButton 
+                                size="large" 
+                                aria-label="show 4 new mails" 
+                                color="inherit" 
+                                onClick={() => navigate('/cart')}
+                            >
+                            <Badge badgeContent={cart.length} color="error">
                                 <ShoppingCartOutlinedIcon />
                             </Badge>
                             </IconButton>
