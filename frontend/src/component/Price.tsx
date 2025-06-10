@@ -7,31 +7,38 @@ type Props = {
     value: number | '';
     currency: string;
     justify: string;
-    underline?: boolean;
+    fontWeight?: number;
+    color?: string;
 };
 
 
-export default function Price({value, currency, justify, underline}: Readonly<Props>) {
+export default function Price({value, currency, justify, fontWeight, color}: Readonly<Props>) {
     return (
-        <Stack direction={'row'} sx={{justifyContent: `${justify}`}}>
-            <Typography 
-                component={'span'} 
-                fontSize={'inherit'}  
-                color={'#765638'}
+        <Stack direction={'row'} sx={{justifyContent: `${justify}`, color: `${color ?? 'black'}`}}>
+            <Typography
+                component={'span'}
+                fontSize={'inherit'}
+                // color={'#765638'}
                 sx={
                     {
-                        paddingTop: '2px', textDecoration: underline ? 'underline' : 'none', 
-                        textUnderlineOffset: underline ? '3px' : 'unset'
+                        paddingTop: '2px',
+                        fontWeight: `${fontWeight ?? 300}`
                     }
                 }
             >
             {value}
             </Typography>
-            <Typography 
-                component={'span'} 
-                fontSize={'inherit'}  
-                color={'#765638'}
-                sx={{paddingTop: '2px', marginLeft: '.3rem'}}
+            <Typography
+                component={'span'}
+                fontSize={'inherit'}
+                // color={'#765638'}
+                sx={
+                        {
+                            paddingTop: '2px',
+                            marginLeft: '.3rem',
+                            fontWeight: `${fontWeight ?? 300}`
+                        }
+                    }
             >
                 {getCurrencyIcon(currency)}
             </Typography>
