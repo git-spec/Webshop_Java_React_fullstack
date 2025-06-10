@@ -1,16 +1,17 @@
 package org.example.backend.service;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
-import org.example.backend.model.Product;
-import org.example.backend.model.Category;
-import org.example.backend.model.Group;
-import org.example.backend.model.Family;
-import org.example.backend.repository.ProductRepo;
 import org.example.backend.exception.NotFoundException;
+import org.example.backend.model.Category;
+import org.example.backend.model.Family;
+import org.example.backend.model.Group;
+import org.example.backend.model.Product;
+import org.example.backend.repository.ProductRepo;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -21,8 +22,6 @@ public class ProductService {
     private static final String NOT_FOUND_MESSAGE_FORMAT = "Seite nicht gefunden.";
 
     public List<Product> getProducts() {
-        // const List<Product> products = productRepo.findAll();
-        // System.out.println(products);
         return productRepo.findAll();
     }
 
