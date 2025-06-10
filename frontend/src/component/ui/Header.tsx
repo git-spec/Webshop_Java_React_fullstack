@@ -77,7 +77,7 @@ export default function Header() {
                             aria-haspopup="true"
                             onClick={handleSidebarOpen}
                             color="inherit"
-                            sx={{pl: 0}}
+                            sx={{ml: -1}}
                         >
                             <MenuOutlinedIcon />
                         </IconButton>
@@ -108,7 +108,7 @@ export default function Header() {
                                 aria-label="show 17 new notifications"
                                 aria-controls={menuId}
                                 color="inherit"
-                                sx={{pr: 0}}
+                                sx={{mr: -1}}
                                 onClick={handleMenuOpen}
                             >
                             <AccountCircle />
