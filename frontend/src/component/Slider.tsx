@@ -15,41 +15,62 @@ export default function Slider({images}: Readonly<Props>) {
 
   return (
     <Stack sx={{alignItems: 'center'}}>
+        <Box 
+            component={'div'} 
+            width={'100%'} 
+            height={'fit-content'} 
+            sx={
+                    {
+                        boxShadow: '0px 1px 3px rgba(0,0,0,0.2), 0px 1px 1px rgba(0,0,0,0.14), 0px 2px 1px rgba(0,0,0,0.12)', 
+                        mb: 4,
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }
+                }
+            >
             <Box component={'div'} 
                 sx={{
-                        width: {sm: '100%', md: '80%', lg: '70%'}, 
+                        width: {sm: '100%', md: '80%', lg: '80%'}, 
                         height: '400px', 
                         backgroundImage: `url(${images[currentIndex]})`, 
                         backgroundRepeat: 'no-repeat', 
                         backgroundPosition: 'center', 
-                        backgroundSize: 'cover',
-                        mb: 4
+                        backgroundSize: 'cover', 
+                                    // boxShadow: '0px 1px 3px rgba(0,0,0,0.2), 0px 1px 1px rgba(0,0,0,0.14), 0px 2px 1px rgba(0,0,0,0.12)',
+                        // mb: 4
                     }} 
             />
-            <Stack direction="row" sx={{justifyContent: 'center'}} spacing={2}>
-                {!!images.length && images.map((image, index) => {
-                    return (
-                        <Button
-                            key={image + '_' + index} 
-                            onClick={() => {setCurrentIndex(index)}} 
-                            sx={
-                                {
-                                    borderRadius: '50%', 
-                                    border: '1px solid #d7b86f',
-                                    '&:hover': {backgroundColor: 'rgba(215, 184, 111, 0.1)'}
+        </Box>
+        <Stack direction="row" sx={{justifyContent: 'center'}} spacing={2}>
+            {!!images.length && images.map((image, index) => {
+                return (
+                    <Button
+                        key={image + '_' + index} 
+                        onClick={() => {setCurrentIndex(index)}} 
+                        sx={
+                            {
+                                borderRadius: '50%', 
+                                boxShadow: '0px 1px 3px rgba(0,0,0,0.2), 0px 1px 1px rgba(0,0,0,0.14), 0px 2px 1px rgba(0,0,0,0.12)',
+                                // border: '1px solid #d7b86f',
+                                '&:hover': {transform: 'scale(110%)'},
+                                '&': {
+                                    minWidth: 'fit-content',
+                                    minHeight: 'fit-content',
+                                    padding: 0
                                 }
                             }
-                            disableRipple
-                        >
-                            <AvatarCaption 
-                                name={image} 
-                                image={image} 
-                                size={'4rem'} 
-                            />
-                        </Button>
-                    )
-                })}
-            </Stack>
+                        }
+                        disableRipple
+                    >
+                        <AvatarCaption 
+                            name={image} 
+                            image={image} 
+                            size={'3.25rem'} 
+                        />
+                    </Button>
+                )
+            })}
+        </Stack>
     </Stack>
   );
 }
