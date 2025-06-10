@@ -32,8 +32,10 @@ export default function Header() {
     // const isMobileMenuOpen = Boolean(mobileAnchorEl);
     const menuId = 'primary-search-account-menu';
     // const mobileMenuId = 'primary-search-account-menu-mobile';
-    const cart = useContext(CartContext);
     const navigate = useNavigate();
+    const context = useContext(CartContext);
+    if (!context) throw new Error("CartContext must be used within a CartProvider");
+    const {cart} = context;
 
     const onSidebarOpen = useCallback(() => {
         setSidebarAnchorEl(null);
@@ -98,7 +100,7 @@ export default function Header() {
                                 color="inherit" 
                                 onClick={() => navigate('/cart')}
                             >
-                            <Badge badgeContent={cart.length} color="error">
+                            <Badge badgeContent={cart?.length ?? 0} color="error">
                                 <ShoppingCartOutlinedIcon />
                             </Badge>
                             </IconButton>
