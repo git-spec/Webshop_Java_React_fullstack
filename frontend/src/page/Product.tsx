@@ -70,9 +70,6 @@ export default function Product({addToCart}: Readonly<Props>) {
         selColor && (cartEntry.color = selColor);
         amount && (cartEntry.amount = +amount);
         addToCart(cartEntry);
-
-        console.log(cartEntry);
-        
     }
 
     return (
@@ -154,7 +151,7 @@ export default function Product({addToCart}: Readonly<Props>) {
                             sx={{width: '3.5rem'}} 
                             slotProps={{
                                 htmlInput: {
-                                    sx: { px: '.4rem', py: '.25rem' },
+                                    sx: {px: '.4rem', py: '.25rem', fontWeight: 300},
                                     min: 0,
                                     max: 99
                                 }
@@ -168,12 +165,13 @@ export default function Product({addToCart}: Readonly<Props>) {
                     <PragraphContainer>
                         <Details 
                             name={'Gesamt'} 
-                            value={<Price value={total ?? 0} currency={product?.currency ?? ''} justify={'end'} underline={true} />}
+                            value={<Price value={total ?? 0} currency={product?.currency ?? ''} justify={'end'} fontWeight={500} />}
+                            fontWeight={500}
                         />
                     </PragraphContainer>
                     {/* Action */}
                     <Stack>
-                        {product && <ButtonAction value={'Zum Warenkorb'} color="success" click={() => handleCart(product)} />}
+                        {product && <ButtonAction value={'in den Warenkorb'} color="success" click={() => handleCart(product)} />}
                     </Stack>
                 </Grid>
                 {/* Description */}
