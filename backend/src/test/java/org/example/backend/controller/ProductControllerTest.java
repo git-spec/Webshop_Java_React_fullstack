@@ -64,7 +64,7 @@ public class ProductControllerTest {
                         new Dimension(width, length, height),
                         new Measure(10, Unit.KG),
                         List.of(Material.OAK, Material.ASH),
-                        List.of(Color.OAK, Color.ASH, Color.BLACK)
+                        List.of("oak", "ash", "black")
                     );        
     Product prod1 = 
             Product.builder()

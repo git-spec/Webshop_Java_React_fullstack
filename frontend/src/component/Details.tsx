@@ -6,18 +6,30 @@ type Props = {
     name: string;
     value?: number | string | ReactNode;
     unit?: string;
+    direction?: 'row' | 'column';
+    fontWeight?: number;
 };
 
 
-export default function Details({name, value, unit}: Readonly<Props>) {
+export default function Details({name, value, unit, direction, fontWeight}: Readonly<Props>) {
 
     return (
-        <Stack direction={'row'} sx={{justifyContent: 'space-between', alignItems: 'center', mb: '.25rem'}}>
-            <Typography component={'span'} sx={{fontWeight: 300, mb: 0}} gutterBottom>{name}</Typography>
+        <Stack 
+            flexDirection={`${direction ?? 'row'}`} 
+            sx={
+                {
+                    height: `${direction ? '100%' : 'auto'}`,
+                    justifyContent: 'space-between', 
+                    alignItems: `${direction ? 'space-between' : 'center'}`, 
+                    mb: '.25rem'
+                }
+            }
+        >
+            <Typography component={'span'} sx={{fontWeight: `${fontWeight ?? 300}`, mb: 0}} gutterBottom>{name}</Typography>
                 <div>
                     {
                         typeof value === 'number' || typeof value === 'string' ? 
-                            <Typography component={'span'} sx={{fontWeight: 300}} gutterBottom>{value}</Typography> 
+                            <Typography component={'span'} sx={{fontWeight: `${fontWeight ?? 300}`}} gutterBottom>{value}</Typography> 
                         : 
                             value
                     }

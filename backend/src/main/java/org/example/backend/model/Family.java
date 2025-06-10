@@ -8,7 +8,8 @@ public enum Family {
   CHAIR("Chair"),
   STOOL( "Stool"),
   SOFA("Sofa"),
-  COUCH("Couch");
+  COUCH("Couch"),
+  TABLE("Table");
 
   private final String value;
 

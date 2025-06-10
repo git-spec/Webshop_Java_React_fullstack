@@ -7,7 +7,7 @@ import CardHeader from "@mui/material/CardHeader";
 
 import {Link} from "react-router-dom";
 import type { ReactNode } from "react";
-import { Fragment } from "react";
+import Grid from "@mui/material/Grid";
 
 type Props = {
     header?: ReactNode;
@@ -26,21 +26,29 @@ type Props = {
 
 function CardMain({header, media, content, actions, actionAreaPath, state}: Readonly<Props>) {
     const template = 
-        <Fragment>
-            {header && <CardHeader>{header}</CardHeader>}
-            {media && <CardMedia component={'img'} alt={media.name} image={media.path} />}
-            <CardContent>
-                {content}
-            </CardContent>
-        </Fragment>
+        <Grid container columns={1} flexDirection={"column"} spacing={0} height={'100%'} justifyContent={'top'}>
+            <Grid>
+                {header && <CardHeader>{header}</CardHeader>}
+                {media && <CardMedia component={'img'} alt={media.name} image={media.path} />}
+            </Grid>
+            <Grid flexDirection={"column"} justifyContent={'space-between'} flexGrow={1}>
+                <CardContent sx={{'&:last-child': {py: 1}, height: '100%'}}>
+                    {content}
+                </CardContent>
+            </Grid>
+        </Grid>
     ;
 
     return (
         <>
-            <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}}}>
+            <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}, minHeight: '20rem'}}>
                 {actionAreaPath ? 
-                        <CardActionArea>
-                            <Link to={actionAreaPath} state={{state}} style={{textDecoration: 'none'}}>
+                        <CardActionArea sx={{height: '100%'}}>
+                            <Link 
+                                to={actionAreaPath} 
+                                state={state} 
+                                style={{textDecoration: 'none', display: 'block', height: 'inherit'}}
+                            >
                             {template}
                             </Link>
                         </CardActionArea>
