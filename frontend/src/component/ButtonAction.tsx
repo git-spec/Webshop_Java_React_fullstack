@@ -9,6 +9,7 @@ type Props = {
     disableRipple?: boolean; 
     click?: () => void;
     href?: string;
+    fitContent?: boolean;
 };
 
 export default function ButtonAction(props: Readonly<Props>) {
@@ -22,14 +23,26 @@ export default function ButtonAction(props: Readonly<Props>) {
                         variant={props.variant ?? 'outlined'} 
                         size="small" 
                         color={props.color} 
-                        sx={{fontFamily: 'SourceSans3'}} 
+                        sx={
+                            {
+                                fontFamily: 'SourceSans3',
+                                 minWidth: `${props.fitContent ? 'fit-content' : '100%'}`
+                            }
+                        } 
                         onClick={props.click}
                         disableRipple={props.disableRipple ?? false}
                     >
                         {props.value}
                     </Button>
             }
-            {props.href && <Button variant={props.variant ?? 'outlined'} size="small" sx={{fontFamily: 'SourceSans3'}} href={props.href}>{props.value}</Button>}
+            {
+                props.href && 
+                    <Button 
+                        variant={props.variant ?? 'outlined'} 
+                        size="small" sx={{fontFamily: 'SourceSans3'}} 
+                        href={props.href}>{props.value}
+                    </Button>
+            }
         </>
     );
 }
