@@ -8,10 +8,12 @@ type Props = {
     unit?: string;
     direction?: 'row' | 'column';
     fontWeight?: number;
+    fontSize?: string;
+    fontStyle?: string;
 };
 
 
-export default function Details({name, value, unit, direction, fontWeight}: Readonly<Props>) {
+export default function Details({name, value, unit, direction, fontWeight, fontSize, fontStyle}: Readonly<Props>) {
 
     return (
         <Stack 
@@ -25,7 +27,20 @@ export default function Details({name, value, unit, direction, fontWeight}: Read
                 }
             }
         >
-            <Typography component={'span'} sx={{fontWeight: `${fontWeight ?? 300}`, mb: 0}} gutterBottom>{name}</Typography>
+            <Typography 
+                component={'span'} 
+                sx={
+                        {
+                            fontWeight: `${fontWeight ?? 300}`, 
+                            fontSize: `${fontSize ?? 'inherit'}`,
+                            fontStyle: `${fontStyle ?? 'inherit'}`,
+                            mb: 0
+                        }
+                    } 
+                gutterBottom
+            >
+                {name}
+            </Typography>
                 <div>
                     {
                         typeof value === 'number' || typeof value === 'string' ? 
