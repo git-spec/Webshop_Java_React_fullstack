@@ -10,6 +10,7 @@ type Props = {
     click?: () => void;
     href?: string;
     fitContent?: boolean;
+    type?: "button" | "submit" | "reset";
 };
 
 export default function ButtonAction(props: Readonly<Props>) {
@@ -17,8 +18,9 @@ export default function ButtonAction(props: Readonly<Props>) {
     return (
         <>
             {
-                props.click && 
+                !props.href ? 
                     <Button 
+                        type={props.type ?? 'button'}
                         key={props.key ?? ''}
                         variant={props.variant ?? 'outlined'} 
                         size="small" 
@@ -34,13 +36,13 @@ export default function ButtonAction(props: Readonly<Props>) {
                     >
                         {props.value}
                     </Button>
-            }
-            {
-                props.href && 
+                :
                     <Button 
                         variant={props.variant ?? 'outlined'} 
                         size="small" sx={{fontFamily: 'SourceSans3'}} 
-                        href={props.href}>{props.value}
+                        href={props.href}
+                    >
+                        {props.value}
                     </Button>
             }
         </>

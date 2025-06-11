@@ -9,6 +9,7 @@ import CardCart from "@/component/card/CardCart";
 import LayoutContainer from "@/component/share/LayoutContainer";
 import Grid from "@mui/material/Grid";
 import Order from "@/component/share/Order";
+import ButtonAction from "@/component/ButtonAction";
 
 
 export default function Cart() {
@@ -44,7 +45,7 @@ export default function Cart() {
         <LayoutContainer>
                     {
                         cart.length > 0 ? 
-                            <Grid container spacing={3}>
+                            <Grid container spacing={4}>
                                 <Grid size={8}>
                                     <Typography 
                                         variant="h2" 
@@ -77,8 +78,13 @@ export default function Cart() {
                                         ) 
                                     }
                                 </Grid>
-                                <Grid size={4}>
-                                    <Order orders={cart} onAction={() => {navigate('/checkout', {state: cart})}} checkout={false} />
+                                <Grid container size={4} rowSpacing={0}>  
+                                    <Grid size={12}>             
+                                        <Order orders={cart} checkout={false} />
+                                    </Grid> 
+                                    <Grid size={12}>
+                                        <ButtonAction value={'zur Kasse'} color="success" click={() => {navigate('/checkout', {state: cart})}} />
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         : 
