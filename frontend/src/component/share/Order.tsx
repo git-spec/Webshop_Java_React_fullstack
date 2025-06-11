@@ -3,19 +3,21 @@ import Typography from "@mui/material/Typography";
 import type { ICart } from "@/interface/ICart";
 import Details from "../Details";
 import Price from "../Price";
-import ButtonAction from "../ButtonAction";
 
 type Props = {
     orders: ICart[];
     checkout: boolean;
-    onAction: () => void;
 };
 
-export default function Order({orders, checkout, onAction}: Readonly<Props>) {
+export default function Order({orders, checkout}: Readonly<Props>) {
     const tax = 19;
 
     const getSumOfOrders = () => {
-    return orders.reduce((acc, obj) => acc + obj.amount * obj.price, 0);
+    if (orders) {
+        return orders.reduce((acc, obj) => acc + obj.amount * obj.price, 0);
+    } else {
+        return 0;
+    }
 }
 
     return (
@@ -30,7 +32,7 @@ export default function Order({orders, checkout, onAction}: Readonly<Props>) {
                {checkout ? 'Bestellung' : 'Bestellübersicht'}
             </Typography>
             {
-                orders.map(
+                orders?.map(
                     order => 
                         <Details 
                             key={order.id}
@@ -51,7 +53,7 @@ export default function Order({orders, checkout, onAction}: Readonly<Props>) {
                     value={
                         <Price 
                             value={getSumOfOrders() / 100 * tax} 
-                            currency={orders[0].currency} 
+                            currency={orders && orders[0].currency} 
                             justify={'end'} 
                             fontSize={'.8rem'}
                         />
@@ -64,15 +66,13 @@ export default function Order({orders, checkout, onAction}: Readonly<Props>) {
                 value={
                     <Price 
                         value={getSumOfOrders()} 
-                        currency={orders[0].currency} 
+                        currency={orders && orders[0].currency} 
                         justify={'end'} 
                         fontWeight={500}
                     />
                 } 
                 fontWeight={500}
             />
-            <br />
-            <ButtonAction value={checkout ? 'kaufen' : 'zur Kasse'} color="success" fitContent={false} click={onAction}  />
         </>
     );
 }
