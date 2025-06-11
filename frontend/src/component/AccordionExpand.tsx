@@ -64,7 +64,7 @@ export default function AccordionExpand({sumary, Component}: Readonly<Props>) {
             aria-controls="panel1-content"
             id="panel1-header"
             >
-            <Typography component="span">{sumary}</Typography>
+            <Typography component="span" fontFamily={'SourceSans3'} fontWeight={500} fontSize={'1.5rem'}>{sumary}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 {handleComponentType(Component)}
