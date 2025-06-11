@@ -78,8 +78,8 @@ export default function Cart() {
                                         ) 
                                     }
                                 </Grid>
-                                <Grid container size={4} rowSpacing={0}>  
-                                    <Grid size={12}>             
+                                <Grid size={4}>  
+                                    <Grid size={12} sx={{mb: 2}}>             
                                         <Order orders={cart} checkout={false} />
                                     </Grid> 
                                     <Grid size={12}>

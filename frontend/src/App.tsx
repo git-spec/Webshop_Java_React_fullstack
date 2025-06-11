@@ -9,6 +9,7 @@ import Home from "./page/Home.tsx";
 import Product from "./page/Product.tsx";
 import Cart from "./page/Cart.tsx";
 import type { CartContextType } from "./type/CartContextType.tsx";
+import Checkout from "./page/Checkout.tsx";
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -66,6 +67,7 @@ export default function App() {
             <Route path={'/products/:category/:group'} element={<Products />} />
             <Route path="/product/:id" element={<Product addToCart={handleCart} />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/" element={<Home />} />
           </Route>
         </Routes>
