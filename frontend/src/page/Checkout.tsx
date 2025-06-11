@@ -1,7 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 
-import type { ICart } from "@/interface/ICart";
 import Order from "@/component/share/Order";
 import LayoutContainer from '@/component/share/LayoutContainer';
 import AccordionExpand from '@/component/AccordionExpand';
@@ -15,7 +14,9 @@ import PayPal from '@/component/PayPal';
 export default function Checkout() {
     const location = useLocation();
     
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {};
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    };
 
     const Accs = [
         {

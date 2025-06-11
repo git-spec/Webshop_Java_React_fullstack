@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "axios";
+
+type Props = {
+    content: string;
+};
 
 // Renders errors or successfull transactions on the screen.
-function Message({ content }) {
+function Message({ content }: Readonly<Props>) {
     return <p>{content}</p>;
 }
 
 export default function PayPal() {
     const initialOptions = {
-        "client-id": "test",
+        "clientId": "test",
         "enable-funding": "venmo",
         "disable-funding": "",
         "buyer-country": "US",
@@ -32,7 +37,7 @@ export default function PayPal() {
                     }}
                    createOrder={async () => {
                         try {
-                            const response = await fetch("/api/orders", {
+                            const response = await axios.post("/api/orders", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -49,7 +54,7 @@ export default function PayPal() {
                                 }),
                             });
 
-                            const orderData = await response.json();
+                            const orderData = await response.data.json();
 
                             if (orderData.id) {
                                 return orderData.id;
@@ -70,7 +75,7 @@ export default function PayPal() {
                     }}
                    onApprove={async (data, actions) => {
                         try {
-                            const response = await fetch(
+                            const response = await axios.post(
                                 `/api/orders/${data.orderID}/capture`,
                                 {
                                     method: "POST",
@@ -80,7 +85,7 @@ export default function PayPal() {
                                 }
                             );
 
-                            const orderData = await response.json();
+                            const orderData = await response.data.json();
                             // Three cases to handle:
                             //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
                             //   (2) Other non-recoverable errors -> Show a failure message
