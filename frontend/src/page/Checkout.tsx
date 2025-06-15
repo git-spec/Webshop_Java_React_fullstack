@@ -9,14 +9,14 @@ import { useState, type FormEvent } from 'react';
 import TextField from '@mui/material/TextField';
 import ButtonAction from '@/component/ButtonAction';
 import PayPal from '@/component/PayPal';
-import type { ICart } from '@/interface/ICart';
+import type { IOrder } from '@/interface/IOrder';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
 
 
 export default function Checkout() {
     const location = useLocation();
-    const cart: ICart[] = location.state;
+    const cart: IOrder[] = location.state;
     const [orderCompleted, setOrderCompleted] = useState<boolean>();
 
     /**
@@ -26,9 +26,10 @@ export default function Checkout() {
     const handleOrder = (paypalOrder: any) => {
         const body = {
             cart: cart.map(
-                        (item: ICart) => {
+                        (item: IOrder) => {
                             return {
-                                productID: item.id,
+                                productID: item.productID,
+                                color: item.color,
                                 amount: item.amount,
                                 price: item.price
                             }

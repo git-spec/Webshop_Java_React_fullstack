@@ -3,7 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import type { OnApproveData , OnApproveActions } from "@paypal/paypal-js";
 
-import type { ICart } from "@/interface/ICart";
+import type { IOrder } from "@/interface/IOrder";
 
 type Message = {
     content: string;
@@ -15,7 +15,7 @@ function Message({ content }: Readonly<Message>) {
 }
 
 type Props = {
-    cart: ICart[];
+    cart: IOrder[];
     onOrder: (paypalOrder: any) => void; 
 };
 
@@ -56,8 +56,8 @@ export default function PayPal({cart, onOrder}: Readonly<Props>) {
                                 body: JSON.stringify({
                                     cart: cart.map(item => {
                                         return {
-                                            id: item.id,
-                                            quantity: `${item.amount}.00`
+                                            id: item.productID,
+                                            quantity: item.amount
                                         }
                                     })
                                 }),
