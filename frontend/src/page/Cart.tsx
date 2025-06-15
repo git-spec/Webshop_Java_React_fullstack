@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 
 import { CartContext } from "@/App";
-import type { ICart } from "@/interface/ICart";
+import type { IOrder } from "@/interface/IOrder";
 import CardContentCart from "@/component/card/CardContentCart";
 import CardCart from "@/component/card/CardCart";
 import LayoutContainer from "@/component/share/LayoutContainer";
@@ -18,10 +18,10 @@ export default function Cart() {
     if (!context) throw new Error("CartContext must be used within a CartProvider");
     const {cart, updateCart} = context;
 
-    const addToCart = (order: ICart) => {
-        const existingItem = cart.find(item => item.id === order.id);
+    const addToCart = (order: IOrder) => {
+        const existingItem = cart.find(item => item.id === order.productID);
         const newCart = existingItem && cart.map(item => {
-            if (item.id === order.id) {
+            if (item.id === order.productID) {
                 item.amount = order.amount;
                 return item;
             } else {
@@ -32,10 +32,10 @@ export default function Cart() {
         newCart && newCart.length > 0 && updateCart(newCart);
     };
 
-    const deleteFromCart = (order: ICart) => {
-        const existingItem = cart.find(item => item.id === order.id);
+    const deleteFromCart = (order: IOrder) => {
+        const existingItem = cart.find(item => item.id === order.productID);
         const newCart = existingItem && cart.filter(item => {
-            if (item.id !== order.id) return item;
+            if (item.id !== order.productID) return item;
         })
         // Updates order in cart.
         newCart && updateCart(newCart);
@@ -58,14 +58,14 @@ export default function Cart() {
                                     </Typography>
                                     {
                                         cart.map(
-                                            (item: ICart) => {
+                                            (item: IOrder) => {
                                                 return (
                                                     <CardCart 
-                                                        key={item.id} 
+                                                        key={item.productID} 
                                                         media={
                                                             {
-                                                                name: item.name, 
-                                                                path: item.images.large[0]
+                                                                name: item.product.name, 
+                                                                path: item.product.images.large[0]
                                                             }
                                                         } 
                                                         content={<CardContentCart order={item} addOrder={addToCart} />} 

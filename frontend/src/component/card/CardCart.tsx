@@ -10,12 +10,12 @@ import Grid from "@mui/material/Grid";
 import ButtonAction from "../ButtonAction";
 import CardActionArea from "@mui/material/CardActionArea";
 import { Link } from "react-router-dom";
-import type { ICart } from "@/interface/ICart";
+import type { IOrder } from "@/interface/IOrder";
 
 type Props = {
     content: ReactNode;
-    state: ICart;
-    deleteOrder: (order: ICart) => void;
+    state: IOrder;
+    deleteOrder: (order: IOrder) => void;
     header?: ReactNode;
     media?:
         {
@@ -36,7 +36,7 @@ export default function CardCart({header, media, content, state, deleteOrder}: R
                             <Grid container columns={1} flexDirection={'row'} spacing={0} justifyContent={'top'}>
                                 <CardActionArea sx={{width: 'unset'}}>
                                     <Link 
-                                        to={`/product/${state?.id}`} 
+                                        to={`/product/${state?.productID}`} 
                                         state={state} 
                                         style={{textDecoration: 'none'}}
                                     >

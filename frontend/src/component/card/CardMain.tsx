@@ -6,7 +6,7 @@ import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
 
 import {Link} from "react-router-dom";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import Grid from "@mui/material/Grid";
 
 type Props = {
@@ -39,6 +39,11 @@ function CardMain({header, media, content, actions, actionAreaPath, state}: Read
         </Grid>
     ;
 
+    useEffect(() => {
+        console.log(state);
+        
+    }, []);
+
     return (
         <>
             <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}, minHeight: '20rem'}}>
@@ -46,7 +51,7 @@ function CardMain({header, media, content, actions, actionAreaPath, state}: Read
                         <CardActionArea sx={{height: '100%'}}>
                             <Link 
                                 to={actionAreaPath} 
-                                state={state} 
+                                state={{state}} 
                                 style={{textDecoration: 'none', display: 'block', height: 'inherit'}}
                             >
                             {template}

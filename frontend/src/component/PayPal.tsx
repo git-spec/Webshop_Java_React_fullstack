@@ -1,26 +1,35 @@
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
+import type { OnApproveData , OnApproveActions } from "@paypal/paypal-js";
 
-type Props = {
+import type { IOrder } from "@/interface/IOrder";
+
+type Message = {
     content: string;
 };
 
 // Renders errors or successfull transactions on the screen.
-function Message({ content }: Readonly<Props>) {
+function Message({ content }: Readonly<Message>) {
     return <p>{content}</p>;
 }
 
-export default function PayPal() {
+type Props = {
+    cart: IOrder[];
+    onOrder: (paypalOrder: any) => void; 
+};
+
+
+export default function PayPal({cart, onOrder}: Readonly<Props>) {
     const initialOptions = {
-        "clientId": "test",
-        "enable-funding": "venmo",
-        "disable-funding": "",
-        "buyer-country": "US",
+        clientId: `${import.meta.env.PAYPAL_CLIENT_ID}`,
+        enableFunding: "venmo",
+        disableFunding: "",
+        buyerCountry: "US",
         currency: "USD",
-        "data-page-type": "product-details",
+        dataPageType: "product-details",
         components: "buttons",
-        "data-sdk-integration-source": "developer-studio",
+        dataSdkIntegrationSource: "developer-studio",
     };
 
     const [message, setMessage] = useState("");
@@ -45,16 +54,16 @@ export default function PayPal() {
                                 // use the "body" param to optionally pass additional order information
                                 // like product ids and quantities
                                 body: JSON.stringify({
-                                    cart: [
-                                        {
-                                            id: "YOUR_PRODUCT_ID",
-                                            quantity: "YOUR_PRODUCT_QUANTITY",
-                                        },
-                                    ],
+                                    cart: cart.map(item => {
+                                        return {
+                                            id: item.productID,
+                                            quantity: item.amount
+                                        }
+                                    })
                                 }),
                             });
 
-                            const orderData = await response.data.json();
+                            const orderData = await response.data;
 
                             if (orderData.id) {
                                 return orderData.id;
@@ -73,57 +82,48 @@ export default function PayPal() {
                             );
                         }
                     }}
-                   onApprove={async (data, actions) => {
-                        try {
-                            const response = await axios.post(
-                                `/api/orders/${data.orderID}/capture`,
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
+                   onApprove={
+                        async (data: OnApproveData, actions: OnApproveActions) => {
+                            try {
+                                const response = await axios.post(
+                                    `/api/orders/${data.orderID}/capture`,
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        }
+                                    }
+                                );
+
+                                const orderData = await response.data;
+                                // Three cases to handle:
+                                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                                //   (2) Other non-recoverable errors -> Show a failure message
+                                //   (3) Successful transaction -> Show confirmation or thank you message
+
+                                const errorDetail = orderData?.details?.[0];
+
+                                if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
+                                    // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                                    // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
+                                    return actions.restart();
+                                } else if (errorDetail) {
+                                    // (2) Other non-recoverable errors -> Show a failure message
+                                    throw new Error(
+                                        `${errorDetail.description} (${orderData.debug_id})`
+                                    );
+                                } else {
+                                    // (3) Successful transaction -> Show confirmation or thank you message
+                                    // Or go to another URL:  actions.redirect('thank_you.html');
+                                    
+                                    // Gets paypal order for posting to db.
+                                    onOrder(orderData);
                                 }
-                            );
-
-                            const orderData = await response.data.json();
-                            // Three cases to handle:
-                            //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                            //   (2) Other non-recoverable errors -> Show a failure message
-                            //   (3) Successful transaction -> Show confirmation or thank you message
-
-                            const errorDetail = orderData?.details?.[0];
-
-                            if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                                // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                                // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                                return actions.restart();
-                            } else if (errorDetail) {
-                                // (2) Other non-recoverable errors -> Show a failure message
-                                throw new Error(
-                                    `${errorDetail.description} (${orderData.debug_id})`
-                                );
-                            } else {
-                                // (3) Successful transaction -> Show confirmation or thank you message
-                                // Or go to another URL:  actions.redirect('thank_you.html');
-                                const transaction =
-                                    orderData.purchase_units[0].payments
-                                        .captures[0];
-                                setMessage(
-                                    `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
-                                );
-                                console.log(
-                                    "Capture result",
-                                    orderData,
-                                    JSON.stringify(orderData, null, 2)
-                                );
+                            } catch (error) {
+                                console.error(`Sorry, your transaction could not be processed...${error}`);
                             }
-                        } catch (error) {
-                            console.error(error);
-                            setMessage(
-                                `Sorry, your transaction could not be processed...${error}`
-                            );
                         }
-                    }}
+                   }
                 />
             </PayPalScriptProvider>
             <Message content={message} />

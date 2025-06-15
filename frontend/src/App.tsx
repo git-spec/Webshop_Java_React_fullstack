@@ -2,7 +2,7 @@ import { createContext, useMemo, useState } from "react";
 import {Routes, Route} from "react-router-dom";
 
 import './App.css';
-import type { ICart } from "./interface/ICart.ts";
+import type { IOrder } from "./interface/IOrder.ts";
 import RootLayout from "./component/layout/RootLayout.tsx";
 import Products from "./page/Products.tsx";
 import Home from "./page/Home.tsx";
@@ -15,31 +15,31 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 
 
 export default function App() {
-  const [cart, setCart] = useState<ICart[]>([]);
+  const [cart, setCart] = useState<IOrder[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
 
-  const handleCart = (product: ICart) => {
-    const itemExsits = cart.find(article => article.id === product.id && article.color === product.color);
+  const handleCart = (order: IOrder) => {
+    const itemExsits = cart.find(article => article.productID === order.productID && article.color === order.color);
 
     if (itemExsits) {
       // Updates existing article to context.
-      itemExsits.amount += product.amount
+      itemExsits.amount += order.amount
       setCart(
         prevArr => prevArr.map(
-          item => item.id === product.id ? { ...prevArr, ...itemExsits } : item
+          item => item.productID === order.productID ? { ...prevArr, ...itemExsits } : item
         )
       );
     } else {
       // Adds new article to context.
-      setCart([...cart, product])
+      setCart([...cart, order])
     }
   }
 
-  const updateCart = (cart: ICart[]) => {
+  const updateCart = (cart: IOrder[]) => {
     setCart(cart)
   }
 
-  // const updateCart = (product: ICart) => {
+  // const updateCart = (product: IOrder) => {
   //   const itemExsits = cart.find(article => article.id === product.id && article.color === product.color);
 
   //   if (itemExsits) {

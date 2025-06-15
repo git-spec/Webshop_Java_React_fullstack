@@ -39,8 +39,8 @@ jobs:
           path: backend/src/main/resources/static
 
       - name: Setup JDK
-      -  uses: actions/setup-java@v4
-         with:
+        uses: actions/setup-java@v4
+        with:
             java-version: "21"
             distribution: "temurin"
             cache: "maven"

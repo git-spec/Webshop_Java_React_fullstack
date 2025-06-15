@@ -8,15 +8,14 @@ import java.time.Instant;
 import org.example.backend.exception.WithPathInterface;
 
 
+@With
 public record ErrorDTO(
         String error,
         String cause,
         String causeMessage,
         String message,
         String timestamp,
-        @With
         String status,
-        @With
         String path // An optional path to connect this error message to a form field.
 ) {
     /**

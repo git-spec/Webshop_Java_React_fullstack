@@ -6,10 +6,11 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 
-import type { ICart } from "@/interface/ICart";
+import type { IOrder } from "@/interface/IOrder";
+import type { IProduct } from "@/interface/IProduct";
 import {colorItems} from "@data/colorData.ts";
-import LayoutContainer from "@/component/share/LayoutContainer";
 import { getMajuscule, getUnitIcon } from "@/util";
+import LayoutContainer from "@/component/share/LayoutContainer";
 import Details from "@/component/Details";
 import Price from "@/component/Price";
 import PragraphContainer from "@/component/ParagraphContainer";
@@ -18,16 +19,16 @@ import ButtonAction from "@/component/ButtonAction";
 import Slider from "@/component/Slider";
 
 type Props = {
-    addToCart: (product: ICart) => void;
+    addToCart: (product: IOrder) => void;
 };
 
 
 export default function Product({addToCart}: Readonly<Props>) {
     const id = useParams();
     const path = '/api/product/';
-    const [product, setProduct] = useState<ICart>();
+    const [product, setProduct] = useState<IProduct>();
     const location = useLocation();
-    const stateProduct: ICart = location.state?.product as ICart;
+    const stateProduct: IProduct = location.state.state;
     const [selColor, setSelColor] = useState<string>();
     const [amount, setAmount] = useState<string>('0');
     const [total, setTotal] = useState<number>();
@@ -47,7 +48,7 @@ export default function Product({addToCart}: Readonly<Props>) {
     const getProduct = (id: Readonly<Params<string>>) => {
         axios.get(path + id.id).then(res => 
             {
-                const product = res.data as ICart;
+                const product = res.data;
                 // Sets first color selected.
                 setSelColor(product.features.colors[0]);
                 // Sets product.
@@ -66,9 +67,14 @@ export default function Product({addToCart}: Readonly<Props>) {
         setSelColor(color);
     };
 
-    const handleCart = (cartEntry: ICart) => {
-        selColor && (cartEntry.color = selColor);
-        amount && (cartEntry.amount = +amount);
+    const handleCart = (product: IProduct) => {
+        const cartEntry: IOrder = {
+            productID: product.id,
+            color: selColor ?? '',
+            amount: +amount,
+            price: product.price,
+            product: product
+        };
         addToCart(cartEntry);
     }
 
