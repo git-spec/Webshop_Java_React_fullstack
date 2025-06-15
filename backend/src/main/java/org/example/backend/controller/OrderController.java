@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.example.backend.exception.BadRequestException;
+import org.example.backend.exception.NotFoundException;
+import org.example.backend.model.OrderCompleted;
+import org.example.backend.model.dto.AuthorizeOrderDTO;
+import org.example.backend.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,22 +40,27 @@ import com.paypal.sdk.models.PurchaseUnitRequest;
 public class OrderController {
     private final ObjectMapper objectMapper;
     private final PaypalServerSdkClient client;
+    private final OrderService orderService;
 
-    public OrderController(ObjectMapper objectMapper, PaypalServerSdkClient client) {
+    private static final String BAD_REQUEST_MESSAGE_FORMAT = "Anfrage ist nicht korrekt.";
+
+    public OrderController(ObjectMapper objectMapper, PaypalServerSdkClient client, OrderService orderService) {
         this.objectMapper = objectMapper;
         this.client = client;
+        this.orderService = orderService;
     }
 
 		    
    @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Order> createOrder(@RequestBody Map<String, Object> request) throws BadRequestException {
         try {
             String cart = objectMapper.writeValueAsString(request.get("cart"));
             Order response = createOrder(cart);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT, e);
         }
     }
 
@@ -63,14 +73,14 @@ public class OrderController {
                new PurchaseUnitRequest.Builder(
                        new AmountWithBreakdown.Builder(
                            "USD",
-                           "100"
+                           "1"
                        )
                        .breakdown(
                            new AmountBreakdown.Builder()
                            .itemTotal(
                                new Money(
                                    "USD",
-                                   "100"
+                                   "1"
                                )
                            ).build()
                        )
@@ -81,7 +91,7 @@ public class OrderController {
                        Arrays.asList(
                            new Item.Builder(
                                "T-Shirt",
-                               new Money.Builder("USD","100").build(),
+                               new Money.Builder("USD","1").build(),
                                "1"
                            )
                            .description("Super Fresh Shirt")
@@ -103,24 +113,30 @@ public class OrderController {
        return apiResponse.getResult();
     }   
 		    
-   @PostMapping("/api/orders/{orderID}/capture")
-            public ResponseEntity<Order> captureOrder(@PathVariable String orderID) {
-                try {
-                    Order response = captureOrders(orderID);
-                    return new ResponseEntity<>(response, HttpStatus.OK);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
+   @PostMapping("/orders/{orderID}/capture")
+    public ResponseEntity<Order> captureOrder(@PathVariable String orderID) throws BadRequestException {
 
-            private Order captureOrders(String orderID) throws IOException, ApiException {
-                CaptureOrderInput ordersCaptureInput = new CaptureOrderInput.Builder(
-                        orderID,
-                        null)
-                        .build();
-                OrdersController ordersController = client.getOrdersController();
-                ApiResponse<Order> apiResponse = ordersController.captureOrder(ordersCaptureInput);
-                return apiResponse.getResult();
-            }
+        try {
+            Order response = captureOrders(orderID);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT, e);
+        }
+    }
+
+    private Order captureOrders(String orderID) throws IOException, ApiException {
+        CaptureOrderInput ordersCaptureInput = new CaptureOrderInput.Builder(
+                orderID,
+                null)
+                .build();
+        OrdersController ordersController = client.getOrdersController();
+        ApiResponse<Order> apiResponse = ordersController.captureOrder(ordersCaptureInput);
+        return apiResponse.getResult();
+    }
+		    
+   @PostMapping("/orders/completed")
+    public ResponseEntity<HttpStatus> addOrder(@RequestBody OrderCompleted request) throws BadRequestException {
+        return orderService.addOrder(request);
+    }
 }
