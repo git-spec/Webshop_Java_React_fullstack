@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.OrderCompleted;
-import org.example.backend.model.dto.AuthorizeOrderDTO;
 import org.example.backend.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
