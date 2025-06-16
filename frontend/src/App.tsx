@@ -23,7 +23,7 @@ export default function App() {
   const [user, setUser] = useState<string | undefined | null>(undefined);
 
   useEffect(() => {
-      loadeUser();
+      loadUser();
   }, []);
 
   const handleCart = (product: ICart) => {
@@ -65,7 +65,7 @@ export default function App() {
       window.open(host + '/logout', '_self')
   }
 
-  const loadeUser = () => {
+  const loadUser = () => {
       axios
           .get('/api/auth').then(res => setUser(res.data))
           .catch(err => setUser(null));
