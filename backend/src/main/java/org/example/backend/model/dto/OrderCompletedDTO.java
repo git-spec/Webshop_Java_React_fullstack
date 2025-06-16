@@ -1,4 +1,4 @@
-package org.example.backend.model;
+package org.example.backend.model.dto;
 
 import java.util.List;
 import java.util.Map;

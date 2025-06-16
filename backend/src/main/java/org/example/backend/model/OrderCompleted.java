@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("orders")
 public record OrderCompleted(
-    String id,
+    String d,
     List<Article> cart,
     Map<String, Object> paypal
 ) {
