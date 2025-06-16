@@ -20,10 +20,13 @@ import {CartContext} from "@/App";
 import ListNested from "../share/list/ListNested";
 import { headerTheme } from "@/theme/headerTheme";
 
-// const theme
+type Props = {
+    onLogin: () => void;
+    onLogout: () => void;
+};
 
 
-export default function Header() {
+export default function Header(props: Readonly<Props>) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     // const [mobileAnchorEl, setMobileAnchorEl] = useState<null | HTMLElement>(null);
     const [sidebarAnchorEl, setSidebarAnchorEl] = useState<null | HTMLElement>(null);
@@ -132,7 +135,7 @@ export default function Header() {
                 </LayoutContainer>
             </AppBar>
             {/* Menu for Account */}
-            <DefaultMenu id={menuId} anchorEl={anchorEl} onClose={handleMenuClose} />
+            <DefaultMenu id={menuId} anchorEl={anchorEl} onClose={handleMenuClose} onLogin={props.onLogin} onLogout={props.onLogout} />
         </ThemeProvider>
     );
 }
