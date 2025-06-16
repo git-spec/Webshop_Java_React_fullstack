@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -89,6 +90,7 @@ public class ProductControllerTest {
                 .build();
 
     @Test
+    @WithMockUser
     void getProducts_shouldReturnListOfProduct_whenIsCalled() throws Exception {
         // GIVEN
         prod1Repo.save(prod1);
@@ -100,6 +102,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws Exception {
         // GIVEN
         prod1Repo.save(prod1);
@@ -111,6 +114,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategory_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}", "invalid"))
@@ -121,6 +125,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws Exception {
         // GIVEN
         prod1Repo.save(prod1);
@@ -132,6 +137,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategoryAndGroup_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
@@ -143,6 +149,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfGroup_whenGetGroup() throws Exception {
         // GIVEN
         prod1Repo.save(prod1);
@@ -154,6 +161,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductsByCategoryAndGroupAndFamily_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
@@ -165,6 +173,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductByID_shouldReturnProduct_whenGetID() throws Exception {
         // GIVEN
         prod1Repo.save(prod1);
@@ -176,6 +185,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getProductByID_shouldReturnEmptyOptional_whenGetInvalidID() throws Exception {
         // GIVEN
         Optional<Object> expected = Optional.empty();
