@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-@Repository("orders")
+@Repository
 public interface OrderRepo extends MongoRepository<OrderCompleted, String> {
 }

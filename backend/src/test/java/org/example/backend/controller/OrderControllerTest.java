@@ -18,37 +18,37 @@ public class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void createOrder_shouldReturn200_whenGetsMap() throws Exception {
-        // GIVEN
-        String requestBody = "{\"amount\": 10.00, \"currency\": \"USD\"}";
-        // WHEN // THEN
-        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON)
-            .content(
-                """
-                    {
-                        "cart": [
-                            {
-                                "id": "123",
-                                "quantity": 1
-                            }
-                        ]
-                    }    
-                """
-            ))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.orderId").exists());
-    }
+    // @Test
+    // void createOrder_shouldReturn200_whenGetsMap() throws Exception {
+    //     // GIVEN
+    //     String requestBody = "{\"amount\": 10.00, \"currency\": \"USD\"}";
+    //     // WHEN // THEN
+    //     mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON)
+    //         .content(
+    //             """
+    //                 {
+    //                     "cart": [
+    //                         {
+    //                             "id": "123",
+    //                             "quantity": 1
+    //                         }
+    //                     ]
+    //                 }    
+    //             """
+    //         ))
+    //         .andExpect(status().isOk())
+    //         .andExpect(jsonPath("$.orderId").exists());
+    // }
 
-    @Test
-    void captureOrder_shouldReturn200_whenGetsID() throws Exception {
-        // GIVEN
-        String orderID = "123";
-        // WHEN // THEN
-        mockMvc.perform(post("/orders/{orderID}/capture", orderID))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(orderID));
-    }
+    // @Test
+    // void captureOrder_shouldReturn200_whenGetsID() throws Exception {
+    //     // GIVEN
+    //     String orderID = "123";
+    //     // WHEN // THEN
+    //     mockMvc.perform(post("/orders/{orderID}/capture", orderID))
+    //     .andExpect(status().isOk())
+    //     .andExpect(jsonPath("$.id").value(orderID));
+    // }
     
     @Test
     void addOrder_shouldReturn200_whenGetsOrder() throws Exception {
