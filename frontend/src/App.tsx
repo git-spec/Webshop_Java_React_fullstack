@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import {Routes, Route} from "react-router-dom";
 
 import './App.css';
@@ -10,6 +10,9 @@ import Product from "./page/Product.tsx";
 import Cart from "./page/Cart.tsx";
 import type { CartContextType } from "./type/CartContextType.tsx";
 import Checkout from "./page/Checkout.tsx";
+import Dashboard from "./page/Dashboard.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
+import axios from "axios";
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -17,6 +20,11 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 export default function App() {
   const [cart, setCart] = useState<ICart[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
+  const [user, setUser] = useState<string | undefined | null>(undefined);
+
+  useEffect(() => {
+      loadeUser();
+  }, []);
 
   const handleCart = (product: ICart) => {
     const itemExsits = cart.find(article => article.id === product.id && article.color === product.color);
@@ -38,6 +46,30 @@ export default function App() {
   const updateCart = (cart: ICart[]) => {
     setCart(cart)
   }
+
+  function login() {
+      const host: string = window.location.host === 'localhost:5173'
+            ? 
+              'http://localhost:8080' 
+          :   window.location.origin
+      ;
+      window.open(host + '/oauth2/authorization/google', '_self')
+  }
+
+  function logout() {
+      const host: string = window.location.host === 'localhost:5173'
+            ? 
+              'http://localhost:8080' 
+          :   window.location.origin
+      ;
+      window.open(host + '/logout', '_self')
+  }
+
+  const loadeUser = () => {
+      axios
+          .get('/api/auth').then(res => setUser(res.data))
+          .catch(err => setUser(null));
+  } 
 
   // const updateCart = (product: ICart) => {
   //   const itemExsits = cart.find(article => article.id === product.id && article.color === product.color);
@@ -62,13 +94,16 @@ export default function App() {
       <CartContext.Provider value={contextValue}>
         <Routes>
           {/*APP RootLayout*/}
-          <Route element={<RootLayout />}>
+          <Route element={<RootLayout onLogin={login} onLogout={logout} />}>
             <Route path={'/products/:category/:group/:family'} element={<Products />} />
             <Route path={'/products/:category/:group'} element={<Products />} />
             <Route path="/product/:id" element={<Product addToCart={handleCart} />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/" element={<Home />} />
+            <Route element={<ProtectedRoute user={user} />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
           </Route>
         </Routes>
       </CartContext.Provider>
