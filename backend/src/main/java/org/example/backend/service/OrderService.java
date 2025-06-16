@@ -1,7 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.model.OrderCompleted;
+import org.example.backend.model.dto.OrderCompletedDTO;
 import org.example.backend.repository.OrderRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class OrderService {
      * @param order
      * @throws BadRequestException 
      */
-    public ResponseEntity<HttpStatus> addOrder(OrderCompleted order) throws BadRequestException {
+    public ResponseEntity<HttpStatus> addOrder(OrderCompletedDTO order) throws BadRequestException {
         try {
             orderRepo.save(order);
             return new ResponseEntity<>(HttpStatus.OK);

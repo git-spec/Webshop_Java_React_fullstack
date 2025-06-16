@@ -3,13 +3,13 @@ package org.example.backend.model;
 import java.util.List;
 import java.util.Map;
 
+import org.example.backend.model.Article;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 
 @Document("orders")
-public record OrderCompleted(
-    String id,
+public record OrderCompletedDTO(
     List<Article> cart,
     Map<String, Object> paypal
 ) {

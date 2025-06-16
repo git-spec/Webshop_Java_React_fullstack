@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.model.OrderCompleted;
+import org.example.backend.model.dto.OrderCompletedDTO;
 import org.example.backend.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -134,7 +134,7 @@ public class OrderController {
     }
 		    
    @PostMapping("/orders/completed")
-    public ResponseEntity<HttpStatus> addOrder(@RequestBody OrderCompleted request) throws BadRequestException {
+    public ResponseEntity<HttpStatus> addOrder(@RequestBody OrderCompletedDTO request) throws BadRequestException {
         return orderService.addOrder(request);
     }
 }
