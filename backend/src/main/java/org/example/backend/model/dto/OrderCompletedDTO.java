@@ -7,8 +7,6 @@ import org.example.backend.model.Article;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
-
-@Document("orders")
 public record OrderCompletedDTO(
     List<Article> cart,
     Map<String, Object> paypal
