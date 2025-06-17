@@ -23,7 +23,7 @@ public class OrderControllerTest {
     //     // GIVEN
     //     String requestBody = "{\"amount\": 10.00, \"currency\": \"USD\"}";
     //     // WHEN // THEN
-    //     mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON)
+    //     mockMvc.perform(post("/api/order").contentType(MediaType.APPLICATION_JSON)
     //         .content(
     //             """
     //                 {
@@ -45,7 +45,7 @@ public class OrderControllerTest {
     //     // GIVEN
     //     String orderID = "123";
     //     // WHEN // THEN
-    //     mockMvc.perform(post("/orders/{orderID}/capture", orderID))
+    //     mockMvc.perform(post("/order/{orderID}/capture", orderID))
     //     .andExpect(status().isOk())
     //     .andExpect(jsonPath("$.id").value(orderID));
     // } 
@@ -53,7 +53,7 @@ public class OrderControllerTest {
     @Test
     void addOrder_shouldReturn200_whenGetsOrder() throws Exception {
         // WHEN // THEN
-        mockMvc.perform(post("/api/orders/completed").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/order/completed").contentType(MediaType.APPLICATION_JSON)
             .content(
                 """
                     {
@@ -77,7 +77,7 @@ public class OrderControllerTest {
     @Test
     void addOrder_shouldReturn400_whenGetsInvalidOrder() throws Exception {
         // WHEN // THEN
-        mockMvc.perform(post("/api/orders/completed").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/order/completed").contentType(MediaType.APPLICATION_JSON)
             .content(
                 """    
                 """
