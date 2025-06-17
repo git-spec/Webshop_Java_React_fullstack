@@ -111,7 +111,7 @@ public class OrderController {
        return apiResponse.getResult();
     }   
 		    
-   @PostMapping("/orders/{orderID}/capture")
+   @PostMapping("/order/{orderID}/capture")
     public ResponseEntity<Order> captureOrder(@PathVariable String orderID) throws BadRequestException {
 
         try {
