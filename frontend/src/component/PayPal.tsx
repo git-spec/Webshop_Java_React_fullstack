@@ -46,7 +46,7 @@ export default function PayPal({cart, onOrder}: Readonly<Props>) {
                     }}
                    createOrder={async () => {
                         try {
-                            const response = await axios.post("/api/orders", {
+                            const response = await axios.post("/api/order", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
