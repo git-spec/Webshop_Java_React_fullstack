@@ -67,7 +67,8 @@ export default function App() {
 
   const loadUser = () => {
       axios
-          .get('/api/auth').then(res => setUser(res.data))
+          .get('/api/auth').then(res => {
+            setUser(res.data)})
           .catch(err => setUser(null));
   } 
 
