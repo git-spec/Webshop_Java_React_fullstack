@@ -1,7 +1,6 @@
 package org.example.backend.model;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public record OrderCompleted(
     String id,
     List<Article> cart,
-    Map<String, Object> paypal
+    PayPal paypal
 ) {
 
 }
