@@ -6,10 +6,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
+import java.math.BigDecimal;
+
+import org.example.backend.model.Article;
+import org.example.backend.model.OrderCompleted;
+import org.example.backend.model.PayPal;
+import org.example.backend.repository.OrderRepo;
 
 
 @SpringBootTest
@@ -17,6 +25,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws Exception {
+        // GIVEN
+        String email = "jon@doe.io";
+        List<Article> articles = List.of(new Article("123", "BLACK", 1, new BigDecimal("10.00")));
+        PayPal paypal = PayPal.builder().id("123").email(email).firstname("Jon").lastname("Doe").build();
+        OrderCompleted order = new OrderCompleted("123", articles, paypal);
+        orderRepo.save(order);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/orders/" + email))
+            .andExpect(status().isOk())
+            .andExpect(content().json(String.valueOf(objectMapper.writeValueAsString(List.of(order)))));
+    }
 
     // @Test
     // void createOrder_shouldReturn200_whenGetsMap() throws Exception {
