@@ -112,16 +112,20 @@ public class OrderControllerTest {
             .content(
                 """
                     {
+                        "id": "123",
                         "cart": [
                             {
                                 "productID": "123",
+                                "color": "BLACK",
                                 "amount": 1,
-                                "price": 10.00
+                                "price": "10.00"
                             }
                         ],
                         "paypal": {
-                            "amount": 10.00,
-                            "currency": "USD"
+                            "id": "123",
+                            "email": "jon@doe.ioe.io",
+                            "firstname": "Jon",
+                            "lastname": "Doe"
                         }
                     }    
                 """
