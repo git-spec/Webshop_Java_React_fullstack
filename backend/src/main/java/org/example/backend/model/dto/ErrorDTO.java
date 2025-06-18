@@ -1,14 +1,12 @@
 package org.example.backend.model.dto;
 
-import lombok.With;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 import java.time.Instant;
 
 import org.example.backend.exception.WithPathInterface;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 
 
-@With
 public record ErrorDTO(
         String error,
         String cause,
@@ -39,6 +37,19 @@ public record ErrorDTO(
                 Instant.now().toString(),
                 HttpStatus.BAD_REQUEST.name(),
                 path
+        );
+    }
+
+    // Manuelle withStatus-Methode
+    public ErrorDTO withStatus(String status) {
+        return new ErrorDTO(
+                this.error,
+                this.cause,
+                this.causeMessage,
+                this.message,
+                this.timestamp,
+                status,
+                this.path
         );
     }
 }
