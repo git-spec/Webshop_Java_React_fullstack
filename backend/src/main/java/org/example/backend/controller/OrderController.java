@@ -53,13 +53,8 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{email}")
-    public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) {
-        List<OrderCompleted> orders = orderService.getOrdersByEmail(email);
-
-        System.out.println("Controller: Return orders completed: " + orders);
-
-        return orders;
-        // return orderService.getOrdersByEmail(email);
+    public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) throws IllegalArgumentException, NotFoundException {
+        return orderService.getOrdersByEmail(email);
     }
 
 		    
