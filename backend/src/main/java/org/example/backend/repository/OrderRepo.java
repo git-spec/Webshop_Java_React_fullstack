@@ -10,6 +10,6 @@ import org.example.backend.model.OrderCompleted;
 
 @Repository
 public interface OrderRepo extends MongoRepository<OrderCompleted, String> {
-    List<OrderCompleted> findByPaypalEmail(String email);
+    List<OrderCompleted> findAllByPaypalEmail(String email);
 
 }
