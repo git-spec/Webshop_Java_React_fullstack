@@ -2,8 +2,6 @@ package org.example.backend.exception;
 
 import lombok.Getter;
 
-@Getter
-import lombok.Getter;
 
 @Getter
 public class EntriesNotFoundException extends RuntimeException {
