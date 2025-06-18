@@ -9,6 +9,4 @@ public record User(
     String email, 
     String firstname, 
     String lastname 
-) {
-    
-}
+) {}

@@ -38,7 +38,9 @@ export default function Checkout() {
             paypal: paypalOrder
         };
 
-        axios.post(`/api/orders/completed`, body).then(res => {
+        console.log(body);
+        
+        axios.post(`/api/order/completed`, body).then(res => {
             res.status === 200 && setOrderCompleted(true);
         }).catch(err => console.log(err));
     }
