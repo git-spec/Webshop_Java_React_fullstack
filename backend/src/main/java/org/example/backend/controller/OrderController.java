@@ -2,19 +2,22 @@ package org.example.backend.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.example.backend.exception.BadRequestException;
+import org.example.backend.exception.NotFoundException;
+import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
 import org.example.backend.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.sdk.PaypalServerSdkClient;
@@ -34,7 +37,7 @@ import com.paypal.sdk.models.OrderRequest;
 import com.paypal.sdk.models.PurchaseUnitRequest;
 
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class OrderController {
     private final ObjectMapper objectMapper;
@@ -48,6 +51,17 @@ public class OrderController {
         this.client = client;
         this.orderService = orderService;
     }
+
+    @GetMapping("/orders/{email}")
+    public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) {
+        List<OrderCompleted> orders = orderService.getOrdersByEmail(email);
+
+        System.out.println("Controller: Return orders completed: " + orders);
+
+        return orders;
+        // return orderService.getOrdersByEmail(email);
+    }
+
 		    
    @PostMapping("/order")
     public ResponseEntity<Order> createOrder(@RequestBody Map<String, Object> request) throws BadRequestException {
@@ -134,7 +148,7 @@ public class OrderController {
     }
 		    
    @PostMapping("/order/completed")
-    public ResponseEntity<HttpStatus> addOrder(@RequestBody OrderCompletedDTO request) throws BadRequestException {
+    public ResponseEntity<String> addOrder(@RequestBody OrderCompletedDTO request) throws BadRequestException {
         return orderService.addOrder(request);
     }
 }
