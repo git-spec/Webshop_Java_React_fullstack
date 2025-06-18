@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExeptionHandler {
+public class GlobalExceptionHandler {
 
     /**
      * Throws exception with status 404.
@@ -26,5 +26,17 @@ public class GlobalExeptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleBadRequest(BadRequestException e) {
         return ErrorDTO.fromException(e).withStatus(HttpStatus.BAD_REQUEST.name());
+    }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    
+    @ExceptionHandler(EntriesNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleEntriesNotFoundException(EntriesNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
