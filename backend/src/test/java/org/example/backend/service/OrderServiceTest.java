@@ -17,7 +17,7 @@ import org.example.backend.exception.EntriesNotFoundException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
-import org.example.backend.model.PayPal;
+// import org.example.backend.model.PayPal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,14 +35,14 @@ public class OrderServiceTest {
 
     String email = "test@email.com";
     List<Article> cart = List.of(new Article("123", "ash", 1, new BigDecimal("10.00")));
-    PayPal paypal = PayPal.builder()
-        .id("1")
-        .email(email)
-        .firstname("Jon")
-        .lastname("Doe")
-        .build();
+    // PayPal paypal = PayPal.builder()
+    //     .id("1")
+    //     .email(email)
+    //     .firstname("Jon")
+    //     .lastname("Doe")
+    //     .build();
     Map<String, Object> paypalDTO = new HashMap<>();
-    OrderCompleted orderCompleted = new OrderCompleted("1", cart, paypal);
+    OrderCompleted orderCompleted = new OrderCompleted("1", cart, paypalDTO);
     OrderCompletedDTO orderCompletedDTO = new OrderCompletedDTO(cart, paypalDTO);
     String BAD_REQUEST_MESSAGE_FORMAT = "Anfrage ist nicht korrekt.";
 
@@ -52,7 +52,7 @@ public class OrderServiceTest {
         List<OrderCompleted> expected = List.of(orderCompleted);
         mockRepo.save(orderCompleted);
         // WHEN
-        Mockito.when(mockRepo.findAllByPaypalEmail(email)).thenReturn(expected);
+        Mockito.when(mockRepo.findAllByPaypalPayerEmailAddress(email)).thenReturn(expected);
         List<OrderCompleted> actual = orderService.getOrdersByEmail(email);
         // THEN
         assertEquals(expected, actual);
@@ -72,7 +72,7 @@ public class OrderServiceTest {
     @Test
     void getOrdersByEmail_shouldThrowBadRequest_whenGetInvalidEmail() throws IllegalArgumentException, EntriesNotFoundException {
         // WHEN
-        Mockito.when(mockRepo.findAllByPaypalEmail(email)).thenReturn(List.of());
+        Mockito.when(mockRepo.findAllByPaypalPayerEmailAddress(email)).thenReturn(List.of());
         try {
             orderService.getOrdersByEmail(email);
         } catch(EntriesNotFoundException e) {
@@ -101,8 +101,22 @@ public class OrderServiceTest {
     @Test
     void addOrder_shouldReturn400_WhenGetInvalidOrder() {
         // WHEN
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> orderService.addOrder(orderCompletedDTO));
+        assertThrows(BadRequestException.class, () -> orderService.addOrder(orderCompletedDTO));
         // THEN
-        assertEquals(exception.getMessage(), BAD_REQUEST_MESSAGE_FORMAT);
+        try {
+            orderService.addOrder(orderCompletedDTO);
+        } catch(BadRequestException e) {
+            // THEN
+            assertTrue(true);
+            assertEquals(e.getMessage(), BAD_REQUEST_MESSAGE_FORMAT);
+        }
+    }
+
+    @Test
+    void isValidEmail_shouldReturnFalse_whenGetEmail() {
+        // WHEN
+        boolean actual = orderService.isValidEmail("123");
+        // THEN
+        assertEquals(false, actual);
     }
 }

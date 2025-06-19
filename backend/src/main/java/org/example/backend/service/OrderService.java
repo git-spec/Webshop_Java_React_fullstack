@@ -45,66 +45,67 @@ public class OrderService {
      * @param order
      * @throws BadRequestException 
      */
-    public ResponseEntity<String> addOrder(OrderCompletedDTO orderDTO) throws BadRequestException {
+    public ResponseEntity<String> addOrder(OrderCompletedDTO orderDTO) {
         try {
-            String id = orderDTO.paypal().get("id").toString();
-            String email = null;
-            String firstname = null;
-            String lastname = null;
-            Object payer = orderDTO.paypal().get("payer");
-            if (id == null) {
-                throw new IllegalArgumentException("PayPal id is missing.");
-            }
-            if (payer instanceof Map) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> payerMap = (Map<String, Object>) payer;
-                Object emailObject = payerMap.get("email_address");
-                if (emailObject != null) {
-                    email = emailObject.toString();
-                    // ... weiterverarbeiten
-                }
-                @SuppressWarnings("unchecked")
-                Map<String, String> nameMap = (Map<String, String>) payerMap.get("name");
-                if (nameMap != null) {
-                    firstname = nameMap.get("given_name");
-                    lastname = nameMap.get("surname");
-                }
-            }
-            if (
-                email != null && !email.isEmpty() 
-                && firstname != null&& !firstname.isEmpty() 
-                && lastname != null && !lastname.isEmpty()
-            ) {
-                PayPal paypal = PayPal.builder()
-                    .id(id)
-                    .email(email)
-                    .firstname(firstname)
-                    .lastname(lastname)
-                    .build();
-                OrderCompleted order = new OrderCompleted(
-                    idService.createID(),
-                    orderDTO.cart(),
-                    paypal
-                );
+            // String id = orderDTO.paypal().get("id").toString();
+            // String email = null;
+            // String firstname = null;
+            // String lastname = null;
+            // Object payer = orderDTO.paypal().get("payer");
+            // if (id == null) {
+            //     throw new IllegalArgumentException("PayPal id is missing.");
+            // }
+            // if (payer instanceof Map) {
+            //     @SuppressWarnings("unchecked")
+            //     Map<String, Object> payerMap = (Map<String, Object>) payer;
+            //     Object emailObject = payerMap.get("email_address");
+            //     if (emailObject != null) {
+            //         email = emailObject.toString();
+            //         // ... weiterverarbeiten
+            //     }
+            //     @SuppressWarnings("unchecked")
+            //     Map<String, String> nameMap = (Map<String, String>) payerMap.get("name");
+            //     if (nameMap != null) {
+            //         firstname = nameMap.get("given_name");
+            //         lastname = nameMap.get("surname");
+            //     }
+            // }
+            // if (
+            //     email != null && !email.isEmpty() 
+            //     && firstname != null&& !firstname.isEmpty() 
+            //     && lastname != null && !lastname.isEmpty()
+            // ) {
+            //     PayPal paypal = PayPal.builder()
+            //         .id(id)
+            //         .email(email)
+            //         .firstname(firstname)
+            //         .lastname(lastname)
+            //         .build();
+            //     OrderCompleted order = new OrderCompleted(
+            //         idService.createID(),
+            //         orderDTO.cart(),
+            //         paypal
+            //     );
+            //     orderRepo.save(order);
+            // }
+            if (orderDTO.paypal().isEmpty()) {
+                throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
+            } else {
+                OrderCompleted order = new OrderCompleted(idService.createID(), orderDTO.cart(), orderDTO.paypal());
                 orderRepo.save(order);
+                return ResponseEntity.ok("The order was saved successfully.");
             }
-            return ResponseEntity.ok("The order was saved successfully.");
-        } catch (Exception e) {
+        } catch (BadRequestException e) {
             throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
         }
     }
 
-    public List<OrderCompleted> getOrdersByEmail(String email) throws IllegalArgumentException, EntriesNotFoundException {
+    public List<OrderCompleted> getOrdersByEmail(String email) throws IllegalArgumentException {
         boolean valid = isValidEmail(email);
         if (!valid) {
             throw new IllegalArgumentException(BAD_REQUEST_MESSAGE_FORMAT);
         } else {
-            List<OrderCompleted> orders = orderRepo.findAllByPaypalEmail(email);
-            if (orders == null || orders.isEmpty()) {
-                throw new EntriesNotFoundException(ORDERS_NOT_FOUND_MESSAGE_FORMAT);
-            } else {
-                return orders;
-            }
+            return orderRepo.findAllByPaypalPayerEmailAddress(email);
         }
     }
 }

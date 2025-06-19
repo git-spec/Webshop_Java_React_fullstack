@@ -53,11 +53,10 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/orders/{email}")
+    @GetMapping("/orders/completed/{email}")
     public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) throws IllegalArgumentException, NotFoundException {
         return orderService.getOrdersByEmail(email);
     }
-
 		    
    @PostMapping("/order")
     public ResponseEntity<Order> createOrder(@RequestBody Map<String, Object> request) throws BadRequestException {
@@ -135,7 +134,7 @@ public class OrderController {
        return apiResponse.getResult();
     }   
 		    
-   @PostMapping("/order/{orderID}/capture")
+   @PostMapping("/orders/{orderID}/capture")
     public ResponseEntity<Order> captureOrder(@PathVariable String orderID) throws BadRequestException {
 
         try {
