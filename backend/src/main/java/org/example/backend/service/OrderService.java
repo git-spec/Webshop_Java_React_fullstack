@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.exception.BadRequestException;
 import org.example.backend.exception.EntriesNotFoundException;
 import org.example.backend.exception.NotFoundException;
+import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.PayPal;
 import org.example.backend.model.dto.OrderCompletedDTO;
@@ -89,7 +90,7 @@ public class OrderService {
             }
             return ResponseEntity.ok("The order was saved successfully.");
         } catch (Exception e) {
-            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT, e);
+            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
         }
     }
 

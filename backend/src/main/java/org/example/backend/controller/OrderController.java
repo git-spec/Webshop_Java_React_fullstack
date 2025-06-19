@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.sdk.PaypalServerSdkClient;
 import com.paypal.sdk.controllers.OrdersController;
@@ -67,8 +68,22 @@ public class OrderController {
         } catch (Exception e) {
             e.printStackTrace();
             // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT, e);
+            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
         }
+
+        // try {
+        //     String cart = objectMapper.writeValueAsString(request.get("cart"));
+        //     Order response = createOrder(cart); // Diese Methode kann ApiException werfen!
+        //     return ResponseEntity.ok(response);
+        // } catch (JsonProcessingException e) {
+        //     throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
+        // } catch (ApiException e) {
+        //     // Optional: eigene Behandlung, z.B. 400 oder 500
+        //     throw new BadRequestException("Fehler bei der Order-Erstellung: " + e.getMessage());
+        // } catch (IOException e) {
+        //     // Sollte eigentlich durch JsonProcessingException abgedeckt sein, aber falls doch:
+        //     throw new BadRequestException("Fehler beim Verarbeiten der Anfrage.");
+        // }
     }
 
     private Order createOrder(String cart) throws IOException, ApiException {
@@ -128,7 +143,7 @@ public class OrderController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT, e);
+            throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
         }
     }
 

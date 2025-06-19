@@ -19,6 +19,7 @@ import java.util.List;
 import java.math.BigDecimal;
 
 import org.example.backend.exception.EntriesNotFoundException;
+import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.PayPal;
