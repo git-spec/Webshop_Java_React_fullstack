@@ -1,7 +1,6 @@
 package org.example.backend.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,11 +10,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.exception.EntriesNotFoundException;
-import org.example.backend.exception.NotFoundException;
 import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.model.OrderCompleted;
-import org.example.backend.model.PayPal;
+// import org.example.backend.model.PayPal;
 import org.example.backend.model.dto.OrderCompletedDTO;
 import org.example.backend.repository.OrderRepo;
 
@@ -33,9 +30,6 @@ public class OrderService {
     private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
     public static boolean isValidEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return false;
-        }
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }

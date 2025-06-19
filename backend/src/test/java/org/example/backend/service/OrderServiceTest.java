@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.exception.BadRequestException;
 import org.example.backend.exception.IllegalArgumentException;
-import org.example.backend.exception.EntriesNotFoundException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
@@ -47,7 +46,7 @@ public class OrderServiceTest {
     String BAD_REQUEST_MESSAGE_FORMAT = "Anfrage ist nicht korrekt.";
 
     @Test
-    void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws IllegalArgumentException, EntriesNotFoundException {
+    void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws IllegalArgumentException {
         // GIVEN
         List<OrderCompleted> expected = List.of(orderCompleted);
         mockRepo.save(orderCompleted);
@@ -59,23 +58,11 @@ public class OrderServiceTest {
     }
 
     @Test
-    void getOrdersByEmail_shouldThrowNotFound_whenNoEntryForEmail() throws IllegalArgumentException, EntriesNotFoundException {
+    void getOrdersByEmail_shouldThrowBadRequest_whenGetInvalidEmail() throws IllegalArgumentException {
         // WHEN
         try {
-            orderService.getOrdersByEmail("fehlerhaft");
+            orderService.getOrdersByEmail("123");
         } catch(IllegalArgumentException e) {
-            // THEN
-            assertTrue(true);
-        }
-    }
-
-    @Test
-    void getOrdersByEmail_shouldThrowBadRequest_whenGetInvalidEmail() throws IllegalArgumentException, EntriesNotFoundException {
-        // WHEN
-        Mockito.when(mockRepo.findAllByPaypalPayerEmailAddress(email)).thenReturn(List.of());
-        try {
-            orderService.getOrdersByEmail(email);
-        } catch(EntriesNotFoundException e) {
             // THEN
             assertTrue(true);
         }
