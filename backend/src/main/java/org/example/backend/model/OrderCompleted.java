@@ -12,6 +12,7 @@ public record OrderCompleted(
     String id,
     List<Article> cart,
     Map<String, Object> paypal
+    // PayPal paypal
 ) {
 
 }

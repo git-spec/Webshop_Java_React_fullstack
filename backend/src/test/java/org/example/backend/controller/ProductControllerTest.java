@@ -88,6 +88,7 @@ public class ProductControllerTest {
                 .currency(Currency.GBP)
                 .amount(100)
                 .build();
+    private static final String NOT_FOUND_MESSAGE_FORMAT = "Seite nicht gefunden.";
 
     @Test
     @WithMockUser
@@ -119,9 +120,8 @@ public class ProductControllerTest {
         // WHEN // THEN
         mockMvc.perform(get("/api/products/{category}", "invalid"))
             .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.error").value("NotFoundException"))
-            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+            .andExpect(content().string(NOT_FOUND_MESSAGE_FORMAT));
     }
 
     @Test
@@ -143,9 +143,7 @@ public class ProductControllerTest {
         mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.error").value("NotFoundException"))
-            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+            .andExpect(content().string(NOT_FOUND_MESSAGE_FORMAT));
     }
 
     @Test
@@ -167,9 +165,7 @@ public class ProductControllerTest {
         mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.error").value("NotFoundException"))
-            .andExpect(jsonPath("$.message").value("Seite nicht gefunden."));
+            .andExpect(content().string(NOT_FOUND_MESSAGE_FORMAT));
     }
 
     @Test

@@ -16,11 +16,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(a -> a
-                // .requestMatchers("/api/dashboard").authenticated()
+                // .requestMatchers("/api/orders/completed/{email}").authenticated()
                 .anyRequest().permitAll()
             ).logout( l -> l.logoutSuccessUrl("http://localhost:5173"))
             .oauth2Login(o -> o.defaultSuccessUrl("http://localhost:5173/dashboard"));
 
         return http.build();
     }
-} 
+}
