@@ -5,8 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.http.ResponseEntity;
-
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +12,7 @@ import org.mockito.Mockito;
 
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.exception.BadRequestException;
+import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.exception.EntriesNotFoundException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
