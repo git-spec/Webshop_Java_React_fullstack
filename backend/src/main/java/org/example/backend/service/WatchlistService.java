@@ -19,15 +19,19 @@ public class WatchlistService {
     private final WatchlistRepo watchlistRepo;
     private final IDService idService;
 
-    private static final String SAVED_ITEM_SUCCESSFULLY = "Item was saved successfully.";
+    public WatchlistItem addWatchlistItem(WatchlistItemDTO itemDTO) {
 
-    // public List<WatchlistItem> getWatchlist(String email) {
-    //     return watchlistRepo.findAllByEmail(email);
-    // }
+        System.out.println("WatchlistItemDTO: " + itemDTO);
 
-    public ResponseEntity<String> addWatchlistItem(WatchlistItemDTO itemDTO) {
         WatchlistItem item = new WatchlistItem(idService.createID(), itemDTO.userEmail(), itemDTO.product());
-        watchlistRepo.save(item);
-        return ResponseEntity.status(HttpStatus.OK).body(SAVED_ITEM_SUCCESSFULLY);
+        return watchlistRepo.save(item);
+    }
+
+    public List<WatchlistItem> getWatchlistItems(String email) {
+        return watchlistRepo.findAllByUserEmail(email);
+    }
+
+    public void deleteWatchlistItem(String id) {
+        watchlistRepo.deleteById(id);
     }
 }
