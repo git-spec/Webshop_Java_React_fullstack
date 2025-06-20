@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import org.example.backend.model.Category;
@@ -33,6 +35,7 @@ import org.example.backend.model.WatchlistItem;
 import org.example.backend.model.dto.WatchlistItemDTO;
 import org.example.backend.repository.WatchlistRepo;
 import org.example.backend.service.WatchlistService;
+import static org.mockito.Mockito.times;
 
 
 @SpringBootTest
@@ -47,22 +50,22 @@ public class WatchlistControllerTest {
     private ObjectMapper objectMapper;
 
     private final Measure width = new Measure(
-                                    49,
+                                    49.0,
                                     Unit.CM
                                 );
     private final Measure length = new Measure(
-                                    45,
+                                    45.0,
                                     Unit.CM
                                 );
     private final Measure height = new Measure(
-                                    78,
+                                    78.0,
                                     Unit.CM
                                 );
     private final ProductFeatures feat1 = new ProductFeatures(
                         new Dimension(width, length, height),
-                        new Measure(6, Unit.KG),
+                        new Measure(6.0, Unit.KG),
                         List.of(Material.OAK, Material.ASH),
-                        List.of("oak", "ash", "black")
+                        List.of("OAK", "ASH", "ASH_BLACK")
                     );          
     private final Product product = 
             Product.builder()
@@ -78,17 +81,28 @@ public class WatchlistControllerTest {
                 .description("Description")
                 .images(new Images(
                         List.of("/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"),
-                        List.of("http://imag)e2.test"),
-                        List.of("/public/large/lara/Lara--1990--chair--cutoutAngle-2--Ash--)M.jpg")
+                        List.of("/public/medium/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"),
+                        List.of("/public/large/lara/ercol-lara-chair-natural-ash_900x.jpg")
                     )
                 )
                 .price(BigDecimal.valueOf(370))
                 .currency(Currency.GBP)
                 .amount(1)
                 .build();
-    private final WatchlistItemDTO itemDTO = new WatchlistItemDTO("jon@doe.io", product);
-    private final WatchlistItem item = new WatchlistItem("123", "jon@doe.io", product);
-    private static final String SAVED_ITEM_SUCCESSFULLY = "Item was saved successfully.";
+    private final String id = "123";
+    private final String email = "jon@doe.io";
+    private final WatchlistItem item = new WatchlistItem(id, email, product);
+
+    @Test
+    void getWatchlistItems_shouldReturnItems_whenGetEmail() throws Exception {
+        // GIVEN
+        watchlistRepo.save(item);
+        List<WatchlistItem> expected = Collections.singletonList(item);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/watchlist/{email}", email))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
 
     @Test
     void addWatchlistItem_shouldReturn200_whenGetItem() throws Exception {
@@ -101,7 +115,7 @@ public class WatchlistControllerTest {
                         "product": {
                             "id": "1536716",
                             "number": "1990",
-                            "name": "Lara Chair",
+                            "name": "LARA Chair",
                             "manufacturer": "Erol",
                             "category": "FURNITURE",
                             "group": "SEATING",
@@ -109,38 +123,40 @@ public class WatchlistControllerTest {
                             "features": {
                                 "dimension": {
                                     "width": {
-                                        "number": 49,
-                                        "unit": "CM"
-                                    },
-                                    "length": {
-                                        "number": 45,
+                                        "number": 49.0,
                                         "unit": "CM"
                                     },
                                     "height": {
-                                        "number": 78,
+                                        "number": 78.0,
+                                        "unit": "CM"
+                                    },
+                                    "length": {
+                                        "number": 46.0,
                                         "unit": "CM"
                                     }
                                 },
                                 "weight": {
-                                    "number": 6,
+                                    "number": 6.0,
                                     "unit": "KG"
                                 },
-                                "materials": {
-                                    "number": 6,
-                                    "unit": "KG"
-                                },
+                                "materials": [
+                                    "OAK",
+                                    "ASH"
+                                ],
                                 "colors": [
-                                    "oak", 
-                                    "ash", 
-                                    "black"
+                                    "OAK", 
+                                    "ASH", 
+                                    "ASH_BLACK"
                                 ]
                             },
+                            "info": "Info",
+                            "description": "Description",
                             "images": {
                                 "small": ["/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"],
-                                "medium": ["http://imag)e2.test"],
-                                "large": ["/public/large/lara/Lara--1990--chair--cutoutAngle-2--Ash--)M.jpg"]
+                                "medium": ["/public/medium/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"],
+                                "large": ["/public/large/lara/ercol-lara-chair-natural-ash_900x.jpg"]
                             },
-                            "price": "370",
+                            "price": 370,
                             "currency": "GBP",
                             "amount": 1
                         }
@@ -148,22 +164,14 @@ public class WatchlistControllerTest {
                 """
             ))
             .andExpect(status().isOk())
-            .andExpect(content().string(SAVED_ITEM_SUCCESSFULLY));
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.userEmail").value(email));
     }
 
-    // // @Test
-    // // void addWatchlistItem_shouldThrowBadRequest_whenGetInvalidEmail() throws Exception {
-    // //     // GIVEN
-    // //     String BAD_REQUEST_MESSAGE_FORMAT = "Anfrage ist nicht korrekt.";
-    // //     // WHEN // THEN
-    // //     mockMvc.perform(post("/api/watchlist").contentType(MediaType.APPLICATION_JSON)
-    // //         .content(
-    // //             """ 
-    // //                 fehlerhaftaft   
-    // //             """
-    // //         )
-    // //     ).andExpect(status().isBadRequest())
-    // //         .andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException()))
-    // //         .andExpect(result -> assertEquals(BAD_REQUEST_MESSAGE_FORMAT, result.getResolvedException().getMessage()));
-    // // }
+    @Test
+    void deleteWatchlistItem_shouldDeleteItem_whenGetID() throws Exception {
+        // WHEN // THEN
+        mockMvc.perform(delete("/api/watchlist/{id}", id))
+            .andExpect(status().isOk());
+    }
 }

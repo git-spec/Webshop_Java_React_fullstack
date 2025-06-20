@@ -28,8 +28,9 @@ import org.example.backend.repository.WatchlistRepo;
 
 public class WatchlistServiceTest {
     private final WatchlistRepo mockRepo = mock(WatchlistRepo.class);
-    private final IDService mockID = mock(IDService.class);
+    private final IDService mockUUID = mock(IDService.class);
     private final WatchlistService mockService = mock(WatchlistService.class);
+    private final WatchlistService watchlistService = new WatchlistService(mockRepo, mockUUID);
 
     private final Measure width = new Measure(
                                     49,
@@ -71,23 +72,56 @@ public class WatchlistServiceTest {
                 .currency(Currency.GBP)
                 .amount(100)
                 .build();
-    private final WatchlistItemDTO itemDTO = new WatchlistItemDTO("jon@doe.io", product);
-    private final WatchlistItem item = new WatchlistItem("123", "jon@doe.io", product);
+    private final String id = "123";
+    private final String email = "jon@doe.io";
+    private final WatchlistItemDTO itemDTO = new WatchlistItemDTO(email, product);
+    private final WatchlistItem item = new WatchlistItem(id, email, product);
     private static final String SAVED_ITEM_SUCCESSFULLY = "Item was saved successfully.";
 
     @Test
-    void addWatchlistItem_shouldReturn200_whenGetItem() {
+    void getWatchlistItems_shouldReturnItems_whenGetEmail() {
         // GIVEN
+        List<WatchlistItem> expected = List.of(item);
         mockRepo.save(item);
         // WHEN
-        when(mockID.createID()).thenReturn("123");
+        when(mockRepo.findAllByUserEmail(email)).thenReturn(expected);
+        List<WatchlistItem> actual = watchlistService.getWatchlistItems(email);
+        //THEN
+        verify(mockRepo).findAllByUserEmail(email);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getWatchlistItems_shouldReturnEmptyList_whenNoItemFound() {
+        // GIVEN
+        List<WatchlistItem> expected = List.of();
+        // WHEN
+        when(mockRepo.findAllByUserEmail(email)).thenReturn(expected);
+        List<WatchlistItem> actual = watchlistService.getWatchlistItems(email);
+        //THEN
+        verify(mockRepo).findAllByUserEmail(email);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void addWatchlistItem_shouldthrowOk_whenGetItem() {
+        // WHEN
+        when(mockUUID.createID()).thenReturn(id);
         when(mockRepo.save(item)).thenReturn(item);
-        when(mockService.addWatchlistItem(itemDTO)).thenReturn(ResponseEntity.ok(SAVED_ITEM_SUCCESSFULLY));
-        ResponseEntity<String> actual = mockService.addWatchlistItem(itemDTO);
-        String id = mockID.createID();
+        // when(mockService.addWatchlistItem(itemDTO)).thenReturn(item);
+        WatchlistItem actual = watchlistService.addWatchlistItem(itemDTO);
+        String mockID = mockUUID.createID();
         // THEN
-        assertEquals(ResponseEntity.ok(SAVED_ITEM_SUCCESSFULLY), actual);
-        assertEquals("123", id);
+        assertEquals(item, actual);
+        assertEquals(id, mockID);
         verify(mockRepo, times(1)).save(item);
+    }
+
+    @Test
+    void deleteWatchlistItem_shouldDeleteItem_whenGetID() {
+        // WHEN
+        watchlistService.deleteWatchlistItem(id);
+        // THEN
+        verify(mockRepo, times(1)).deleteById(id);
     }
 }
