@@ -83,7 +83,7 @@ export default function Cart() {
                                         <Order orders={cart} checkout={false} />
                                     </Grid> 
                                     <Grid size={12}>
-                                        <ButtonAction value={'zur Kasse'} color="success" click={() => {navigate('/checkout', {state: cart})}} />
+                                        <ButtonAction value={'zur Kasse'} color="success" click={() => {navigate('/checkout')}} />
                                     </Grid>
                                 </Grid>
                             </Grid>

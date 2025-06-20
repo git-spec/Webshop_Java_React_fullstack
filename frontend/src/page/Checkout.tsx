@@ -1,23 +1,27 @@
-import { useLocation } from 'react-router-dom';
+import { useContext, useEffect, useState, type FormEvent } from 'react';
+import axios from 'axios';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 
 import Order from "@/component/share/Order";
 import LayoutContainer from '@/component/share/LayoutContainer';
 import AccordionExpand from '@/component/AccordionExpand';
 import PersonDetailsForm from '@/component/PersonDetailsForm';
-import { useState, type FormEvent } from 'react';
-import TextField from '@mui/material/TextField';
 import ButtonAction from '@/component/ButtonAction';
 import PayPal from '@/component/PayPal';
 import type { IOrder } from '@/interface/IOrder';
-import axios from 'axios';
-import Typography from '@mui/material/Typography';
+
+import { CartContext } from '@/App';
 
 
 export default function Checkout() {
-    const location = useLocation();
-    const cart: IOrder[] = location.state;
+    const context = useContext(CartContext);
     const [orderCompleted, setOrderCompleted] = useState<boolean>();
+
+    useEffect(() => {
+        orderCompleted && context?.updateCart([]);
+    }, [orderCompleted]);
 
     /**
      * Posts completed order to db.
@@ -25,7 +29,7 @@ export default function Checkout() {
      */
     const handleOrder = (paypalOrder: any) => {
         const body = {
-            cart: cart.map(
+            cart: context?.cart.map(
                         (item: IOrder) => {
                             return {
                                 productID: item.productID,
@@ -60,7 +64,7 @@ export default function Checkout() {
         {
             id: 'payment',
             sumary: 'Zahlung',
-            Component: <PayPal cart={cart} onOrder={handleOrder} />
+            Component: <PayPal cart={context?.cart} onOrder={handleOrder} />
         }
     ];
 
