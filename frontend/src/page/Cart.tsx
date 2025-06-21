@@ -10,18 +10,20 @@ import LayoutContainer from "@/component/share/LayoutContainer";
 import Grid from "@mui/material/Grid";
 import Order from "@/component/share/Order";
 import ButtonAction from "@/component/ButtonAction";
+import NoteBig from "@/component/share/NoteBig";
 
 
 export default function Cart() {
+    const message = "Der Warenkorb ist leer.";
     const navigate = useNavigate();
     const context = useContext(CartContext);
     if (!context) throw new Error("CartContext must be used within a CartProvider");
     const {cart, updateCart} = context;
 
     const addToCart = (order: IOrder) => {
-        const existingItem = cart.find(item => item.id === order.productID);
+        const existingItem = cart.find(item => item.productID === order.productID);
         const newCart = existingItem && cart.map(item => {
-            if (item.id === order.productID) {
+            if (item.productID === order.productID) {
                 item.amount = order.amount;
                 return item;
             } else {
@@ -33,9 +35,9 @@ export default function Cart() {
     };
 
     const deleteFromCart = (order: IOrder) => {
-        const existingItem = cart.find(item => item.id === order.productID);
+        const existingItem = cart.find(item => item.productID === order.productID);
         const newCart = existingItem && cart.filter(item => {
-            if (item.id !== order.productID) return item;
+            if (item.productID !== order.productID) return item;
         })
         // Updates order in cart.
         newCart && updateCart(newCart);
@@ -88,16 +90,7 @@ export default function Cart() {
                                 </Grid>
                             </Grid>
                         : 
-                            <Typography 
-                                variant="h1" 
-                                textAlign={'center'} 
-                                fontFamily={'SourceSans3'} 
-                                fontWeight={500} fontSize={'2rem'} 
-                                color="lightgray"
-                                marginTop={12}
-                            >
-                                Der Warenkorb ist leer.
-                            </Typography>
+                            <NoteBig value={message} />
                     }
         </LayoutContainer>
     );

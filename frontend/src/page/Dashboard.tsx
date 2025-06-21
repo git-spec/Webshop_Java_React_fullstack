@@ -1,8 +1,25 @@
-import { Typography } from "@mui/material";
+import LayoutContainer from "@/component/share/LayoutContainer";
+import TabsBasic from "@/component/TabsBasic";
+import Watchlist from "./Watchlist";
+import type { IWatchlistItem } from "@/interface/IWatchlistItem";
 
-export default function Dashboard() {
+type Props = {
+    watchlist: IWatchlistItem[] | undefined;
+    onDelete: (watchlist: IWatchlistItem[]) => void;
+};
 
-    return (
-            <Typography component={'h3'} sx={{textAlign: 'center'}}>Dashboard</Typography>
+
+export default function Dashboard({watchlist, onDelete}: Readonly<Props>) {
+    const tabsItems = [
+        {
+            label: "Merkliste",
+            children: <Watchlist watchlist={watchlist} onDelete={onDelete} />
+        }
+    ];
+
+    return (  
+        <LayoutContainer>
+            <TabsBasic tabs={tabsItems} /> 
+        </LayoutContainer>
     );
 }
