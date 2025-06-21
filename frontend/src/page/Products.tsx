@@ -22,7 +22,7 @@ function Products({user , watchlist}: Readonly<Props>) {
   const [products, setProducts] = useState<IProduct[]>();
   const { category, group, family } = useParams();
 
-  function getProducts() {
+  const getProducts = () => {
     axios.get('/api/products').then(res => {
       const filteredProducts = res.data.filter(
         (product: IProduct) => 
@@ -34,7 +34,7 @@ function Products({user , watchlist}: Readonly<Props>) {
     }).catch(err => console.log(err));
   }
 
-  function addToWatchlist(product: IProduct) {
+  const addToWatchlist = (product: IProduct) => {
         if (user && user.email) {
           const itemExists = watchlist?.some(listItem => product.id === listItem.product.id);
           if (!itemExists) {

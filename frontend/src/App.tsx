@@ -33,9 +33,8 @@ export default function App() {
   const [listItems, setListItems] = useState<IWatchlistItem[]>();
 
   useEffect(() => {
-      loadUser();
-      user && getWatchlist();
-  }, [user]);
+      handleUser();
+  }, []);
 
   const handleCart = (order: IOrder) => {
     const itemExsits = cart.find(article => article.productID === order.productID && article.color === order.color);
@@ -90,6 +89,17 @@ export default function App() {
       }).catch(err => console.log(err));
   }
 
+  const handleUser = async () => {
+    try {
+      const user = await axios.get('/api/auth');
+      setUser(user.data);
+      const watchlist = await axios.get(`/api/watchlist/${user.data.email}`);
+      setListItems(watchlist.data);
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
   // const updateCart = (product: IOrder) => {
   //   const itemExsits = cart.find(article => article.id === product.id && article.color === product.color);
 
@@ -124,7 +134,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route element={<ProtectedRoute user={user} />}>
                 <Route path="/dashboard" element={
-                  <Dashboard watchlist={listItems} onDelete={(watchlist) => (setListItems(watchlist))} />
+                  <Dashboard user={user} watchlist={listItems} onDelete={(watchlist) => (setListItems(watchlist))} />
                 } />
               </Route>
             </Route>
