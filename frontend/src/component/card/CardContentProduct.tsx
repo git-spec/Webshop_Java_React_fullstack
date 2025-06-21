@@ -18,7 +18,9 @@ export default function CardContentProduct(props: Readonly<IProduct>) {
                 {props.info}
             </Typography>
             </Box>
-            <Price value={props.price} currency={props.currency} justify={'end'} color={'#765638'} />
+            <Box mb={1}>
+                <Price value={props.price} currency={props.currency} justify={'end'} color={'#765638'} />
+            </Box>
         </Stack>
     );
 }

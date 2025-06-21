@@ -44,10 +44,10 @@ function CardMain<T>(
     }: Readonly<Props<T>>) {
     const [visible, setVisible] = useState<boolean>(true);
     const template = 
-        <Grid container columns={1} flexDirection={"column"} spacing={0} height={'100%'} justifyContent={'top'}>
-            <Grid>
+        <Grid container columns={1} flexDirection={"column"} flexWrap={"nowrap"} spacing={0} height={'100%'} alignItems={"space-between"}>
+            <Grid height={'15rem'}>
                 {header && <CardHeader>{header}</CardHeader>}
-                {media && <CardMedia component={'img'} alt={media.name} image={media.path} />}
+                {media && <CardMedia component={'img'} alt={media.name} image={media.path} sx={{height: 240, objectFit: 'cover'}} />}
             </Grid>
             <Grid flexDirection={"column"} justifyContent={'space-between'} flexGrow={1}>
                 <CardContent sx={{'&:last-child': {py: 1}, height: '100%'}}>
@@ -61,7 +61,7 @@ function CardMain<T>(
         <>
             {
                 visible && 
-                    <Card sx={{ minWidth: {xs: '100%', sm: 'auto'}, maxWidth: {sm: 180}, minHeight: '18rem', position: "absolute"}}>
+                    <Card sx={{ maxWidth: {sm: "320px"}, height: '23rem', position: "relative"}}>
                     {path ? 
                             <CardActionArea sx={{height: '100%'}}>
                                 <Link 

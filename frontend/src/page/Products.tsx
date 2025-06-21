@@ -60,16 +60,20 @@ function Products({user , watchlist}: Readonly<Props>) {
             <Grid container columnSpacing={2} rowSpacing={4}>
               {
                 products?.map((product: IProduct) => {
-                    return <CardMain 
-                      key={product.id} 
-                      media={{name: product.name, path: product.images.large[0]}} 
-                      content={<CardContentProduct {...product} />}
-                      state={product}
-                      iconButton={!!user}
-                      icon={<StarsIcon sx={{color: "#D7B76F"}} />}
-                      path={`/product/${product.id}`} 
-                      onAction={addToWatchlist}
-                    />
+                      return <Grid
+                          key={product.id}
+                          size={{xs: 12, sm: 6, md: 4, lg: 4}}
+                      >
+                        <CardMain
+                          media={{name: product.name, path: product.images.large[0]}} 
+                          content={<CardContentProduct {...product} />}
+                          state={product}
+                          iconButton={!!user}
+                          icon={<StarsIcon sx={{color: "#D7B76F"}} />}
+                          path={`/product/${product.id}`} 
+                          onAction={addToWatchlist}
+                        />
+                    </Grid>
                 })
               }
             </Grid>
