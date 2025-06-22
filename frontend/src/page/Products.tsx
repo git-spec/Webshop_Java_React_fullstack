@@ -24,8 +24,8 @@ function Products({products, user , watchlist}: Readonly<Props>) {
   const { category, group, family } = useParams();
 
   useEffect(() => {
-    products && getProducts(products);
-  }, []);
+    family && products && getProducts(products);
+  }, [family]);
 
   const getProducts = (products: IProduct[]) => {
       const filteredProducts = products.filter(
