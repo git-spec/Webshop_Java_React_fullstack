@@ -50,7 +50,7 @@ export default function TabsBasic(props: Readonly<Props>) {
 
     return(
         <>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3}}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               {
                 props.tabs.map((tab, i) => <Tab sx={{fontFamily: "SourceSans3", fontWeight: "500", fontSize: "1.2rem", letterSpacing: ".06rem"}} key={tab.label} label={tab.label} {...a11yProps(i)} />)

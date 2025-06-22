@@ -4,14 +4,14 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 import Price from "../Price";
 import Details from "../Details";
 
 // context of cart
 type Props = {
-    order: IOrder;
-    addOrder: (cart: IOrder) => void;
+    order: IOrderItem;
+    addOrder: (cart: IOrderItem) => void;
 };
 
 export default function CardContentCart(props: Readonly<Props>) {
@@ -61,24 +61,26 @@ export default function CardContentCart(props: Readonly<Props>) {
                 <Details 
                     name={'Menge'} 
                     direction={'column'}
-                    value={<TextField 
-                        id="amount" 
-                        variant="outlined" 
-                        size="small" 
-                        type={'number'} 
-                        placeholder="0"
-                        sx={{width: '3.5rem'}} 
-                        slotProps={{
-                            htmlInput: {
-                                sx: { px: '.4rem', py: '.25rem', fontWeight: 300},
-                                min: 0,
-                                max: 99
-                            }
-                        }} 
-                        value={amount}
-                        onChange={handleAmount}
-                        required
-                    />}
+                    value={
+                        <TextField 
+                            id="amount" 
+                            variant="outlined" 
+                            size="small" 
+                            type={'number'} 
+                            placeholder="0"
+                            sx={{width: '3.5rem'}} 
+                            slotProps={{
+                                htmlInput: {
+                                    sx: { px: '.4rem', py: '.25rem', fontWeight: 300},
+                                    min: 0,
+                                    max: 99
+                                }
+                            }} 
+                            value={amount}
+                            onChange={handleAmount}
+                            required
+                        />
+                    }
                 />
                 {/* Total */}
                 <Details

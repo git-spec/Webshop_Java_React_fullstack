@@ -1,11 +1,11 @@
 import Typography from "@mui/material/Typography";
 
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 import Details from "../Details";
 import Price from "../Price";
 
 type Props = {
-    orders: IOrder[];
+    orders: IOrderItem[];
     checkout: boolean;
 };
 

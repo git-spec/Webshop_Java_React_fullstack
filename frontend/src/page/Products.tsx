@@ -14,24 +14,27 @@ import type { IWatchlistItemDTO } from '@/interface/IWatchlistItemDTO.ts';
 import type { IWatchlistItem } from '@/interface/IWatchlistItem.ts';
 
 type Props = {
-    user?: IUserAuth;
+    products: IProduct[] | undefined; 
+    user: IUserAuth | null | undefined;
     watchlist: IWatchlistItem[] | undefined;
 };
 
-function Products({user , watchlist}: Readonly<Props>) {
-  const [products, setProducts] = useState<IProduct[]>();
+function Products({products, user , watchlist}: Readonly<Props>) {
+  const [sortedProducts, setSortedProducts] = useState<IProduct[]>();
   const { category, group, family } = useParams();
 
-  const getProducts = () => {
-    axios.get('/api/products').then(res => {
-      const filteredProducts = res.data.filter(
+  useEffect(() => {
+    products && getProducts(products);
+  }, []);
+
+  const getProducts = (products: IProduct[]) => {
+      const filteredProducts = products.filter(
         (product: IProduct) => 
           product.category.toLowerCase() === category &&
           product.group.toLowerCase() === group &&
           product.family.toLowerCase() === family
       );
-      setProducts(filteredProducts);
-    }).catch(err => console.log(err));
+      setSortedProducts(filteredProducts);
   }
 
   const addToWatchlist = (product: IProduct) => {
@@ -50,16 +53,12 @@ function Products({user , watchlist}: Readonly<Props>) {
         }
   }
 
-  useEffect(() => {
-    getProducts();
-  }, []);
-
   return (
     <LayoutContainer>
         <Box sx={{paddingTop: 4}}>
             <Grid container columnSpacing={2} rowSpacing={4}>
               {
-                products?.map((product: IProduct) => {
+                sortedProducts?.map((product: IProduct) => {
                       return <Grid
                           key={product.id}
                           size={{xs: 12, sm: 6, md: 4, lg: 4}}

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 import type { IProduct } from "@/interface/IProduct";
 import {colorItems} from "@data/colorData.ts";
 import { getMajuscule, getUnitIcon } from "@/util";
@@ -19,7 +19,7 @@ import ButtonAction from "@/component/ButtonAction";
 import Slider from "@/component/Slider";
 
 type Props = {
-    addToCart: (product: IOrder) => void;
+    addToCart: (product: IOrderItem) => void;
 };
 
 
@@ -68,7 +68,7 @@ export default function Product({addToCart}: Readonly<Props>) {
     };
 
     const handleCart = (product: IProduct) => {
-        const cartEntry: IOrder = {
+        const cartEntry: IOrderItem = {
             productID: product.id,
             color: selColor ?? '',
             amount: +amount,

@@ -2,21 +2,32 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import type { IUserAuth } from "@/interface/IUserAuth";
+import type { IProduct } from "@/interface/IProduct";
+import LayoutContainer from "@/component/share/LayoutContainer";
+import CardCart from "@/component/card/CardCart";
+import CardOrder from "@/component/card/CardOrder";
+import CardContentOrder from "@/component/card/CardContentOrder";
+import type { IOrder } from "@/interface/IOrder";
 
 type Props = {
-    user: IUserAuth;
+    user: IUserAuth | null | undefined;
+    products: IProduct[] | undefined;
 };
 
 
-export default function Orders({user}: Readonly<Props>) {
-    const [orders, setOrders] = useState();
+export default function Orders({user, products}: Readonly<Props>) {
+    const [orders, setOrders] = useState<IOrder[]>();
 
     useEffect(() => {
         getOrders();
+
+        console.log('Orders / Products: ', products);
+        
     }, []);
 
     const getOrders = () => {
-        axios.get(`/api/orders/completed/${user.email}`).then(res => {
+        // axios.get(`/api/orders/completed/${import.meta.dev.VITE_EMAIL}`).then(res => {
+        axios.get(`/api/orders/completed/${"ikfischer@yahoo.de"}`).then(res => {
             setOrders(res.data);
 
             console.log('Orders: ', res.data);
@@ -25,6 +36,15 @@ export default function Orders({user}: Readonly<Props>) {
     }
 
     return (
-        <p>Hallo</p>
+        <>
+            {
+                products && orders?.map((order: IOrder) => (
+                    <CardOrder 
+                        key={order.id} 
+                        orderID={order.id} 
+                        content={<CardContentOrder products={products} order={order} />} 
+                    />
+                ))}
+        </>
     );
 }

@@ -43,29 +43,27 @@ export default function Watchlist({watchlist, onDelete}: Readonly<Props>) {
 //   }, []);
 
     return (
-        <Box sx={{paddingTop: 4}}>
-            <Grid container columnSpacing={3} rowSpacing={4} sx={{justifyContent: !watchlist ? "center" : "", height: "100%"}}>
-                {
-                    watchlist && watchlist.length > 0 ?
-                        watchlist.map((item: IWatchlistItem) => {
-                            return <Grid
-                                    key={item.product.id}                                   
-                                    size={{xs: 12, sm: 6, md: 4, lg: 3}}
-                                    >
-                                        <CardMain 
-                                            media={{name: item.product.name, path: item.product.images.large[0]}} 
-                                            content={<CardContentProduct {...item.product} />}
-                                            state={item}
-                                            deleteButton={true}
-                                            path={`/product/${item.product.id}`} 
-                                            onAction={(deleteFromWL)}
-                                        />
-                                    </Grid>
-                            })
-                    :
-                        <NoteBig value={message} />
-                }
-            </Grid>
-        </Box>
+        <Grid container columnSpacing={3} rowSpacing={4} sx={{justifyContent: !watchlist ? "center" : "", height: "100%"}}>
+            {
+                watchlist && watchlist.length > 0 ?
+                    watchlist.map((item: IWatchlistItem) => {
+                        return <Grid
+                                key={item.product.id}                                   
+                                size={{xs: 12, sm: 6, md: 4, lg: 3}}
+                                >
+                                    <CardMain 
+                                        media={{name: item.product.name, path: item.product.images.large[0]}} 
+                                        content={<CardContentProduct {...item.product} />}
+                                        state={item}
+                                        deleteButton={true}
+                                        path={`/product/${item.product.id}`} 
+                                        onAction={(deleteFromWL)}
+                                    />
+                                </Grid>
+                        })
+                :
+                    <NoteBig value={message} />
+            }
+        </Grid>
     );
 }

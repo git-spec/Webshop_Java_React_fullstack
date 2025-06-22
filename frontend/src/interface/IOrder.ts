@@ -1,10 +1,8 @@
-import type { IProduct } from "./IProduct";
+import type { IOrderItem } from "./IOrderItem";
 
 
 export interface IOrder {
-    productID: string;
-    color: string;
-    amount: number;
-    price: number;
-    product: IProduct;
+    id: string;
+    cart: IOrderItem[];
+    paypal: Map<string, Object>;
 }

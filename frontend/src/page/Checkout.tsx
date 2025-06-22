@@ -10,7 +10,7 @@ import AccordionExpand from '@/component/AccordionExpand';
 import PersonDetailsForm from '@/component/PersonDetailsForm';
 import ButtonAction from '@/component/ButtonAction';
 import PayPal from '@/component/PayPal';
-import type { IOrder } from '@/interface/IOrder';
+import type { IOrderItem } from '@/interface/IOrderItem';
 
 import { CartContext } from '@/App';
 
@@ -30,7 +30,7 @@ export default function Checkout() {
     const handleOrder = (paypalOrder: any) => {
         const body = {
             cart: context?.cart.map(
-                        (item: IOrder) => {
+                        (item: IOrderItem) => {
                             return {
                                 productID: item.productID,
                                 color: item.color,

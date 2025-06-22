@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 
 import { CartContext } from "@/App";
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 import CardContentCart from "@/component/card/CardContentCart";
 import CardCart from "@/component/card/CardCart";
 import LayoutContainer from "@/component/share/LayoutContainer";
@@ -20,7 +20,7 @@ export default function Cart() {
     if (!context) throw new Error("CartContext must be used within a CartProvider");
     const {cart, updateCart} = context;
 
-    const addToCart = (order: IOrder) => {
+    const addToCart = (order: IOrderItem) => {
         const existingItem = cart.find(item => item.productID === order.productID);
         const newCart = existingItem && cart.map(item => {
             if (item.productID === order.productID) {
@@ -34,7 +34,7 @@ export default function Cart() {
         newCart && newCart.length > 0 && updateCart(newCart);
     };
 
-    const deleteFromCart = (order: IOrder) => {
+    const deleteFromCart = (order: IOrderItem) => {
         const existingItem = cart.find(item => item.productID === order.productID);
         const newCart = existingItem && cart.filter(item => {
             if (item.productID !== order.productID) return item;
@@ -60,7 +60,7 @@ export default function Cart() {
                                     </Typography>
                                     {
                                         cart.map(
-                                            (item: IOrder) => {
+                                            (item: IOrderItem) => {
                                                 return (
                                                     <CardCart 
                                                         key={item.productID} 
