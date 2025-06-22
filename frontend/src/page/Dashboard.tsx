@@ -5,6 +5,7 @@ import LayoutContainer from "@/component/share/LayoutContainer";
 import TabsBasic from "@/component/TabsBasic";
 import Watchlist from "./Watchlist";
 import Orders from "./Orders";
+import Profile from "./Profile";
 
 type Props = {
     user: IUserAuth | null | undefined;
@@ -23,6 +24,10 @@ export default function Dashboard({user, products, watchlist, onDelete}: Readonl
         {
             label: "Bestellungen",
             children: <Orders user={user} products={products} />
+        },
+        {
+            label: "Profil",
+            children: <Profile user={user} />
         }
     ];
 
