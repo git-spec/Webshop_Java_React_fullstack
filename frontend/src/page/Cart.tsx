@@ -48,8 +48,8 @@ export default function Cart() {
         <LayoutContainer>
                     {
                         cart.length > 0 ? 
-                            <Grid container spacing={4}>
-                                <Grid size={8}>
+                            <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
+                                <Grid size={{xs: 12, sm: 8}}>
                                     <Typography 
                                         variant="h2" 
                                         fontFamily={'SourceSans3'} 
@@ -85,7 +85,7 @@ export default function Cart() {
                                         </Stack>
                                     }
                                 </Grid>
-                                <Grid size={4}>  
+                                <Grid size={{xs: 12, sm: 4}}>  
                                     <Grid size={12} sx={{mb: 2}}>             
                                         <Order orders={cart} checkout={false} />
                                     </Grid> 

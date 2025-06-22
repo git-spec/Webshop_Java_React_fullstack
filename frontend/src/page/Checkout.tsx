@@ -72,13 +72,13 @@ export default function Checkout() {
         <LayoutContainer>
             { 
                 !orderCompleted ? <form onSubmit={handleSubmit}>
-                        <Grid container spacing={4}>
-                            <Grid size={7}>
+                        <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
+                            <Grid size={{xs: 12, sm: 7}}>
                                 {
                                     Accs.map(acc => <AccordionExpand key={acc.id} sumary={acc.sumary} Component={acc.Component} />)
                                 }                    
                             </Grid>
-                            <Grid size={5}>  
+                            <Grid size={{xs: 12, sm: 5}}>  
                                 <Grid size={12} sx={{mb: 2}}>             
                                     {context && <Order orders={context.cart} checkout={true} />}
                                 </Grid> 
