@@ -61,7 +61,7 @@ function Products({products, user , watchlist}: Readonly<Props>) {
                 sortedProducts?.map((product: IProduct) => {
                       return <Grid
                           key={product.id}
-                          size={{xs: 12, sm: 6, md: 4, lg: 4}}
+                          size={{xs: 12, sm: 6, md: 4, lg: 3}}
                       >
                         <CardMain
                           media={{name: product.name, path: product.images.large[0]}} 
