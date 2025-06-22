@@ -80,7 +80,7 @@ export default function Checkout() {
                             </Grid>
                             <Grid size={5}>  
                                 <Grid size={12} sx={{mb: 2}}>             
-                                    <Order orders={location.state} checkout={true} />
+                                    {context && <Order orders={context.cart} checkout={true} />}
                                 </Grid> 
                                 <Grid size={12}>
                                     <ButtonAction type='submit' value={'kaufen'} color="success" fitContent={false}  />

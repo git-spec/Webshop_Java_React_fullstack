@@ -39,7 +39,7 @@ export default function CardContentCart(props: Readonly<Props>) {
                 {props.order.product.info}
             </Typography>
             </Box>
-            <Stack height={'100%'} flexDirection={'row'} justifyContent={'space-between'}>
+            <Stack height={'100%'} flexDirection={'row'} justifyContent={'space-between'} py={1}>
                 <Details
                     name={'Farbe'} 
                     value={props.order.color}

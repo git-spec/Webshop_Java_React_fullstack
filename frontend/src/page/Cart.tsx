@@ -11,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import Order from "@/component/share/Order";
 import ButtonAction from "@/component/ButtonAction";
 import NoteBig from "@/component/share/NoteBig";
+import Stack from "@mui/material/Stack";
 
 
 export default function Cart() {
@@ -59,25 +60,29 @@ export default function Cart() {
                                         Warenkorb
                                     </Typography>
                                     {
-                                        cart.map(
-                                            (item: IOrderItem) => {
-                                                return (
-                                                    <CardCart 
-                                                        key={item.productID} 
-                                                        media={
-                                                            {
-                                                                name: item.product.name, 
-                                                                path: item.product.images.large[0]
-                                                            }
-                                                        } 
-                                                        content={<CardContentCart order={item} addOrder={addToCart} />} 
-                                                        // content={<CardContentCart {...item} />} 
-                                                        state={item}
-                                                        deleteOrder={deleteFromCart}
-                                                    />
-                                                )
+                                        <Stack flex={'flex'} gap={3}>
+                                            {
+                                                cart.map(
+                                                    (item: IOrderItem) => {
+                                                        return (
+                                                            <CardCart 
+                                                                key={item.productID} 
+                                                                media={
+                                                                    {
+                                                                        name: item.product.name, 
+                                                                        path: item.product.images.large[0]
+                                                                    }
+                                                                } 
+                                                                content={<CardContentCart order={item} addOrder={addToCart} />} 
+                                                                // content={<CardContentCart {...item} />} 
+                                                                state={item}
+                                                                deleteOrder={deleteFromCart}
+                                                            />
+                                                        )
+                                                    }
+                                                ) 
                                             }
-                                        ) 
+                                        </Stack>
                                     }
                                 </Grid>
                                 <Grid size={4}>  

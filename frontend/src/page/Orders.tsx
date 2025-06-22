@@ -3,8 +3,6 @@ import axios from "axios";
 
 import type { IUserAuth } from "@/interface/IUserAuth";
 import type { IProduct } from "@/interface/IProduct";
-import LayoutContainer from "@/component/share/LayoutContainer";
-import CardCart from "@/component/card/CardCart";
 import CardOrder from "@/component/card/CardOrder";
 import CardContentOrder from "@/component/card/CardContentOrder";
 import type { IOrder } from "@/interface/IOrder";
@@ -20,9 +18,6 @@ export default function Orders({user, products}: Readonly<Props>) {
 
     useEffect(() => {
         getOrders();
-
-        console.log('Orders / Products: ', products);
-        
     }, []);
 
     const getOrders = () => {
