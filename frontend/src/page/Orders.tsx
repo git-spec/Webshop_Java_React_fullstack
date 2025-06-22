@@ -24,9 +24,6 @@ export default function Orders({user, products}: Readonly<Props>) {
         // axios.get(`/api/orders/completed/${import.meta.dev.VITE_EMAIL}`).then(res => {
         axios.get(`/api/orders/completed/${"ikfischer@yahoo.de"}`).then(res => {
             setOrders(res.data);
-
-            console.log('Orders: ', res.data);
-            
         }).catch(err => console.log(err));
     }
 

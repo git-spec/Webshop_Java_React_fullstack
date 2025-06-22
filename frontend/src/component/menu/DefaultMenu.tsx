@@ -18,6 +18,10 @@ function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>
     const user = useContext(UserContext);
     const menuId = id;
     const isOpen = Boolean(anchorEl);
+    const menuItems = [
+        <MenuItem key={'dashboard'} onClick={() => {handleMenuClose(); navigate('/dashboard')}}>Dashboard</MenuItem>,
+        <MenuItem key={'logout'} onClick={() => {handleMenuClose(); onLogout()}}>Logout</MenuItem>
+    ];
 
     const handleMenuClose = () => {
         onClose(null);
@@ -42,10 +46,7 @@ function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>
             {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
             { !user && <MenuItem onClick={() => {handleMenuClose(); onLogin()}}>Login</MenuItem>}
             {
-                user && <>
-                    <MenuItem onClick={() => {handleMenuClose(); navigate('/dashboard')}}>Dashboard</MenuItem>
-                    <MenuItem onClick={() => {handleMenuClose(); onLogout()}}>Logout</MenuItem>
-                </>
+                user && menuItems
             }
         </Menu>
     );
