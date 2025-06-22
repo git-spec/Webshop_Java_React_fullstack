@@ -31,7 +31,7 @@ export default function App() {
   const [products, setProducts] = useState<IProduct[]>();
   const [cart, setCart] = useState<IOrderItem[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
-  const [user, setUser] = useState<IUserAuth | undefined | null>(undefined); 
+  const [user, setUser] = useState<IUserAuth | null>(); 
   const [listItems, setListItems] = useState<IWatchlistItem[]>();
 
   useEffect(() => {
@@ -62,13 +62,17 @@ export default function App() {
       );
     } else {
       // Adds new article to context.
-      setCart([...cart, order])
+      setCart([...cart, order]);
     }
   }
 
   const updateCart = (cart: IOrderItem[]) => {
-    setCart(cart)
+    setCart(cart);
   }
+
+  // const updateUser = (user: IUserAuth) => {
+  //   setUser(user);
+  // }
 
   function login() {
       const host: string = window.location.host === 'localhost:5173'
@@ -131,12 +135,12 @@ export default function App() {
   // }
 
   const CartContextValue = useMemo(() => ({ cart, updateCart }), [cart, updateCart]);
-  // const UserContextValue = useMemo(() => ({ user, updateUser }), [user, updateUser]);
+  const UserContextValue = useMemo(() => ({ user }), [user]);
   // const ProductsContextValue = useMemo(() => ({ products, updateProducts }), [products, updateProducts]);
 
   return (
       <CartContext.Provider value={CartContextValue}>
-        {/* <UserContextValue.Provider value={UserContextValue}> */}
+        <UserContext.Provider value={UserContextValue.user}>
           {/* <ProductsContextValue.Provider value={ProductsContextValue}> */}
             <Routes>
               {/*APP RootLayout*/}
@@ -155,7 +159,7 @@ export default function App() {
               </Route>
           </Routes>
           {/* </UProductsContextValue.Provider> */}
-        {/* </UserContextValue.Provider> */}
+        </UserContext.Provider>
       </CartContext.Provider>
   )
 }
