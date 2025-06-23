@@ -25,15 +25,27 @@ import type { SnackbarCloseReason } from "@mui/material/Snackbar";
 //     return <FormHelperText>{helperText}</FormHelperText>;
 // }
 
+type Props = {
+    props?: {
+        gender?: string;
+        firstname: string;
+        lastname: string;
+        street?: string;
+        homenumber?: string;
+        postalcode?: string;
+        domicile?: string;
+    }
+};
 
-export default function PersonDetailsForm() {
-    const [gender, setGender] = useState<string>('');
-    const [firstname, setFirstname] = useState<string>('');
-    const [lastname, setLastname] = useState<string>('');
-    const [street, setStreet] = useState<string>('');
-    const [homenumber, setHomenumber] = useState<string>('');
-    const [postalcode, setPostalcode] = useState<string>('');
-    const [domicile, setDomicile] = useState<string>('');
+
+export default function PersonDetailsForm({props}: Readonly<Props>) {
+    const [gender, setGender] = useState<string>(props?.gender ?? '');
+    const [firstname, setFirstname] = useState<string>(props?.firstname ?? '');
+    const [lastname, setLastname] = useState<string>(props?.lastname ?? '');
+    const [street, setStreet] = useState<string>(props?.street ?? '');
+    const [homenumber, setHomenumber] = useState<string>(props?.homenumber ?? '');
+    const [postalcode, setPostalcode] = useState<string>(props?.postalcode ?? '');
+    const [domicile, setDomicile] = useState<string>(props?.domicile ?? '');
 
     function handleGender(e: SelectChangeEvent) {
         setGender(e.target.value);
@@ -64,8 +76,8 @@ export default function PersonDetailsForm() {
     }
 
     return (
-        <Grid container columnSpacing={2}>
-            <Grid size={{xs: 12, sm: 3}} sx={{mb: 2}}>
+        <Grid container columnSpacing={2} flexDirection={'column'}>
+            <Grid size={3} sx={{mb: 2}}>
                 <Box sx={{ minWidth: 100 }}>
                     <FormControl fullWidth>
                         <InputLabel id={'gender-label'} size="small">Gender</InputLabel>
@@ -84,27 +96,29 @@ export default function PersonDetailsForm() {
                     </FormControl>
                 </Box>
             </Grid>
-            <Grid size={12} sx={{mb: 2}}>
-                <TextField
-                    id="firstname"
-                    label="Vorname"
-                    variant="outlined"
-                    size="small"
-                    value={firstname}
-                    onChange={handleFirstname}
-                    fullWidth
-                />
-            </Grid>
-            <Grid size={12} sx={{mb: 2}}>
-                <TextField
-                    id="lastname"
-                    label="Nachname"
-                    variant="outlined"
-                    size="small"
-                    value={lastname}
-                    onChange={handleLastname}
-                    fullWidth
-                />
+            <Grid container>
+                <Grid size={12} sx={{mb: 2}}>
+                    <TextField
+                        id="firstname"
+                        label="Vorname"
+                        variant="outlined"
+                        size="small"
+                        value={firstname}
+                        onChange={handleFirstname}
+                        fullWidth
+                    />
+                </Grid>
+                <Grid size={12} sx={{mb: 2}}>
+                    <TextField
+                        id="lastname"
+                        label="Nachname"
+                        variant="outlined"
+                        size="small"
+                        value={lastname}
+                        onChange={handleLastname}
+                        fullWidth
+                    />
+                </Grid>
             </Grid>
             {/* <Grid size={{xs: 12, sm: 9, md: 10}} sx={{mb: 1}}>
                 <FormControl fullWidth>
@@ -119,28 +133,30 @@ export default function PersonDetailsForm() {
                     <MyFormHelperText />
                 </FormControl>
             </Grid> */}
-            <Grid size={{xs: 12, sm: 9, md: 10}} sx={{mb: 2}}>
-                <TextField
-                    id="street"
-                    label="Straße"
-                    variant="outlined"
-                    size="small"
-                    value={street}
-                    onChange={handleStreet}
-                    multiline
-                    fullWidth
-                />
-            </Grid>
-            <Grid size={{xs: 12, sm: 3, md: 2}} sx={{mb: 2}}>
-                <TextField
-                    id="homenumber"
-                    label="Nr."
-                    variant="outlined"
-                    size="small"
-                    value={homenumber}
-                    onChange={handleHomenumber}
-                    fullWidth
-                />
+            <Grid container>
+                <Grid size={{xs: 12, sm: 9, md: 10}} sx={{mb: 2}}>
+                    <TextField
+                        id="street"
+                        label="Straße"
+                        variant="outlined"
+                        size="small"
+                        value={street}
+                        onChange={handleStreet}
+                        multiline
+                        fullWidth
+                    />
+                </Grid>
+                <Grid size={{xs: 12, sm: 3, md: 2}} sx={{mb: 2}}>
+                    <TextField
+                        id="homenumber"
+                        label="Nr."
+                        variant="outlined"
+                        size="small"
+                        value={homenumber}
+                        onChange={handleHomenumber}
+                        fullWidth
+                    />
+                </Grid>
             </Grid>
             <Grid container>
                 <Grid size={{xs: 12, sm: 4, md: 5}} sx={{mb: 2}}>
@@ -151,7 +167,6 @@ export default function PersonDetailsForm() {
                         size="small"
                         value={postalcode}
                         onChange={handlePostalcode}
-                        multiline
                         fullWidth
                     />
                 </Grid>

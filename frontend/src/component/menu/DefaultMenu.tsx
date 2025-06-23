@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { UserContext } from "@/App";
 
 
 type Props = {
@@ -12,18 +14,16 @@ type Props = {
 };
 
 function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>) {
-    let anchor: null | HTMLElement = null;
+    const navigate = useNavigate();
+    const user = useContext(UserContext);
     const menuId = id;
     const isOpen = Boolean(anchorEl);
-
-    useEffect(() => {
-        if (anchorEl) {
-            anchor = anchorEl;
-        }
-    }, [anchorEl]);
+    const menuItems = [
+        <MenuItem key={'dashboard'} onClick={() => {handleMenuClose(); navigate('/dashboard')}}>Dashboard</MenuItem>,
+        <MenuItem key={'logout'} onClick={() => {handleMenuClose(); onLogout()}}>Logout</MenuItem>
+    ];
 
     const handleMenuClose = () => {
-        anchor = null;
         onClose(null);
     };
 
@@ -44,8 +44,10 @@ function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>
             onClose={handleMenuClose}
         >
             {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
-            <MenuItem onClick={() => {handleMenuClose(); onLogin()}}>Login</MenuItem>
-            <MenuItem onClick={() => {handleMenuClose(); onLogout()}}>Logout</MenuItem>
+            { !user && <MenuItem onClick={() => {handleMenuClose(); onLogin()}}>Login</MenuItem>}
+            {
+                user && menuItems
+            }
         </Menu>
     );
 }

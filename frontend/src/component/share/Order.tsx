@@ -1,11 +1,11 @@
 import Typography from "@mui/material/Typography";
 
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 import Details from "../Details";
 import Price from "../Price";
 
 type Props = {
-    orders: IOrder[];
+    orders: IOrderItem[];
     checkout: boolean;
 };
 
@@ -35,12 +35,12 @@ export default function Order({orders, checkout}: Readonly<Props>) {
                 orders?.map(
                     order => 
                         <Details 
-                            key={order.id}
-                            name={`${order.name}\u00A0\u00A0\u00A0\u00A0x ${order.amount}`} 
+                            key={order.productID}
+                            name={`${order.product.name}\u00A0\u00A0\u00A0\u00A0x ${order.amount}`} 
                             value={
                                 <Price 
                                     value={order.price * order.amount} 
-                                    currency={order.currency} 
+                                    currency={order.product.currency} 
                                     justify={'end'} 
                                 />
                             } 
@@ -53,7 +53,7 @@ export default function Order({orders, checkout}: Readonly<Props>) {
                     value={
                         <Price 
                             value={getSumOfOrders() / 100 * tax} 
-                            currency={orders && orders[0].currency} 
+                            currency={orders[0]?.product.currency ?? ''} 
                             justify={'end'} 
                             fontSize={'.8rem'}
                         />
@@ -66,7 +66,7 @@ export default function Order({orders, checkout}: Readonly<Props>) {
                 value={
                     <Price 
                         value={getSumOfOrders()} 
-                        currency={orders && orders[0].currency} 
+                        currency={orders[0]?.product.currency ?? ''} 
                         justify={'end'} 
                         fontWeight={500}
                     />

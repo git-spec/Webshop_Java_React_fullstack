@@ -1,53 +1,85 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import StarsIcon from '@mui/icons-material/Stars';
 
 import type { IProduct } from "../interface/IProduct.ts";
 import CardMain from '../component/card/CardMain.tsx';
 import CardContentProduct from '../component/card/CardContentProduct.tsx';
+import LayoutContainer from '@/component/share/LayoutContainer.tsx';
+import type { IUserAuth } from '@/interface/IUserAuth.ts';
+import type { IWatchlistItemDTO } from '@/interface/IWatchlistItemDTO.ts';
+import type { IWatchlistItem } from '@/interface/IWatchlistItem.ts';
 
+type Props = {
+    products: IProduct[] | undefined; 
+    user: IUserAuth | null | undefined;
+    watchlist: IWatchlistItem[] | undefined;
+};
 
-function Products() {
-  const [products, setProducts] = useState<IProduct[]>();
+function Products({products, user , watchlist}: Readonly<Props>) {
+  const [sortedProducts, setSortedProducts] = useState<IProduct[]>();
   const { category, group, family } = useParams();
 
-  function getProducts() {
-    axios.get('/api/products').then(res => {
-      const filteredProducts = res.data.filter(
+  useEffect(() => {
+    family && products && getProducts(products);
+  }, [family]);
+
+  const getProducts = (products: IProduct[]) => {
+      const filteredProducts = products.filter(
         (product: IProduct) => 
           product.category.toLowerCase() === category &&
           product.group.toLowerCase() === group &&
           product.family.toLowerCase() === family
       );
-      setProducts(filteredProducts);
-    }).catch(err => console.log(err));
+      setSortedProducts(filteredProducts);
   }
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  const addToWatchlist = (product: IProduct) => {
+        if (user && user.email) {
+          const itemExists = watchlist?.some(listItem => product.id === listItem.product.id);
+          if (!itemExists) {
+              const body: IWatchlistItemDTO = {
+                userEmail: user.email,
+                product: product,
+              };
+            axios.post("/api/watchlist", body).then(res => {
+              console.log(res.data);
+              
+            });
+          }
+        }
+  }
 
   return (
-    <Container>
-        <Box sx={{paddingTop: 4}}>
-            <Grid container columnSpacing={2} rowSpacing={4}>
-              {
-              products?.map((product: IProduct) => {
-                  return <CardMain 
-                    key={product.id} 
-                    media={{name: product.name, path: product.images.large[0]}} 
-                    content={<CardContentProduct {...product} />}
-                    state={product}
-                    actionAreaPath={`/product/${product.id}`} 
-                  />
-              })
-              }
-            </Grid>
-        </Box>
-    </Container>
+    <div style={{paddingTop: '4rem'}}>
+      <LayoutContainer>
+          <Box sx={{paddingTop: 4}}>
+              <Grid container columnSpacing={2} rowSpacing={4}>
+                {
+                  sortedProducts?.map((product: IProduct) => {
+                        return <Grid
+                            key={product.id}
+                            size={{xs: 12, sm: 6, md: 4, lg: 3}}
+                        >
+                          <CardMain
+                            media={{name: product.name, path: product.images.large[0]}} 
+                            content={<CardContentProduct {...product} />}
+                            state={product}
+                            iconButton={!!user}
+                            icon={<StarsIcon sx={{color: "#D7B76F"}} />}
+                            path={`/product/${product.id}`} 
+                            onAction={addToWatchlist}
+                          />
+                      </Grid>
+                  })
+                }
+              </Grid>
+          </Box>
+      </LayoutContainer>
+    </div>
   )
 }
 

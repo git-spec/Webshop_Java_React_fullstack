@@ -1,7 +1,7 @@
-import type { IOrder } from "@/interface/IOrder";
+import type { IOrderItem } from "@/interface/IOrderItem";
 
 
 export type CartContextType = {
-  cart: IOrder[];
-  updateCart: (cart: IOrder[]) => void;
+  cart: IOrderItem[];
+  updateCart: (cart: IOrderItem[]) => void;
 };
