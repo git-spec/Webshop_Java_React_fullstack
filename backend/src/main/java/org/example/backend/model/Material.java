@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum Material {
+    WOOD("Wood"),
     OAK("Oak"),
     ASH("Ash"),
     BEECH("Beech"),
