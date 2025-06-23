@@ -21,7 +21,7 @@ public enum Material {
     VIRGIN_WOOL("Virgin Wool"),
     LINEN("Linen"),
     COTTON("Cotton"),
-    HEMP("Hanf"),
+    HEMP( "Hanf"),
     LEATHER("Leather"),
     LINOLEUM("Linoleum"),
     PLASTIC("Plastic");
