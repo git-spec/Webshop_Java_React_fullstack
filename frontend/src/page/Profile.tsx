@@ -5,7 +5,7 @@ import type { IUserAuth } from "@/interface/IUserAuth";
 import { Stack } from "@mui/material";
 
 type Props = {
-    user: IUserAuth | undefined;
+    user: IUserAuth | null | undefined;
 };
 
 

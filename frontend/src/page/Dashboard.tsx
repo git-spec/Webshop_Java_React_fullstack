@@ -32,8 +32,10 @@ export default function Dashboard({user, products, watchlist, onDelete}: Readonl
     ];
 
     return (  
+    <div style={{paddingTop: '4rem'}}>
         <LayoutContainer>
             <TabsBasic tabs={tabsItems} /> 
         </LayoutContainer>
+    </div>
     );
 }

@@ -45,58 +45,60 @@ export default function Cart() {
     };
 
     return (
-        <LayoutContainer>
-                    {
-                        cart.length > 0 ? 
-                            <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
-                                <Grid size={{xs: 12, sm: 8}}>
-                                    <Typography 
-                                        variant="h2" 
-                                        fontFamily={'SourceSans3'} 
-                                        fontWeight={500} 
-                                        fontSize={'1.5rem'}
-                                        marginBottom={'1.5rem'}
-                                    >
-                                        Warenkorb
-                                    </Typography>
-                                    {
-                                        <Stack flex={'flex'} gap={3}>
-                                            {
-                                                cart.map(
-                                                    (item: IOrderItem) => {
-                                                        return (
-                                                            <CardCart 
-                                                                key={item.productID} 
-                                                                media={
-                                                                    {
-                                                                        name: item.product.name, 
-                                                                        path: item.product.images.large[0]
-                                                                    }
-                                                                } 
-                                                                content={<CardContentCart order={item} addOrder={addToCart} />} 
-                                                                // content={<CardContentCart {...item} />} 
-                                                                state={item}
-                                                                deleteOrder={deleteFromCart}
-                                                            />
-                                                        )
-                                                    }
-                                                ) 
-                                            }
-                                        </Stack>
-                                    }
-                                </Grid>
-                                <Grid size={{xs: 12, sm: 4}}>  
-                                    <Grid size={12} sx={{mb: 2}}>             
-                                        <Order orders={cart} checkout={false} />
-                                    </Grid> 
-                                    <Grid size={12}>
-                                        <ButtonAction value={'zur Kasse'} color="success" click={() => {navigate('/checkout')}} />
+        <div style={{paddingTop: '4rem'}}>
+            <LayoutContainer>
+                        {
+                            cart.length > 0 ? 
+                                <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
+                                    <Grid size={{xs: 12, sm: 8}}>
+                                        <Typography 
+                                            variant="h2" 
+                                            fontFamily={'SourceSans3'} 
+                                            fontWeight={500} 
+                                            fontSize={'1.5rem'}
+                                            marginBottom={'1.5rem'}
+                                        >
+                                            Warenkorb
+                                        </Typography>
+                                        {
+                                            <Stack flex={'flex'} gap={3}>
+                                                {
+                                                    cart.map(
+                                                        (item: IOrderItem) => {
+                                                            return (
+                                                                <CardCart 
+                                                                    key={item.productID} 
+                                                                    media={
+                                                                        {
+                                                                            name: item.product.name, 
+                                                                            path: item.product.images.large[0]
+                                                                        }
+                                                                    } 
+                                                                    content={<CardContentCart order={item} addOrder={addToCart} />} 
+                                                                    // content={<CardContentCart {...item} />} 
+                                                                    state={item}
+                                                                    deleteOrder={deleteFromCart}
+                                                                />
+                                                            )
+                                                        }
+                                                    ) 
+                                                }
+                                            </Stack>
+                                        }
+                                    </Grid>
+                                    <Grid size={{xs: 12, sm: 4}}>  
+                                        <Grid size={12} sx={{mb: 2}}>             
+                                            <Order orders={cart} checkout={false} />
+                                        </Grid> 
+                                        <Grid size={12}>
+                                            <ButtonAction value={'zur Kasse'} color="success" click={() => {navigate('/checkout')}} />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        : 
-                            <NoteBig value={message} />
-                    }
-        </LayoutContainer>
+                            : 
+                                <NoteBig value={message} />
+                        }
+            </LayoutContainer>
+        </div>
     );
 }

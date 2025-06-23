@@ -12,7 +12,7 @@ export default function RootLayout(props: Readonly<Props>) {
     return (
         <>
             <Header onLogin={props.onLogin} onLogout={props.onLogout} />
-            <main style={{paddingTop: '4rem'}}>
+            <main>
                 <Outlet />
             </main>
             <footer></footer>
