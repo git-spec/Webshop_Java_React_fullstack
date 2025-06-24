@@ -16,6 +16,7 @@ import Dashboard from "./page/Dashboard.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import type { IProduct } from "./interface/IProduct.ts";
 import type { IWatchlistItem } from "./interface/IWatchlistItem.ts";
+import NotFound from "./page/NotFound.tsx";
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 export const UserContext = createContext<IUserAuth | null | undefined>(undefined);
@@ -156,6 +157,7 @@ export default function App() {
                     <Dashboard user={user} products={products} watchlist={listItems} onDelete={(watchlist) => (setListItems(watchlist))} />
                   } />
                 </Route>
+                <Route path="*" element={<NotFound />} />
               </Route>
           </Routes>
           {/* </UProductsContextValue.Provider> */}
