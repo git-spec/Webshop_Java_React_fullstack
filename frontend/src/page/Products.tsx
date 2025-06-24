@@ -54,7 +54,7 @@ function Products({products, user , watchlist}: Readonly<Props>) {
   }
 
   return (
-    <LayoutContainer pt={'4rem'}>
+    <LayoutContainer padding={true}>
         <Box sx={{paddingTop: 4}}>
             <Grid container columnSpacing={2} rowSpacing={4}>
               {

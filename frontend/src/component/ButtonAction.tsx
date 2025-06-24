@@ -28,7 +28,8 @@ export default function ButtonAction(props: Readonly<Props>) {
                         sx={
                             {
                                 fontFamily: 'SourceSans3',
-                                 minWidth: `${props.fitContent ? 'fit-content' : '100%'}`
+                                width: `${props.fitContent ? 'fit-content' : '100%'}`,
+                                px: `${props.fitContent ? 1 : ''}`
                             }
                         } 
                         onClick={props.click}
@@ -39,8 +40,15 @@ export default function ButtonAction(props: Readonly<Props>) {
                 :
                     <Button 
                         variant={props.variant ?? 'outlined'} 
-                        size="small" sx={{fontFamily: 'SourceSans3'}} 
+                        size="small"
                         href={props.href}
+                        sx={
+                            {
+                                fontFamily: 'SourceSans3',
+                                width: `${props.fitContent ? 'fit-content' : '100%'}`,
+                                px: `${props.fitContent ? 1 : ''}`
+                            }
+                        } 
                     >
                         {props.value}
                     </Button>

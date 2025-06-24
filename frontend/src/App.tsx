@@ -157,8 +157,8 @@ export default function App() {
                     <Dashboard user={user} products={products} watchlist={listItems} onDelete={(watchlist) => (setListItems(watchlist))} />
                   } />
                 </Route>
-                <Route path="*" element={<NotFound />} />
               </Route>
+              <Route path="*" element={<NotFound />} />
           </Routes>
           {/* </UProductsContextValue.Provider> */}
         </UserContext.Provider>

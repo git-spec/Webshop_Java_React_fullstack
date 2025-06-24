@@ -79,7 +79,7 @@ export default function Product({addToCart}: Readonly<Props>) {
     }
 
     return (
-        <LayoutContainer pt={'4rem'}>
+        <LayoutContainer padding={true}>
             {/* Image */}
             <Grid container spacing={6}>
                 <Grid size={8}>

@@ -32,7 +32,7 @@ export default function Dashboard({user, products, watchlist, onDelete}: Readonl
     ];
 
     return (  
-        <LayoutContainer pt={'4rem'}>
+        <LayoutContainer padding={true}>
             <TabsBasic tabs={tabsItems} /> 
         </LayoutContainer>
     );

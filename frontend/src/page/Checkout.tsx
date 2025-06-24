@@ -69,7 +69,7 @@ export default function Checkout() {
     ];
 
     return (
-        <LayoutContainer pt={'4rem'}>
+        <LayoutContainer padding={true}>
             { 
                 !orderCompleted ? <form onSubmit={handleSubmit}>
                         <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
