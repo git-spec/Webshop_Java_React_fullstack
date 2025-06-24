@@ -69,39 +69,37 @@ export default function Checkout() {
     ];
 
     return (
-        <div style={{paddingTop: '4rem'}}>
-            <LayoutContainer>
-                { 
-                    !orderCompleted ? <form onSubmit={handleSubmit}>
-                            <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
-                                <Grid size={{xs: 12, sm: 7}}>
-                                    {
-                                        Accs.map(acc => <AccordionExpand key={acc.id} sumary={acc.sumary} Component={acc.Component} />)
-                                    }                    
-                                </Grid>
-                                <Grid size={{xs: 12, sm: 5}}>  
-                                    <Grid size={12} sx={{mb: 2}}>             
-                                        {context && <Order orders={context.cart} checkout={true} />}
-                                    </Grid> 
-                                    <Grid size={12}>
-                                        <ButtonAction type='submit' value={'kaufen'} color="success" fitContent={false}  />
-                                    </Grid>
+        <LayoutContainer pt={'4rem'}>
+            { 
+                !orderCompleted ? <form onSubmit={handleSubmit}>
+                        <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
+                            <Grid size={{xs: 12, sm: 7}}>
+                                {
+                                    Accs.map(acc => <AccordionExpand key={acc.id} sumary={acc.sumary} Component={acc.Component} />)
+                                }                    
+                            </Grid>
+                            <Grid size={{xs: 12, sm: 5}}>  
+                                <Grid size={12} sx={{mb: 2}}>             
+                                    {context && <Order orders={context.cart} checkout={true} />}
+                                </Grid> 
+                                <Grid size={12}>
+                                    <ButtonAction type='submit' value={'kaufen'} color="success" fitContent={false}  />
                                 </Grid>
                             </Grid>
-                        </form>
-                    : 
-                        <Typography 
-                            variant="h1" 
-                            textAlign={'center'} 
-                            fontFamily={'SourceSans3'} 
-                            fontWeight={500} fontSize={'2rem'} 
-                            color="lightgray"
-                            marginTop={12}
-                        >
-                            Vielen Dank für Ihren Einkauf!
-                        </Typography>
-                }
-            </LayoutContainer>
-        </div>
+                        </Grid>
+                    </form>
+                : 
+                    <Typography 
+                        variant="h1" 
+                        textAlign={'center'} 
+                        fontFamily={'SourceSans3'} 
+                        fontWeight={500} fontSize={'2rem'} 
+                        color="lightgray"
+                        marginTop={12}
+                    >
+                        Vielen Dank für Ihren Einkauf!
+                    </Typography>
+            }
+        </LayoutContainer>
     );
 }

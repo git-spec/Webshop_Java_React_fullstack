@@ -38,7 +38,7 @@ function Products({products, user , watchlist}: Readonly<Props>) {
   }
 
   const addToWatchlist = (product: IProduct) => {
-        if (user && user.email) {
+        if (user?.email) {
           const itemExists = watchlist?.some(listItem => product.id === listItem.product.id);
           if (!itemExists) {
               const body: IWatchlistItemDTO = {
@@ -54,32 +54,30 @@ function Products({products, user , watchlist}: Readonly<Props>) {
   }
 
   return (
-    <div style={{paddingTop: '4rem'}}>
-      <LayoutContainer>
-          <Box sx={{paddingTop: 4}}>
-              <Grid container columnSpacing={2} rowSpacing={4}>
-                {
-                  sortedProducts?.map((product: IProduct) => {
-                        return <Grid
-                            key={product.id}
-                            size={{xs: 12, sm: 6, md: 4, lg: 3}}
-                        >
-                          <CardMain
-                            media={{name: product.name, path: product.images.large[0]}} 
-                            content={<CardContentProduct {...product} />}
-                            state={product}
-                            iconButton={!!user}
-                            icon={<StarsIcon sx={{color: "#D7B76F"}} />}
-                            path={`/product/${product.id}`} 
-                            onAction={addToWatchlist}
-                          />
-                      </Grid>
-                  })
-                }
-              </Grid>
-          </Box>
-      </LayoutContainer>
-    </div>
+    <LayoutContainer pt={'4rem'}>
+        <Box sx={{paddingTop: 4}}>
+            <Grid container columnSpacing={2} rowSpacing={4}>
+              {
+                sortedProducts?.map((product: IProduct) => {
+                      return <Grid
+                          key={product.id}
+                          size={{xs: 12, sm: 6, md: 4, lg: 3}}
+                      >
+                        <CardMain
+                          media={{name: product.name, path: product.images.large[0]}} 
+                          content={<CardContentProduct {...product} />}
+                          state={product}
+                          iconButton={!!user}
+                          icon={<StarsIcon sx={{color: "#D7B76F"}} />}
+                          path={`/product/${product.id}`} 
+                          onAction={addToWatchlist}
+                        />
+                    </Grid>
+                })
+              }
+            </Grid>
+        </Box>
+    </LayoutContainer>
   )
 }
 

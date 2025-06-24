@@ -79,115 +79,113 @@ export default function Product({addToCart}: Readonly<Props>) {
     }
 
     return (
-        <div style={{paddingTop: '4rem'}}>
-            <LayoutContainer>
-                {/* Image */}
-                <Grid container spacing={6}>
-                    <Grid size={8}>
-                        <Slider images={product?.images.large ?? []} />
-                    </Grid>
-                    <Grid size={4}>
-                        {/* Manufacturer */}
-                        <Typography component={'p'} sx={{fontSize: '.75rem'}}>{product?.manufacturer}</Typography>
-                        {/* Name */}
-                        <Typography component={'h1'} sx={{fontSize: '1.5rem', pb: '1rem'}}>{product?.name}</Typography>
-                        {/* Dimension */}
-                        <PragraphContainer>
-                            <Typography component={'h3'} sx={{fontWeight: 600, pb: '.5rem'}}>Abmessungen</Typography>
-                            {
-                                product?.features.dimension && Object.entries(product.features.dimension).map(
-                                    (dimension) => (
-                                        <Details 
-                                            key={dimension[0]} 
-                                            name={getMajuscule(dimension[0])} 
-                                            value={dimension[1].number} 
-                                            unit={getUnitIcon(dimension[1].unit).find(val => !!val)} 
-                                        />
-                                    )
-                                )
-                            }
-                        </PragraphContainer>
-                        {/* Material */}
-                        <PragraphContainer>
-                            <Typography component={'h3'} sx={{fontWeight: 600, pb: '.5rem'}}>Material</Typography>
-                            <Details name={
-                                product?.features.materials.map(
-                                    material => {return getMajuscule(material)}
-                                    ).toString().replace(',', ', ') ?? ''
-                                } 
-                            />
-                        </PragraphContainer>
-                        {/* Farben */}
-                        <PragraphContainer>
-                            <Typography component={'h3'} sx={{fontWeight: 600, pb: '.75rem'}}>Farben</Typography>
-                            <Stack direction="row" spacing={2}>
-                                {product?.features.colors.map(color => {
-                                    const colorItem = colorItems.find(item => item.name === color);
-                                    return (
-                                        colorItem && <AvatarCaption 
-                                            key={colorItem.name}
-                                            name={colorItem.name} 
-                                            image={colorItem.image} 
-                                            caption={colorItem.caption} 
-                                            size={colorItem.size} 
-                                            filter={colorItem.filter}
-                                            select={selColor === colorItem.name}
-                                            click={(color) => handleColor(color)}
-                                        />
-                                    )
-                                })}
-                            </Stack>
-                        </PragraphContainer>
-                        <br />
-                        {/* Price */}
-                        <PragraphContainer>
-                            <Details 
-                                name={'Preis'} 
-                                value={<Price value={product?.price ?? ''} currency={product?.currency ?? ''} justify={'end'} />}
-                            />
-                        </PragraphContainer>
-                        {/* Amount */}
-                        <Details 
-                            name={'Menge'} 
-                            value={<TextField 
-                                id="amount" 
-                                variant="outlined" 
-                                size="small" 
-                                type={'number'} 
-                                placeholder="0"
-                                sx={{width: '3.5rem'}} 
-                                slotProps={{
-                                    htmlInput: {
-                                        sx: {px: '.4rem', py: '.25rem', fontWeight: 300},
-                                        min: 0,
-                                        max: 99
-                                    }
-                                }} 
-                                value={amount}
-                                onChange={handleAmount}
-                                required
-                            />}
-                        />
-                        {/* Total */}
-                        <PragraphContainer>
-                            <Details 
-                                name={'Gesamt'} 
-                                value={<Price value={total ?? 0} currency={product?.currency ?? ''} justify={'end'} fontWeight={500} />}
-                                fontWeight={500}
-                            />
-                        </PragraphContainer>
-                        {/* Action */}
-                        <Stack>
-                            {product && <ButtonAction value={'in den Warenkorb'} color="success" click={() => handleCart(product)} />}
-                        </Stack>
-                    </Grid>
-                    {/* Description */}
-                    <Grid size={12}>
-                        <Typography component={'h2'} sx={{fontSize: '1.2rem', pb: '1rem'}}>Beschreibung</Typography>
-                        <Typography component={'p'} sx={{fontWeight: 300}} gutterBottom>{product?.description}</Typography>
-                    </Grid>
+        <LayoutContainer pt={'4rem'}>
+            {/* Image */}
+            <Grid container spacing={6}>
+                <Grid size={8}>
+                    <Slider images={product?.images.large ?? []} />
                 </Grid>
-            </LayoutContainer>
-        </div>
+                <Grid size={4}>
+                    {/* Manufacturer */}
+                    <Typography component={'p'} sx={{fontSize: '.75rem'}}>{product?.manufacturer}</Typography>
+                    {/* Name */}
+                    <Typography component={'h1'} sx={{fontSize: '1.5rem', pb: '1rem'}}>{product?.name}</Typography>
+                    {/* Dimension */}
+                    <PragraphContainer>
+                        <Typography component={'h3'} sx={{fontWeight: 600, pb: '.5rem'}}>Abmessungen</Typography>
+                        {
+                            product?.features.dimension && Object.entries(product.features.dimension).map(
+                                (dimension) => (
+                                    <Details 
+                                        key={dimension[0]} 
+                                        name={getMajuscule(dimension[0])} 
+                                        value={dimension[1].number} 
+                                        unit={getUnitIcon(dimension[1].unit).find(val => !!val)} 
+                                    />
+                                )
+                            )
+                        }
+                    </PragraphContainer>
+                    {/* Material */}
+                    <PragraphContainer>
+                        <Typography component={'h3'} sx={{fontWeight: 600, pb: '.5rem'}}>Material</Typography>
+                        <Details name={
+                            product?.features.materials.map(
+                                material => {return getMajuscule(material)}
+                                ).toString().replace(',', ', ') ?? ''
+                            } 
+                        />
+                    </PragraphContainer>
+                    {/* Farben */}
+                    <PragraphContainer>
+                        <Typography component={'h3'} sx={{fontWeight: 600, pb: '.75rem'}}>Farben</Typography>
+                        <Stack direction="row" spacing={2}>
+                            {product?.features.colors.map(color => {
+                                const colorItem = colorItems.find(item => item.name === color);
+                                return (
+                                    colorItem && <AvatarCaption 
+                                        key={colorItem.name}
+                                        name={colorItem.name} 
+                                        image={colorItem.image} 
+                                        caption={colorItem.caption} 
+                                        size={colorItem.size} 
+                                        filter={colorItem.filter}
+                                        select={selColor === colorItem.name}
+                                        click={(color) => handleColor(color)}
+                                    />
+                                )
+                            })}
+                        </Stack>
+                    </PragraphContainer>
+                    <br />
+                    {/* Price */}
+                    <PragraphContainer>
+                        <Details 
+                            name={'Preis'} 
+                            value={<Price value={product?.price ?? ''} currency={product?.currency ?? ''} justify={'end'} />}
+                        />
+                    </PragraphContainer>
+                    {/* Amount */}
+                    <Details 
+                        name={'Menge'} 
+                        value={<TextField 
+                            id="amount" 
+                            variant="outlined" 
+                            size="small" 
+                            type={'number'} 
+                            placeholder="0"
+                            sx={{width: '3.5rem'}} 
+                            slotProps={{
+                                htmlInput: {
+                                    sx: {px: '.4rem', py: '.25rem', fontWeight: 300},
+                                    min: 0,
+                                    max: 99
+                                }
+                            }} 
+                            value={amount}
+                            onChange={handleAmount}
+                            required
+                        />}
+                    />
+                    {/* Total */}
+                    <PragraphContainer>
+                        <Details 
+                            name={'Gesamt'} 
+                            value={<Price value={total ?? 0} currency={product?.currency ?? ''} justify={'end'} fontWeight={500} />}
+                            fontWeight={500}
+                        />
+                    </PragraphContainer>
+                    {/* Action */}
+                    <Stack>
+                        {product && <ButtonAction value={'in den Warenkorb'} color="success" click={() => handleCart(product)} />}
+                    </Stack>
+                </Grid>
+                {/* Description */}
+                <Grid size={12}>
+                    <Typography component={'h2'} sx={{fontSize: '1.2rem', pb: '1rem'}}>Beschreibung</Typography>
+                    <Typography component={'p'} sx={{fontWeight: 300}} gutterBottom>{product?.description}</Typography>
+                </Grid>
+            </Grid>
+        </LayoutContainer>
     );
 }
