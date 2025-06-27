@@ -14,3 +14,5 @@ export function getMajuscule(material: string) {
     const firstChar = material.slice(0, 1).toUpperCase();
     return firstChar.concat(material.slice(1).toLowerCase());
 }
+
+export function getUrl() { return window.location.pathname };

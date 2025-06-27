@@ -1,12 +1,17 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import {Routes, Route} from "react-router-dom";
+import {
+  Route, 
+  createBrowserRouter, 
+  createRoutesFromElements, 
+  RouterProvider
+} from "react-router-dom";
 import axios from "axios";
 
 import './App.css';
 import type { IOrderItem } from "./interface/IOrderItem.ts";
 import type { IUserAuth } from "./interface/IUserAuth.ts";
 import RootLayout from "./component/layout/RootLayout.tsx";
-import Products from "./page/Products.tsx";
+import Products, {getSelProducts} from "./page/Products.tsx";
 import Home from "./page/Home.tsx";
 import Product from "./page/Product.tsx";
 import Cart from "./page/Cart.tsx";
@@ -37,7 +42,6 @@ export default function App() {
 
   useEffect(() => {
     handleUser();
-    getProducts();
   }, []);
 
   // useEffect(() => {
@@ -139,27 +143,41 @@ export default function App() {
   const UserContextValue = useMemo(() => ({ user }), [user]);
   // const ProductsContextValue = useMemo(() => ({ products, updateProducts }), [products, updateProducts]);
 
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<RootLayout onLogin={login} onLogout={logout} />}>
+            <Route 
+              path={'products/:category/:group/:family'} 
+              element={<Products user={user} watchlist={listItems} />} 
+              loader={() => getSelProducts()}  
+            />
+            {/* <Route path={'products/:category/:group'} element={<Products products={products} user={user} watchlist={listItems} />} /> */}
+            <Route path="product/:id" element={<Product addToCart={handleCart} />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route index element={<Home />} />
+            <Route element={<ProtectedRoute user={user?.idToken} />}>
+              <Route path="dashboard" element={
+                <Dashboard 
+                  user={user} 
+                  products={products} 
+                  watchlist={listItems} 
+                  onDelete={(watchlist) => (setListItems(watchlist))} 
+                />
+              } />
+            </Route>
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </>
+    )
+  );
+
   return (
       <CartContext.Provider value={CartContextValue}>
         <UserContext.Provider value={UserContextValue.user}>
           {/* <ProductsContextValue.Provider value={ProductsContextValue}> */}
-            <Routes>
-              {/*APP RootLayout*/}
-              <Route element={<RootLayout onLogin={login} onLogout={logout} />}>
-                <Route path={'/products/:category/:group/:family'} element={<Products products={products} user={user} watchlist={listItems}  />} />
-                <Route path={'/products/:category/:group'} element={<Products products={products} user={user} watchlist={listItems} />} />
-                <Route path="/product/:id" element={<Product addToCart={handleCart} />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/" element={<Home />} />
-                <Route element={<ProtectedRoute user={user?.idToken} />}>
-                  <Route path="/dashboard" element={
-                    <Dashboard user={user} products={products} watchlist={listItems} onDelete={(watchlist) => (setListItems(watchlist))} />
-                  } />
-                </Route>
-              </Route>
-              <Route path="*" element={<NotFound />} />
-          </Routes>
+            <RouterProvider router={router} />
           {/* </UProductsContextValue.Provider> */}
         </UserContext.Provider>
       </CartContext.Provider>
