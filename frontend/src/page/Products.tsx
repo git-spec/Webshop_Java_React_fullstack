@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -12,30 +12,27 @@ import LayoutContainer from '@/component/share/LayoutContainer.tsx';
 import type { IUserAuth } from '@/interface/IUserAuth.ts';
 import type { IWatchlistItemDTO } from '@/interface/IWatchlistItemDTO.ts';
 import type { IWatchlistItem } from '@/interface/IWatchlistItem.ts';
+import { getUrl } from '@/util/index.ts';
 
 type Props = {
-    products: IProduct[] | undefined; 
     user: IUserAuth | null | undefined;
     watchlist: IWatchlistItem[] | undefined;
 };
 
-function Products({products, user , watchlist}: Readonly<Props>) {
-  const [sortedProducts, setSortedProducts] = useState<IProduct[]>();
-  const { category, group, family } = useParams();
+export const getSelProducts = async () => {
+  const path = `/api${getUrl()}`;
 
-  useEffect(() => {
-    family && products && getProducts(products);
-  }, [family]);
-
-  const getProducts = (products: IProduct[]) => {
-      const filteredProducts = products.filter(
-        (product: IProduct) => 
-          product.category.toLowerCase() === category &&
-          product.group.toLowerCase() === group &&
-          product.family.toLowerCase() === family
-      );
-      setSortedProducts(filteredProducts);
+  if (path.includes('/products')) {
+    const response = await axios.get(`${path}`);
+    return response.data;
+  } else {
+    return undefined;
   }
+}
+
+
+export default function Products({user , watchlist}: Readonly<Props>) {
+  const products: IProduct[] | undefined = useLoaderData();
 
   const addToWatchlist = (product: IProduct) => {
         if (user?.email) {
@@ -58,7 +55,7 @@ function Products({products, user , watchlist}: Readonly<Props>) {
         <Box sx={{paddingTop: 4}}>
             <Grid container columnSpacing={2} rowSpacing={4}>
               {
-                sortedProducts?.map((product: IProduct) => {
+                products?.map((product: IProduct) => {
                       return <Grid
                           key={product.id}
                           size={{xs: 12, sm: 6, md: 4, lg: 3}}
@@ -79,6 +76,4 @@ function Products({products, user , watchlist}: Readonly<Props>) {
         </Box>
     </LayoutContainer>
   )
-}
-
-export default Products;
+};
