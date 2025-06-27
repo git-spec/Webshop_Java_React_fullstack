@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -17,7 +17,6 @@ type Props = {
 export default function ListItemAction({name, path, onCurrName, handleOpen, handleClick, pl}: Readonly<Props>) {
     const [itemName, setItemName] = useState<string>();
     const [itemPath, setItemPath] = useState<string>();
-    const navigate = useNavigate();
 
     useEffect(() => {
         setItemName(name);
@@ -31,16 +30,18 @@ export default function ListItemAction({name, path, onCurrName, handleOpen, hand
         onCurrName(itemName ?? '');
     }
 
-    const handleNavigation = (path: string) => {
-        navigate(path);
-        handleClick();
-    }
-
     return (
         <ListItem sx={{pl: pl ?? 0, pr: 4}} disablePadding>
-            <ListItemButton onClick={() => {sendCurrName(); handleOpen(); itemPath && handleNavigation(itemPath)}}>
-                    <ListItemText primary={itemName} />
-            </ListItemButton>
+            <ListItemButton onClick={() => {sendCurrName(); handleOpen(); itemPath && handleClick()}}>
+                {
+                    !itemPath ? 
+                            <ListItemText primary={itemName} />
+                    : 
+                        <NavLink to={itemPath} style={{textDecoration: 'none'}} >
+                            <ListItemText primary={itemName} />
+                        </NavLink>
+                }
+            </ListItemButton> 
         </ListItem>
     );
 }
