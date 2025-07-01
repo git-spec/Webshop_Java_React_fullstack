@@ -33,7 +33,7 @@ export default function CardCart({header, media, content, state, deleteOrder}: R
         <>
             {
                 visible && <Card sx={{position: 'relative'}}>
-                            <Grid container columns={1} flexDirection={'row'} spacing={0} justifyContent={'top'}>
+                            <Grid container columns={1} flexDirection={'row'} flexWrap={'nowrap'} spacing={0} justifyContent={'top'}>
                                 <CardActionArea sx={{width: 'unset'}}>
                                     <Link 
                                         to={`/product/${state?.productID}`} 

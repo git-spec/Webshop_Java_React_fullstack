@@ -30,7 +30,7 @@ export default function CardContentCart(props: Readonly<Props>) {
     };
 
     return (
-        <Stack height={'100%'} flexGrow={1}>
+        <Stack height={'100%'} flexGrow={1} flexWrap={'nowrap'}>
             <Box sx={{mb: '.5rem'}}>
             <Typography gutterBottom variant="h5" component="div" color={'#765638'} fontSize={'1rem'}>
                 {props.order.product.name}

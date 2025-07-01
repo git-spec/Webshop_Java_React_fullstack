@@ -45,7 +45,7 @@ export default function Cart() {
     };
 
     return (
-        <LayoutContainer pt={'4rem'}>
+        <LayoutContainer padding={true}>
                     {
                         cart.length > 0 ? 
                             <Grid container spacing={4} direction={{xs: 'column', sm: 'row'}}>
