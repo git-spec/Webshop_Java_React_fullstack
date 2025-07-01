@@ -8,6 +8,7 @@ export const sidebarItems: INavItem[] = [
     },
     {
         name: "Sitzgelegenheiten",
+        path: "/products/furniture/seating",
         subnav: [
             {
                 name: "Stühle",

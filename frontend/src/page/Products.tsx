@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, type LoaderFunctionArgs } from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -19,14 +18,17 @@ type Props = {
     watchlist: IWatchlistItem[] | undefined;
 };
 
-export const getSelProducts = async () => {
-  const path = `/api${getUrl()}`;
-
-  if (path.includes('/products')) {
-    const response = await axios.get(`${path}`);
+export const getSelProducts = async ({request}: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  if (url.pathname.includes('/products')) {
+    // for request by navlink
+    const response = await axios.get(`/api${url.pathname}`);
     return response.data;
   } else {
-    return undefined;
+    // for direct request
+    const path = `/api${getUrl()}`;
+    const response = await axios.get(path);
+    return response.data;
   }
 }
 

@@ -150,7 +150,12 @@ export default function App() {
             <Route 
               path={'products/:category/:group/:family'} 
               element={<Products user={user} watchlist={listItems} />} 
-              loader={() => getSelProducts()}  
+              loader={(request) => getSelProducts(request)}  
+            />
+            <Route 
+              path={'products/:category/:group'} 
+              element={<Products user={user} watchlist={listItems} />} 
+              loader={(request) => getSelProducts(request)}  
             />
             {/* <Route path={'products/:category/:group'} element={<Products products={products} user={user} watchlist={listItems} />} /> */}
             <Route path="product/:id" element={<Product addToCart={handleCart} />} />

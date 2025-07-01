@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {ThemeProvider} from '@mui/material/styles';
 import AppBar from "@mui/material/AppBar";
@@ -19,6 +19,12 @@ import LayoutContainer from "@/component/share/LayoutContainer";
 import {CartContext} from "@/App";
 import ListNested from "../share/list/ListNested";
 import { headerTheme } from "@/theme/headerTheme";
+import type { INavItem } from "@/interface/INavItem";
+
+export type NavPoint = {
+    navPoint: INavItem | undefined;
+    setNavPoint: React.Dispatch<React.SetStateAction<INavItem | undefined>>;
+};
 
 type Props = {
     onLogin: () => void;
@@ -27,6 +33,7 @@ type Props = {
 
 
 export default function Header(props: Readonly<Props>) {
+    // anchor for sidebar
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     // const [mobileAnchorEl, setMobileAnchorEl] = useState<null | HTMLElement>(null);
     const [sidebarAnchorEl, setSidebarAnchorEl] = useState<null | HTMLElement>(null);
@@ -36,9 +43,9 @@ export default function Header(props: Readonly<Props>) {
     const menuId = 'primary-search-account-menu';
     // const mobileMenuId = 'primary-search-account-menu-mobile';
     const navigate = useNavigate();
-    const context = useContext(CartContext);
-    if (!context) throw new Error("CartContext must be used within a CartProvider");
-    const {cart} = context;
+    const cartContext = useContext(CartContext);
+    if (!cartContext) throw new Error("CartContext must be used within a CartProvider");
+    const {cart} = cartContext;
 
     const onSidebarOpen = useCallback(() => {
         setSidebarAnchorEl(null);
