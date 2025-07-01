@@ -29,7 +29,8 @@ export default function ButtonAction(props: Readonly<Props>) {
                             {
                                 fontFamily: 'SourceSans3',
                                 width: `${props.fitContent ? 'fit-content' : '100%'}`,
-                                px: `${props.fitContent ? 1 : ''}`
+                                minWidth: 'fit-content',
+                                padding: `${props.fitContent ? 1 : 0}`
                             }
                         } 
                         onClick={props.click}
@@ -46,7 +47,8 @@ export default function ButtonAction(props: Readonly<Props>) {
                             {
                                 fontFamily: 'SourceSans3',
                                 width: `${props.fitContent ? 'fit-content' : '100%'}`,
-                                px: `${props.fitContent ? 1 : ''}`
+                                minWidth: 'fit-content',
+                                padding: `${props.fitContent ? 1 : 0}`
                             }
                         } 
                     >

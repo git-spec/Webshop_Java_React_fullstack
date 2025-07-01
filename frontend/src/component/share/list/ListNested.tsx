@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment, useCallback} from "react";
+import {useState, Fragment} from "react";
 import List from "@mui/material/List";
 import Collapse from "@mui/material/Collapse";
 
@@ -8,51 +8,57 @@ import ListItemAction from "./ListItemAction";
 type Props = {
     data: INavItem[];
     handleClick: () => void;
-    onOpen?: () => void;    // trigger of nested list
 };
 
 
-export default function ListNested({data, handleClick, onOpen}: Readonly<Props>) {
-    const [items, setItems] = useState<INavItem[]>();
+export default function ListNested({data, handleClick}: Readonly<Props>) {
     const [open, setOpen] = useState(false);
     const [currName, setCurrName] = useState<string>();
 
     /**
-     * Gets triggered by list item to toggle collapse.
-     */
-    const handleOpen = () => {
-        // list item inside of this
-        setOpen(!open);
-        // list item of nested list in collape
-        onOpen && onOpen();
-    }
-
-    /**
-     * Gets name of list item for collapsing.
+     * Gets name of list item for collapsing and navigation.
      * @param name - name of list item
      */
     const handleCurrName = (name: string) => {
-        setCurrName(name);
+        if (name === currName) {
+            // for toggling collapse
+            setOpen(!open);
+        } else {
+            // name of selected navigation point
+            setCurrName(name);
+            // for collapsing subnavigations
+            setOpen(true);
+        }
+        
     }
-
-    useEffect(() => {
-        setItems(data);
-    }, []);
 
     return (
         <List disablePadding>
-            {items?.map((item, index) => (
+            {data?.map((item, index) => (
                 <Fragment key={item.name + '_' + index}>
                     <ListItemAction 
-                        name={item.name} path={item.path} pl={item.pl ?? '0'} 
-                        onCurrName={handleCurrName} 
-                        handleOpen={handleOpen} 
+                        item={item} 
+                        onCurrName={handleCurrName}
                         handleClick={handleClick} 
                     />
-                    {item.subnav &&
-                        <Collapse in={item.name == currName ? open : false} timeout="auto" unmountOnExit>
-                            <ListNested data={item.subnav} handleClick={handleClick} onOpen={handleOpen} />
-                        </Collapse>
+                    {
+                        item.subnav &&
+                            <Collapse 
+                                in={item.name == currName ? open : false} 
+                                timeout="auto" 
+                                unmountOnExit
+                            >
+                                <ListNested 
+                                    data={item.subnav} 
+                                    handleClick={
+                                        () => {
+                                            handleClick(); 
+                                            setCurrName(undefined); 
+                                            setOpen(false)
+                                        }
+                                    }
+                                />
+                            </Collapse>
                     }
                 </Fragment>
             ))}
