@@ -1,7 +1,10 @@
 import {useEffect, useState, type ReactNode} from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import ClearIcon from '@mui/icons-material/Clear';
 
 import type { AnchorType } from "../../type/AnchorType";
+import ButtonAction from "../ButtonAction";
+import Box from "@mui/material/Box";
 
 type Props = {
     anchor: AnchorType
@@ -48,7 +51,7 @@ function SwipeDrawer({anchor, children, open, onOpen}: Readonly<Props>) {
                         '& .MuiPaper-root': {
                             pt: 8, 
                             pl: 4,
-                            width: {xs: '100vw', sm: '50vw', md: '30vw', xl: '25vw'}
+                            width: {xs: '70vw', sm: '50vw', md: '30vw', xl: '25vw'}
                         }
                     }
                 } 
@@ -58,6 +61,16 @@ function SwipeDrawer({anchor, children, open, onOpen}: Readonly<Props>) {
                 onOpen={toggleDrawer(anchor, true)}
             >
                 {children}
+                {/* Close Button */}
+                <Box sx={{position: 'absolute', top: 8, right: 8, display: {xs: 'block', sm: 'none'}}}>
+                    <ButtonAction 
+                        variant={'text'} 
+                        color={'inherit'} 
+                        fitContent={true} 
+                        value={<ClearIcon />} 
+                        click={() => {onOpen()}} 
+                    />
+                </Box>
             </SwipeableDrawer>
     );
 }

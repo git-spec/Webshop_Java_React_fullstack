@@ -61,7 +61,7 @@ export default function CardCart({header, media, content, state, deleteOrder}: R
                             value={<ClearIcon />} 
                             click={() => {setVisible(false); deleteOrder?.(state)}} 
                         />
-                        </CardActions>
+                    </CardActions>
                 </Card>
             }
         </>

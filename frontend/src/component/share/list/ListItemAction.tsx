@@ -1,47 +1,37 @@
-import {useState, useEffect} from "react";
 import { NavLink } from "react-router-dom";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import type { INavItem } from "@/interface/INavItem";
 
 type Props = {
-    name: string;
-    path?: string;
-    pl?: string;
+    item: INavItem;
     onCurrName: (name: string) => void;
-    handleOpen: () => void;   // for collapsing list
     handleClick: () => void   // for parent of list
 };
 
 
-export default function ListItemAction({name, path, onCurrName, handleOpen, handleClick, pl}: Readonly<Props>) {
-    const [itemName, setItemName] = useState<string>();
-    const [itemPath, setItemPath] = useState<string>();
-
-    useEffect(() => {
-        setItemName(name);
-        setItemPath(path);
-    }, [name, path]);
+export default function ListItemAction({item, onCurrName, handleClick}: Readonly<Props>) {
 
     /**
      * Send name of list item to parent.
      */
     const sendCurrName = () => {
-        onCurrName(itemName ?? '');
+        onCurrName(item.name ?? '');
     }
 
     return (
-        <ListItem sx={{pl: pl ?? 0, pr: 4}} disablePadding>
-            <ListItemButton onClick={() => {sendCurrName(); handleOpen(); itemPath && handleClick()}}>
+        <ListItem sx={{pl: item.pl ?? 0, pr: 4, pb: 1}} disablePadding>
                 {
-                    !itemPath ? 
-                            <ListItemText primary={itemName} />
+                    !item.path ? 
+                        <ListItemButton onClick={() => {sendCurrName(); !item.subnav && handleClick()}}>
+                            <ListItemText primary={item.name} />
+                        </ListItemButton> 
                     : 
-                        <NavLink to={itemPath} style={{textDecoration: 'none'}} >
-                            <ListItemText primary={itemName} />
+                        <NavLink to={item.path} style={{textDecoration: 'none'}} onClick={() => {sendCurrName(); !item.subnav && handleClick()}}>
+                            <ListItemText primary={item.name} />
                         </NavLink>
                 }
-            </ListItemButton> 
         </ListItem>
     );
 }
