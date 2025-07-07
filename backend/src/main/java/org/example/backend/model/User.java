@@ -1,5 +1,7 @@
 package org.example.backend.model;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -8,5 +10,6 @@ public record User(
     String id, 
     String email, 
     String firstname, 
-    String lastname 
+    String lastname,
+    List<String> watchlist
 ) {}
