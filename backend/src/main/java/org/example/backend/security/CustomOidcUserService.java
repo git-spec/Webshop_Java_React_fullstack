@@ -1,5 +1,6 @@
 package org.example.backend.security;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -35,7 +36,8 @@ public class CustomOidcUserService extends OidcUserService {
             (String) userMap.get("sub"),
             (String) userMap.get("email"),
             (String) userMap.get("given_name"),
-            (String) userMap.get("family_name")
+            (String) userMap.get("family_name"),
+            List.of()
         );
         
         userRepo.save(newUser);

@@ -10,6 +10,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
+
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 import org.example.backend.repository.UserRepo;
@@ -28,7 +31,7 @@ public class CustomOidcUserServiceIntegrationTest {
     @Test
     void oidcLogin_shouldSaveUser_whenIsCalled() throws Exception {
         // GIVEN
-        userRepo.save(new User("123", "user@test.de", "test", "user"));
+        userRepo.save(new User("123", "user@test.de", "test", "user", List.of()));
         //WHEN //THEN
         mockMvc.perform(get("/api/auth")
             .with(
