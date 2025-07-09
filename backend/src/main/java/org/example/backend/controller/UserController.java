@@ -16,6 +16,8 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 
 import org.example.backend.model.WatchlistItem;
+import org.example.backend.model.User;
+import org.example.backend.model.dto.UserDTO;
 import org.example.backend.model.dto.WatchlistItemDTO;
 import org.example.backend.service.UserService;
 import org.example.backend.service.WatchlistService;
@@ -27,6 +29,11 @@ import org.example.backend.service.WatchlistService;
 public class UserController {
     private final WatchlistService watchlistService;
     private final UserService userService;
+
+    @PostMapping
+    public User addUser(@RequestBody UserDTO userDTO) {
+        return userService.addUser(userDTO);
+    }
 
     @GetMapping("/watchlist/{email}")
     public List<WatchlistItem> getWatchlistItems(@PathVariable String email) {
