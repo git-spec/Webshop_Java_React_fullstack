@@ -1,5 +1,7 @@
 package org.example.backend.controller;
 
+import java.awt.PageAttributes;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.result.UpdateResult;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +37,7 @@ import org.example.backend.model.ProductFeatures;
 import org.example.backend.model.Unit;
 import org.example.backend.model.User;
 import org.example.backend.model.WatchlistItem;
+import org.example.backend.model.dto.UserDTO;
 import org.example.backend.repository.UserRepo;
 import org.example.backend.repository.WatchlistRepo;
 import org.example.backend.service.UserService;
@@ -106,6 +110,8 @@ public class UserControllerTest {
     private final String id = "123";
     private final String email = "jon@doe.io";
     private final WatchlistItem item = new WatchlistItem(id, email, product);
+    private User user = new User("test123", "123@test.com", "Jon", "Doe", Instant.now());
+    private UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
 
     @Test
     void getWatchlistItems_shouldReturnItems_whenGetEmail() throws Exception {
@@ -190,10 +196,67 @@ public class UserControllerTest {
     // }
 
     @Test
+    void addUser_shouldReturnUser_whenGetUser() throws Exception {
+        // GIVEN
+        userRepo.save(user);
+        String jsonDTO = objectMapper.writeValueAsString(userDTO);
+        // WHEN
+        when(userService.addUser(userDTO)).thenReturn(user);
+        // THEN
+        mockMvc.perform(post("/api/user")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonDTO))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void addUser_shouldThrow409_whenUserExist() throws Exception {
+        // GIVEN
+        String jsonDTO = objectMapper.writeValueAsString(userDTO);
+        // WHEN
+        when(userService.addUser(userDTO))
+            .thenThrow(new DuplicateException("Fehler"));
+        // THEN
+        mockMvc.perform(post("/api/user")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonDTO))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    void addUser_shouldThrow400_whenGetNull() throws Exception {
+        // WHEN
+        when(userService.addUser(any(UserDTO.class)))
+            .thenThrow(new IllegalArgumentException("Fehler"));
+        // THEN
+        mockMvc.perform(post("/api/user")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(
+                """      
+                """
+            ))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addUser_shouldThrow500_whenUpdateFailed() throws Exception {
+        // GIVEN
+        String jsonDTO = objectMapper.writeValueAsString(userDTO);
+        // WHEN 
+        when(userService.addUser(userDTO))
+            .thenThrow(new AccessException("Fehler"));
+        // THEN
+        mockMvc.perform(post("/api/user")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonDTO)).andExpect(status().isInternalServerError());
+    }
+
+    @Test
     void updateWatchlist_shouldAddProductToWatchlist_whenGetIdTokenAndProductId() throws Exception {
         // GIVEN
         UpdateResult result = UpdateResult.acknowledged(1L, 1L, null);
-        userRepo.save(new User("test123", "123@test.com", "Jon", "Doe", List.of()));
+        user.setWatchlist(List.of());
+        userRepo.save(user);
         // WHEN 
         when(userService.updateWatchlist("test123", "prod123")).thenReturn(result); 
         // THEN
@@ -207,12 +270,12 @@ public class UserControllerTest {
                     }        
                 """
             )).andExpect(status().isOk());
-        verify(userRepo).save(argThat(user ->
-            user.id().equals("test123") &&
-            user.email().equals("123@test.com") &&
-            user.firstname().equals("Jon") &&
-            user.lastname().equals("Doe") &&
-            user.watchlist().isEmpty()
+        verify(userRepo).save(argThat(el ->
+            el.getId().equals("test123") &&
+            el.getEmail().equals("123@test.com") &&
+            el.getGivenName().equals("Jon") &&
+            el.getFamilyName().equals("Doe") &&
+            el.getWatchlist().isEmpty()
         ));
 
     }
@@ -239,7 +302,7 @@ public class UserControllerTest {
     @Test
     void updateWatchlist_shouldThrow409_whenProductExist() throws Exception {
         // GIVEN
-        User user = new User("test123", "123@test.com", "Jon", "Doe", List.of("prod123"));
+        user.setWatchlist(List.of("prod123"));
         userRepo.save(user);
         // WHEN
         when(userService.updateWatchlist("test123", "prod123"))

@@ -24,7 +24,6 @@ public class User {
     private List<String> watchlist;
     private final Instant createdAt;
 
-
     public User(
         String id, 
         String email, 
