@@ -27,9 +27,9 @@ public class UserService {
     private final MongoTemplate mongoTemp;
     private final IDService idService;
 
-    private static final String ILLEGAL_ARGUMENT = "Angaben fehlen.";
-    private static final String DUPLICATE = "Bereits in der Watchlist enthalten.";
-    private static final String INTERNAL_ERROR = "Es ist ein Fehelr aufgetreten. Versuchen Sie es später noch einmal.";
+    static final String ILLEGAL_ARGUMENT = "Angaben fehlen.";
+    static final String DUPLICATE = "Bereits in der Watchlist enthalten.";
+    static final String INTERNAL_ERROR = "Es ist ein Fehelr aufgetreten. Versuchen Sie es später noch einmal.";
 
     public User addUser(UserDTO userDTO) throws DuplicateException {
         User user = new User(

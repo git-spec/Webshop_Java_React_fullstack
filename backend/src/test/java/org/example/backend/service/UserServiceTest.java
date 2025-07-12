@@ -68,10 +68,11 @@ public class UserServiceTest {
         // WHEN
         UserDTO invalidDTO = new UserDTO(null, "Jon", "Doe");
         // THEN
-        assertThrows(
+        IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
             () -> userService.addUser(invalidDTO)
         );
+        assertEquals(UserService.ILLEGAL_ARGUMENT, exception.getMessage());
     }
 
     @Test
@@ -79,20 +80,22 @@ public class UserServiceTest {
         // GIVEN
         mockRepo.save(user);
         // WHEN
-        when(mockRepo.findByEmail(user.getEmail())).thenThrow(new DuplicateException("Fehler"));
+        when(mockRepo.findByEmail(user.getEmail())).thenThrow(new DuplicateException(UserService.DUPLICATE));
         // THEN
-        assertThrows(DuplicateException.class, () -> 
+        DuplicateException exception = assertThrows(DuplicateException.class, () -> 
             userService.addUser(userDTO)
         );
+        assertEquals(UserService.DUPLICATE, exception.getMessage());
     }
 
     @Test
     void addUsert_shouldThrowAccessException_onDataAccessException() throws AccessException {
         // THEN
-        assertThrows(
+        AccessException exception = assertThrows(
             AccessException.class, 
             () -> userService.addUser(userDTO)
         );
+        assertEquals(UserService.INTERNAL_ERROR, exception.getMessage());
     }
 
     @Test
