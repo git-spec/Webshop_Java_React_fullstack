@@ -114,15 +114,39 @@ public class UserControllerTest {
     private UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
 
     @Test
-    void getWatchlistItems_shouldReturnItems_whenGetEmail() throws Exception {
+    void getUser_shouldReturnUser_whenGetEmail() throws Exception {
         // GIVEN
-        watchlistRepo.save(item);
-        List<WatchlistItem> expected = Collections.singletonList(item);
-        // WHEN // THEN
-        mockMvc.perform(get("/api/user/watchlist/{email}", email))
+        userRepo.save(user);
+        // WHEN
+        when(userService.getUser(user.getEmail())).thenReturn(user);
+        // THEN
+        mockMvc.perform(get("/api/user/{email}", user.getEmail()))
             .andExpect(status().isOk())
-            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+            .andExpect(content().string(objectMapper.writeValueAsString(user)));
     }
+
+    @Test
+    void getUser_shouldThrow400_whenGetInvaldEmail() throws Exception {
+        // GIVEN
+        userRepo.save(user);
+        // WHEN
+        when(userService.getUser("INVALID"))
+            .thenThrow(new IllegalArgumentException("Invalid"));
+        // THEN
+        mockMvc.perform(get("/api/user/{email}", "INVALID"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getUser_shouldThrow500_whenGetInvaldEmail() throws Exception {
+        // WHEN 
+        when(userService.getUser("jondoe.io"))
+            .thenThrow(new AccessException("Fehler"));
+        // THEN
+        mockMvc.perform(get("/api/user/{id}", "jondoe.io"))
+            .andExpect(status().isInternalServerError());
+    }
+
 
     // @Test
     // void addWatchlistItem_shouldReturn200_whenGetItem() throws Exception {
@@ -249,6 +273,17 @@ public class UserControllerTest {
         mockMvc.perform(post("/api/user")
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonDTO)).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void getWatchlistItems_shouldReturnItems_whenGetEmail() throws Exception {
+        // GIVEN
+        watchlistRepo.save(item);
+        List<WatchlistItem> expected = Collections.singletonList(item);
+        // WHEN // THEN
+        mockMvc.perform(get("/api/user/watchlist/{email}", email))
+            .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     @Test
