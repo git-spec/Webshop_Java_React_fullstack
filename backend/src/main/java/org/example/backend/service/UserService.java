@@ -33,6 +33,19 @@ public class UserService {
     static final String DUPLICATE = "Bereits in der Watchlist enthalten.";
     static final String INTERNAL_ERROR = "Es ist ein Fehelr aufgetreten. Versuchen Sie es später noch einmal.";
 
+    public User getUser(String email) throws IllegalArgumentException, AccessException {
+        if (Utils.isEmailValid(email)) {
+            Optional<User> result = userRepo.findByEmail(email);
+            if (!result.isEmpty()) {
+                return result.get(); 
+            } else {
+                throw new AccessException(INTERNAL_ERROR);
+            }
+        } else {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+        }
+    }
+
     public User addUser(UserDTO userDTO) throws DuplicateException {
         User user = new User(
             idService.createID(), 
@@ -63,19 +76,6 @@ public class UserService {
             throw new AccessException(INTERNAL_ERROR);
         }
 
-    }
-
-    public User getUser(String email) throws IllegalArgumentException, AccessException {
-        if (Utils.isEmailValid(email)) {
-            Optional<User> result = userRepo.findByEmail(email);
-            if (!result.isEmpty()) {
-                return result.get(); 
-            } else {
-                throw new AccessException(INTERNAL_ERROR);
-            }
-        } else {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
-        }
     }
 
     public UpdateResult updateWatchlist(
