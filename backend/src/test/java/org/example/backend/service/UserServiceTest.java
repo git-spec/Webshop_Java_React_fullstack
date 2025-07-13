@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,14 +23,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.mongodb.client.result.UpdateResult;
 
+import org.example.backend.Utils;
 import org.example.backend.exception.AccessException;
 import org.example.backend.exception.DuplicateException;
 import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
 import org.example.backend.repository.UserRepo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +51,37 @@ public class UserServiceTest {
     
     User user = new User("test123", "123@test.com", "Jon", "Doe", Instant.now());
     UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
+
+    @Test
+    void getUser_shoulReturnUser_whenGetEmail() {
+        // GIVEN
+        mockRepo.save(user);
+        // WHEN
+        when(mockRepo.findById(user.getEmail())).thenReturn(Optional.of(user));
+        User actual = userService.getUser(user.getEmail());
+        // THEN
+        assertEquals(user, actual);
+        verify(mockRepo, times(1)).findByEmail(user.getEmail());
+    }
+
+    @Test
+    void getUsert_shouldThrowAccessException_onDataAccessException() throws AccessException {
+        // THEN
+        AccessException exception = assertThrows(
+            AccessException.class, 
+            () -> userService.getUser(user.getEmail())
+        );
+        assertEquals(UserService.INTERNAL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void getUsert_shouldIllegalArgumentException_whenGetInvalidID() throws IllegalArgumentException {
+        // GIVEN
+        // WHEN
+        Boolean result = Utils.isEmailValid("jondoe.io");
+        // THEN
+        assertFalse(result, UserService.ILLEGAL_ARGUMENT);
+    }
 
     @Test
     void addUser_shouldAddUserToDB_whenGetUserDTO() {
@@ -118,10 +153,11 @@ public class UserServiceTest {
     @Test
     void updateWatchlist_shouldThrowIllegalArgumentException_whenGetNull() throws IllegalArgumentException {
         // THEN
-        assertThrows(
+        IllegalArgumentException actual = assertThrows(
             IllegalArgumentException.class, 
             () -> userService.updateWatchlist(null, null)
         );
+        assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());
     }
 
     @Test
