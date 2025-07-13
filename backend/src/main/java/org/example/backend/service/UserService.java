@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.exception.DuplicateException;
+import org.example.backend.Utils;
 import org.example.backend.exception.AccessException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
@@ -49,8 +51,8 @@ public class UserService {
         }
 
         // Checks for duplicate
-        User existing = userRepo.findByEmail(user.getEmail());
-        if (existing != null) {
+        Optional<User> existing = userRepo.findByEmail(user.getEmail());
+        if (existing.isPresent()) {
             throw new DuplicateException(DUPLICATE);
         }
         // Checks result
@@ -61,6 +63,19 @@ public class UserService {
             throw new AccessException(INTERNAL_ERROR);
         }
 
+    }
+
+    public User getUser(String email) throws IllegalArgumentException, AccessException {
+        if (Utils.isEmailValid(email)) {
+            Optional<User> result = userRepo.findByEmail(email);
+            if (!result.isEmpty()) {
+                return result.get(); 
+            } else {
+                throw new AccessException(INTERNAL_ERROR);
+            }
+        } else {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+        }
     }
 
     public UpdateResult updateWatchlist(
