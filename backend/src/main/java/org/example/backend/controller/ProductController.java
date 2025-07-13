@@ -8,8 +8,10 @@ import org.example.backend.model.Product;
 import org.example.backend.service.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -46,6 +48,11 @@ public class ProductController {
         @PathVariable String family
     ) throws NotFoundException {
         return productService.getProductsByCategoryAndGroupAndFamily(category, group, family);
+    }
+
+    @PostMapping("/products")
+    public List<Product> getProductsByID(@RequestBody List<String> ids) {
+        return productService.getProductsByID(ids);
     }
 
     @GetMapping("/product/{id}")
