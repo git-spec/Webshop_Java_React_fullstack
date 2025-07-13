@@ -11,8 +11,8 @@ import CardContentProduct from "@/component/card/CardContentProduct";
 import NoteBig from "@/component/share/NoteBig";
 
 type Props = {
-    watchlist: IWatchlistItem[] | undefined;
-    onDelete: (watchlist: IWatchlistItem[]) => void;
+    watchlist: IProduct[] | undefined;
+    onDelete: (watchlist: IProduct[]) => void;
 };
 
 export default function Watchlist({watchlist, onDelete}: Readonly<Props>) {
@@ -25,13 +25,13 @@ export default function Watchlist({watchlist, onDelete}: Readonly<Props>) {
     //     }).catch(err => console.log(err));
     // }
 
-    function deleteWatchlistItem(item: IWatchlistItem) {
+    function deleteWatchlistItem(item: IProduct) {
         axios.delete(`/api/watchlist/${item.id}`);
     }
   
-    const deleteFromWL = (item: IWatchlistItem) => {
+    const deleteFromWL = (item: IProduct) => {
         const newListItems = watchlist?.filter(
-            (listItem: IWatchlistItem) => listItem.product.id !== item.product.id
+            (listItem: IProduct) => listItem.id !== item.id
         );
         // newListItems && setListItems(newListItems);
         newListItems && deleteWatchlistItem(item);
@@ -46,17 +46,17 @@ export default function Watchlist({watchlist, onDelete}: Readonly<Props>) {
         <Grid container columnSpacing={3} rowSpacing={4} sx={{justifyContent: !watchlist ? "center" : "", height: "100%"}}>
             {
                 watchlist && watchlist.length > 0 ?
-                    watchlist.map((item: IWatchlistItem) => {
+                    watchlist.map((item: IProduct) => {
                         return <Grid
-                                key={item.product.id}                                   
+                                key={item.id}                                   
                                 size={{xs: 12, sm: 6, md: 4, lg: 3}}
                                 >
                                     <CardMain 
-                                        media={{name: item.product.name, path: item.product.images.large[0]}} 
-                                        content={<CardContentProduct {...item.product} />}
+                                        media={{name: item.name, path: item.images.large[0]}} 
+                                        content={<CardContentProduct {...item} />}
                                         state={item}
                                         deleteButton={true}
-                                        path={`/product/${item.product.id}`} 
+                                        path={`/product/${item.id}`} 
                                         onAction={(deleteFromWL)}
                                     />
                                 </Grid>

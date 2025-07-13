@@ -4,18 +4,15 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import StarsIcon from '@mui/icons-material/Stars';
 
-import type { IProduct } from "../interface/IProduct.ts";
-import CardMain from '../component/card/CardMain.tsx';
-import CardContentProduct from '../component/card/CardContentProduct.tsx';
+import type { IProduct } from "@/interface/IProduct.ts";
+import type { IUser } from '@/interface/IUser.ts';
+import CardMain from '@/component/card/CardMain.tsx';
+import CardContentProduct from '@/component/card/CardContentProduct.tsx';
 import LayoutContainer from '@/component/share/LayoutContainer.tsx';
-import type { IUserAuth } from '@/interface/IUserAuth.ts';
-import type { IWatchlistItemDTO } from '@/interface/IWatchlistItemDTO.ts';
-import type { IWatchlistItem } from '@/interface/IWatchlistItem.ts';
 import { getUrl } from '@/util/index.ts';
 
 type Props = {
-    user: IUserAuth | null | undefined;
-    watchlist: IWatchlistItem[] | undefined;
+    user: IUser | null | undefined;
 };
 
 export const getSelProducts = async ({request}: LoaderFunctionArgs) => {
@@ -33,24 +30,21 @@ export const getSelProducts = async ({request}: LoaderFunctionArgs) => {
 }
 
 
-export default function Products({user , watchlist}: Readonly<Props>) {
+export default function Products({user}: Readonly<Props>) {
   const products: IProduct[] | undefined = useLoaderData();
 
-  const addToWatchlist = (product: IProduct) => {
-        if (user?.email) {
-          const itemExists = watchlist?.some(listItem => product.id === listItem.product.id);
-          if (!itemExists) {
-              const body: IWatchlistItemDTO = {
-                userEmail: user.email,
-                product: product,
-              };
-            axios.post("/api/watchlist", body).then(res => {
-              console.log(res.data);
-              
-            });
-          }
-        }
-  }
+  // const addToWatchlist = (product: IProduct) => {
+  //       if (user?.email) {
+  //         const body = {
+  //           idToken: user.idToken,
+  //           productID: product.id
+  //         };
+  //         axios.post("/api/user/watchlist", body).then(res => {
+  //           console.log(res.data);
+            
+  //         });
+  //       }
+  // }
 
   return (
     <LayoutContainer padding={true}>
@@ -69,7 +63,7 @@ export default function Products({user , watchlist}: Readonly<Props>) {
                           iconButton={!!user}
                           icon={<StarsIcon sx={{color: "#D7B76F"}} />}
                           path={`/product/${product.id}`} 
-                          onAction={addToWatchlist}
+                          onAction={() => {}}
                         />
                     </Grid>
                 })

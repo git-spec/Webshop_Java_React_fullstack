@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 
 import PersonDetailsForm from "@/component/PersonDetailsForm";
-import type { IUserAuth } from "@/interface/IUserAuth";
+import type { IUser } from "@/interface/IUser";
 import { Stack } from "@mui/material";
 
 type Props = {
-    user: IUserAuth | null | undefined;
+    user: IUser | null | undefined;
 };
 
 

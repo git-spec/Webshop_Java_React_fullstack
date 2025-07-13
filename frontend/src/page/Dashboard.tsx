@@ -1,5 +1,4 @@
-import type { IWatchlistItem } from "@/interface/IWatchlistItem";
-import type { IUserAuth } from "@/interface/IUserAuth";
+import type { IUser } from "@/interface/IUser";
 import type { IProduct } from "@/interface/IProduct";
 import LayoutContainer from "@/component/share/LayoutContainer";
 import TabsBasic from "@/component/TabsBasic";
@@ -8,10 +7,10 @@ import Orders from "./Orders";
 import Profile from "./Profile";
 
 type Props = {
-    user: IUserAuth | null | undefined;
+    user: IUser | null | undefined;
     products: IProduct[] | undefined;
-    watchlist: IWatchlistItem[] | undefined;
-    onDelete: (watchlist: IWatchlistItem[]) => void;
+    watchlist: IProduct[] | undefined;
+    onDelete: (watchlist: IProduct[]) => void;
 };
 
 
