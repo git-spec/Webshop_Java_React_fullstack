@@ -2,7 +2,11 @@ package org.example.backend.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.example.backend.Utils;
+import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.AccessException;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Family;
@@ -19,7 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
     private final ProductRepo productRepo;
 
-    private static final String NOT_FOUND_MESSAGE_FORMAT = "Seite nicht gefunden.";
+    static final String NOT_FOUND_MESSAGE_FORMAT = "Seite nicht gefunden.";
+    static final String ILLEGAL_ARGUMENT = "Angaben sind nicht korrekt oder fehlen.";
 
     public List<Product> getProducts() {
         return productRepo.findAll();
@@ -86,5 +91,14 @@ public class ProductService {
 
     public Optional<Product> getProductByID(String id) {
         return productRepo.findById(id);
+    }
+
+    public List<Product> getProductsByID(List<String> ids) throws IllegalArgumentException, AccessException {
+        List<Boolean> validation = ids.stream().map(id -> Utils.isValidUuidFormat(id)).toList();
+        if (!validation.contains(false)) {
+            return productRepo.findByIdIn(ids).orElseThrow(() -> new AccessException(NOT_FOUND_MESSAGE_FORMAT));
+        } else {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+        }
     }
 }
