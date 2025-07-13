@@ -1,10 +1,29 @@
 package org.example.backend.service;
 
 import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.example.backend.Utils;
 import org.example.backend.exception.NotFoundException;
+import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.AccessException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
@@ -17,17 +36,7 @@ import org.example.backend.model.Product;
 import org.example.backend.model.ProductFeatures;
 import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -268,5 +277,44 @@ public class ProductServiceTest {
             () -> productService.getProductByID(id)
         );
         assertNotNull(result);
+    }
+
+    @Test
+    void getProductsByID_shouldReturnProducts_whenGetIDs() {
+        // GIVEN
+        List<String> ids = List.of("1536716");
+        // WHEN
+        when(productRepo.findByIdIn(ids)).thenReturn(Optional.of(List.of(prod1)));
+        List<Product> actual = productService.getProductsByID(ids);
+        // THEN
+        assertEquals(List.of(prod1), actual);
+    }
+
+    @Test
+    void getProductsByID_shouldThrowIllegalArgumentException_whenGetInvalidIDs() {
+        // GIVEN
+        List<String> ids = List.of("1@$");
+        List<Boolean> validation = ids.stream().map(id -> Utils.isValidUuidFormat(id)).toList();
+        // WHEN // THEN
+        assertTrue(validation.contains(false));
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class, 
+            () -> productService.getProductsByID(ids)
+        );
+        assertEquals(ProductService.ILLEGAL_ARGUMENT, exception.getMessage());
+    }
+
+    @Test
+    void getProductsByID_shouldThrowAccessException_whenGetInvalidIDs() {
+        //GIVEN
+        Optional<Object> optinal = Optional.empty();
+        // WHEN // THEN
+        AccessException exception = assertThrows(
+            AccessException.class, 
+            () -> optinal.orElseThrow(
+                () -> new AccessException(ProductService.NOT_FOUND_MESSAGE_FORMAT)
+            )
+        );
+        assertEquals(ProductService.NOT_FOUND_MESSAGE_FORMAT, exception.getMessage());
     }
 }
