@@ -30,6 +30,11 @@ public class UserController {
     private final WatchlistService watchlistService;
     private final UserService userService;
 
+    @GetMapping("/{email}")
+    public User getUser(@PathVariable String email) {
+        return userService.getUser(email);
+    }
+
     @PostMapping
     public User addUser(@RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
