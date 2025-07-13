@@ -190,4 +190,21 @@ public class ProductControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
+
+    @Test
+    @WithMockUser
+    void getProductsByID_shouldReturnProducts_whenGetIDs() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        List<Product> expected = List.of(prod1);
+        // WHEN // THEN
+        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(
+                """
+                    [
+                        "1536716"
+                    ]
+                """
+            )).andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
 }
