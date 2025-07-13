@@ -22,23 +22,25 @@ import ProtectedRoute from "./ProtectedRoute.tsx";
 import type { IProduct } from "./interface/IProduct.ts";
 import type { IWatchlistItem } from "./interface/IWatchlistItem.ts";
 import NotFound from "./page/NotFound.tsx";
+import type { IUser } from "./interface/IUser.ts";
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
-export const UserContext = createContext<IUserAuth | null | undefined>(undefined);
+export const UserContext = createContext<IUser | null | undefined>(undefined);
 export const ProductsContext = createContext<IProduct[] | null | undefined>(undefined);
 
-type WatchlistItemDTO = {
-    userEmail: string;
-    product: IProduct;
-};
+// type WatchlistItemDTO = {
+//     userEmail: string;
+//     product: IProduct;
+// };
 
 
 export default function App() {
   const [products, setProducts] = useState<IProduct[]>();
   const [cart, setCart] = useState<IOrderItem[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
-  const [user, setUser] = useState<IUserAuth | null>(); 
-  const [listItems, setListItems] = useState<IWatchlistItem[]>();
+  const [userAuth, setUserAuth] = useState<IUserAuth | null>(); 
+  const [user, setUser] = useState<IUser | null>(); 
+  const [listItems, setListItems] = useState<IProduct[]>();
 
   useEffect(() => {
     handleUser();
@@ -48,11 +50,11 @@ export default function App() {
   //   getProducts();
   // }, [products]);
 
-  const getProducts = () => {
-    axios.get('/api/products').then(res => {
-      setProducts(res.data);
-    }).catch(err => console.log(err));
-  }
+  // const getProducts = () => {
+  //   axios.get('/api/products').then(res => {
+  //     setProducts(res.data);
+  //   }).catch(err => console.log(err));
+  // }
 
   const handleCart = (order: IOrderItem) => {
     const itemExsits = cart.find(article => article.productID === order.productID && article.color === order.color);
@@ -97,29 +99,58 @@ export default function App() {
       window.open(host + '/logout', '_self')
   }
 
-  // const loadUser = () => {
-  //     axios
-  //         .get('/api/auth').then(res => {
-  //           setUser(res.data);
-  //         })
-  //         .catch(err => setUser(null));
-  // }
-
-  // function getWatchlist() {
-  //     axios.get(`/api/watchlist/${user.email}`).then(res => {
-  //         setListItems(res.data);
-  //     }).catch(err => console.log(err));
-  // }
-
-  const handleUser = async () => {
+  /**
+   * Gets user and watchlist.
+   * @returns {Promise<void>}
+   */
+  const handleUser = async (): Promise<void> => {
     try {
-      const user = await axios.get('/api/auth');
-      setUser(user.data);
-      const watchlist = await axios.get(`/api/watchlist/${user.data.email}`);
-      setListItems(watchlist.data);
+      // Gets user by oAuth.
+      const userAuth = await axios.get('/api/auth');
+      setUserAuth(userAuth.data);
+      const user: IUser = {
+        email: userAuth.data.email,
+        sub: userAuth.data.claims.sub,
+        gender: userAuth.data.gender,
+        givenName: userAuth.data.givenName,
+        familyName: userAuth.data.familyName,
+        address: {
+          street: userAuth.data.address.street,
+          postalCode: userAuth.data.address.postalCode,
+          locality: userAuth.data.address.locality,
+          region: userAuth.data.address.region,
+          country: userAuth.data.address.country,
+        },
+        watchlist: [],
+      };
+      // Checks existing email address of user.
+      const exist = await axios.get(`/api/user/${user.email}`);
+      if (exist.data) {
+        setUser(exist.data);
+      // Gets watchlist.
+        const items = getWatchlistItems(exist.data.watchlist);
+        items.then(items => setListItems(items));
+      } else {
+        // Creates new user.
+        const res = await axios.post('api/user', user);
+        setUser(res.data);
+      // Gets watchlist.
+        const items = getWatchlistItems(res.data.watchlist);
+        items.then(items => setListItems(items));
+      }
     } catch(err) {
       console.error(err);
     }
+  }
+
+  /**
+   * Gets products for watchlist.
+   * @param {Array<string>} watchlist - list of products
+   * @returns {Promise<Array<IProduct>>}
+   */
+  const getWatchlistItems = async (watchlist: Array<string>): Promise<Array<IProduct>> => {
+    const res = await axios.post('/api/products', watchlist);
+    return res.data;
   }
 
   // const updateCart = (product: IOrderItem) => {
@@ -149,12 +180,12 @@ export default function App() {
         <Route path="/" element={<RootLayout onLogin={login} onLogout={logout} />}>
             <Route 
               path={'products/:category/:group/:family'} 
-              element={<Products user={user} watchlist={listItems} />} 
+              element={<Products user={user} />} 
               loader={(request) => getSelProducts(request)}  
             />
             <Route 
               path={'products/:category/:group'} 
-              element={<Products user={user} watchlist={listItems} />} 
+              element={<Products user={user} />} 
               loader={(request) => getSelProducts(request)}  
             />
             {/* <Route path={'products/:category/:group'} element={<Products products={products} user={user} watchlist={listItems} />} /> */}
@@ -162,7 +193,7 @@ export default function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route index element={<Home />} />
-            <Route element={<ProtectedRoute user={user?.idToken} />}>
+            <Route element={<ProtectedRoute user={userAuth?.idToken} />}>
               <Route path="dashboard" element={
                 <Dashboard 
                   user={user} 
