@@ -10,7 +10,7 @@ public interface Utils {
         return uuid != null && uuid.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
     }
 
-    public static boolean isEmailValid(String email) {
+    public static boolean isValidEmail(String email) {
         return Pattern.compile(EMAIL_REGEX)
                     .matcher(email)
                     .matches();

@@ -78,7 +78,7 @@ public class UserServiceTest {
     void getUsert_shouldIllegalArgumentException_whenGetInvalidID() throws IllegalArgumentException {
         // GIVEN
         // WHEN
-        Boolean result = Utils.isEmailValid("jondoe.io");
+        Boolean result = Utils.isValidEmail("jondoe.io");
         // THEN
         assertFalse(result, UserService.ILLEGAL_ARGUMENT);
     }

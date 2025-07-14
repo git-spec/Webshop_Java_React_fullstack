@@ -34,7 +34,7 @@ public class UserService {
     static final String INTERNAL_ERROR = "Es ist ein Fehelr aufgetreten. Versuchen Sie es später noch einmal.";
 
     public User getUser(String email) throws IllegalArgumentException, AccessException {
-        if (Utils.isEmailValid(email)) {
+        if (Utils.isValidEmail(email)) {
             Optional<User> result = userRepo.findByEmail(email);
             if (!result.isEmpty()) {
                 return result.get(); 
