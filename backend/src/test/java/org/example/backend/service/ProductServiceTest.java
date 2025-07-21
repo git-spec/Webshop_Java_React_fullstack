@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -294,7 +293,7 @@ public class ProductServiceTest {
     void getProductsByID_shouldThrowIllegalArgumentException_whenGetInvalidIDs() {
         // GIVEN
         List<String> ids = List.of("1@$");
-        List<Boolean> validation = ids.stream().map(id -> Utils.isValidUuidFormat(id)).toList();
+        List<Boolean> validation = ids.stream().map(id -> Utils.isValidAlphanumeric(id)).toList();
         // WHEN // THEN
         assertTrue(validation.contains(false));
         IllegalArgumentException exception = assertThrows(

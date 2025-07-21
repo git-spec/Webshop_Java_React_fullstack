@@ -94,7 +94,7 @@ public class ProductService {
     }
 
     public List<Product> getProductsByID(List<String> ids) throws IllegalArgumentException, AccessException {
-        List<Boolean> validation = ids.stream().map(id -> Utils.isValidUuidFormat(id)).toList();
+        List<Boolean> validation = ids.stream().map(id -> Utils.isValidAlphanumeric(id)).toList();
         if (!validation.contains(false)) {
             return productRepo.findByIdIn(ids).orElseThrow(() -> new AccessException(NOT_FOUND_MESSAGE_FORMAT));
         } else {
