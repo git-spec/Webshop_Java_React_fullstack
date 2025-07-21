@@ -14,18 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.mockito.Mockito.when;
+
 import org.example.backend.model.Product;
-import org.assertj.core.error.OptionalShouldBeEmpty;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
-import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
 import org.example.backend.model.Family;
@@ -36,6 +36,7 @@ import org.example.backend.model.Measure;
 import org.example.backend.model.ProductFeatures;
 import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
+import org.example.backend.service.ProductService;
 
 
 @SpringBootTest
@@ -48,6 +49,9 @@ public class ProductControllerTest {
     private ProductRepo prod1Repo;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
+    @MockitoBean
+    private  ProductService mockService;
+
     String id = "1536716";
     Measure width = new Measure(
                                     49,
@@ -116,8 +120,10 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategory_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
+    void getProductsByCategory_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategory("invalid")).thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
         mockMvc.perform(get("/api/products/{category}", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
@@ -138,8 +144,11 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategoryAndGroup_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
+    void getProductsByCategoryAndGroup_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategoryAndGroup("invalid", "invalid"))
+            .thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
         mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
@@ -160,9 +169,12 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategoryAndGroupAndFamily_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
-        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
+    void getProductsByCategoryAndGroupAndFamily_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategoryAndGroupAndFamily("invalid", "invalid", "invalid"))
+            .thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "invalid", "invalid", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
             .andExpect(content().string(NOT_FOUND_MESSAGE_FORMAT));
