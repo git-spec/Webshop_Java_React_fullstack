@@ -20,6 +20,7 @@ import org.example.backend.exception.AccessException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
 import org.example.backend.repository.UserRepo;
+import org.example.backend.model.dto.WatchlistItemDTO;
 
 
 @Service
@@ -79,26 +80,41 @@ public class UserService {
     }
 
     public UpdateResult updateWatchlist(
-        String userID, 
-        String productID
+        WatchlistItemDTO itemDto
     ) throws IllegalArgumentException, DuplicateException, AccessException {
         // Checks for null
-        if (userID == null || productID == null) {
+        if (!Utils.isValidAlphanumeric(itemDto.userID()) || !Utils.isValidAlphanumeric(itemDto.productID())) {
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
         }
         // Checks for duplicate
-        Query query = new Query(Criteria.where("id").is(userID).and("watchlist").is(productID));
+        Query query = new Query(Criteria.where("id").is(itemDto.userID()).and("watchlist").is(itemDto.productID()));
         boolean exists = mongoTemp.exists(query, User.class);
         if (exists) {
             throw new DuplicateException(DUPLICATE);
         }
         // Checks result
-        Update update = new Update().addToSet("watchlist", productID);
+        Update update = new Update().addToSet("watchlist", itemDto.productID());
         UpdateResult result = mongoTemp.updateFirst(
-            new Query(Criteria.where("id").is(userID)),
+            new Query(Criteria.where("id").is(itemDto.userID())),
             update,
             User.class
         );
+        if (result.wasAcknowledged()) {
+            return result;
+        } else {
+            throw new AccessException(INTERNAL_ERROR);
+        }
+    }
+
+    public UpdateResult removeWatchlistItem(WatchlistItemDTO itemDto) throws IllegalArgumentException, AccessException {
+        // Checks for null
+        if (!Utils.isValidAlphanumeric(itemDto.userID()) || !Utils.isValidAlphanumeric(itemDto.productID())) {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+        }
+        // Checks result
+        Query query = new Query(Criteria.where("_id").is(itemDto.userID()));
+        Update update = new Update().pull("watchlist", itemDto.productID());
+        UpdateResult result  = mongoTemp.updateFirst(query, update, User.class);
         if (result.wasAcknowledged()) {
             return result;
         } else {
