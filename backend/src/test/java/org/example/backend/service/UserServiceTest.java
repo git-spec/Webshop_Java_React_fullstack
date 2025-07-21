@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.mock;
@@ -32,8 +33,12 @@ import org.example.backend.exception.DuplicateException;
 import org.example.backend.exception.IllegalArgumentException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
+import org.example.backend.model.dto.WatchlistItemDTO;
 import org.example.backend.repository.UserRepo;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.MockedStatic;
+import static org.mockito.Mockito.mockStatic;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -49,8 +54,11 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
     
-    User user = new User("test123", "123@test.com", "Jon", "Doe", Instant.now());
+    String id = "test123";
+    User user = new User(id, "123@test.com", "Jon", "Doe", Instant.now());
     UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
+    WatchlistItemDTO itemDTO = new WatchlistItemDTO("test123", "prod1");
+    WatchlistItemDTO invalidItemDto = new WatchlistItemDTO(null, "prod1");
 
     @Test
     void getUser_shoulReturnUser_whenGetEmail() {
@@ -66,10 +74,12 @@ public class UserServiceTest {
 
     @Test
     void getUsert_shouldThrowAccessException_onDataAccessException() throws AccessException {
-        // THEN
+        // GIVEN
+        String email = user.getEmail();
+        // WHEN // THEN
         AccessException exception = assertThrows(
             AccessException.class, 
-            () -> userService.getUser(user.getEmail())
+            () -> userService.getUser(email)
         );
         assertEquals(UserService.INTERNAL_ERROR, exception.getMessage());
     }
@@ -124,7 +134,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addUsert_shouldThrowAccessException_onDataAccessException() throws AccessException {
+    void addUser_shouldThrowAccessException_onDataAccessException() throws AccessException {
         // THEN
         AccessException exception = assertThrows(
             AccessException.class, 
@@ -134,30 +144,41 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateWathlist_shouldUpdateWatchlist_whenGetUserIdAndProductId() {
+    void updateWatchlist_shouldUpdateWatchlist_whenGetUserIdAndProductId() {
         // GIVEN
         UpdateResult updateResult = mock(UpdateResult.class);
         user.setWatchlist(List.of());
         mockTemp.save(user);
-        // WHEN
-        when(updateResult.wasAcknowledged()).thenReturn(true);
-        when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
-            .thenReturn(updateResult);
-        UpdateResult actual = userService.updateWatchlist("test123", "prod123");
-        // THEN
-        assertEquals(updateResult, actual);
-        verify(mockTemp).updateFirst(any(Query.class), any(Update.class), eq(User.class));
-
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
+            when(updateResult.wasAcknowledged()).thenReturn(true);
+            when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
+                .thenReturn(updateResult);
+            UpdateResult actual = userService.updateWatchlist(itemDTO);
+            Utils.isValidAlphanumeric(id);
+            // THEN
+            assertEquals(updateResult, actual);
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(id), times(2));
+            verify(mockTemp).updateFirst(any(Query.class), any(Update.class), eq(User.class));
+        }
     }
 
     @Test
-    void updateWatchlist_shouldThrowIllegalArgumentException_whenGetNull() throws IllegalArgumentException {
-        // THEN
-        IllegalArgumentException actual = assertThrows(
-            IllegalArgumentException.class, 
-            () -> userService.updateWatchlist(null, null)
-        );
-        assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());
+    void updateWatchlist_shouldThrowIllegalArgumentException_whenGetInvalidData() throws IllegalArgumentException {
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(false);
+            when(Utils.isValidAlphanumeric(any())).thenReturn(false);
+            Utils.isValidAlphanumeric(null);
+            // THEN
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(null));
+            IllegalArgumentException actual = assertThrows(
+                IllegalArgumentException.class, 
+                () -> userService.updateWatchlist(invalidItemDto)
+            );
+            assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());
+        }
     }
 
     @Test
@@ -165,9 +186,10 @@ public class UserServiceTest {
         // WHEN
         when(mockTemp.exists(any(Query.class),eq(User.class))).thenReturn(true);
         // THEN
-        assertThrows(DuplicateException.class, () -> 
-            userService.updateWatchlist("test123", "prod234")
+        DuplicateException actual = assertThrows(DuplicateException.class, () -> 
+            userService.updateWatchlist(itemDTO)
         );
+        assertEquals(UserService.DUPLICATE, actual.getMessage());
     }
 
     @Test
@@ -176,7 +198,49 @@ public class UserServiceTest {
         when(mockResult.wasAcknowledged()).thenReturn(true);
         when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
             .thenReturn(mockResult);
-        UpdateResult result = userService.updateWatchlist("userId", "productId");
+        UpdateResult result = userService.updateWatchlist(itemDTO);
+        // THEN
+        assertSame(mockResult, result);
+    }
+
+    @Test
+    void removeWatchlistItem_shouldRemoveWatchlistItem_whenGetUserIdAndProductId() {
+        // GIVEN
+            UpdateResult updateResult = mock(UpdateResult.class);
+            user.setWatchlist(List.of("prod1", "prod2", "prod3"));
+            mockTemp.save(user);
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
+            when(updateResult.wasAcknowledged()).thenReturn(true);
+            when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
+                .thenReturn(updateResult);
+            Utils.isValidAlphanumeric(id);
+            UpdateResult actual = userService.removeWatchlistItem(itemDTO);
+            // THEN
+            assertEquals(updateResult, actual);
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(id), times(2));
+            verify(mockTemp).updateFirst(any(Query.class), any(Update.class), eq(User.class));
+        }
+    }
+
+    @Test
+    void removeWatchlistItem_shouldThrowIllegalArgumentException_whenGetInvalidData() throws IllegalArgumentException {
+        // THEN
+        IllegalArgumentException actual = assertThrows(
+            IllegalArgumentException.class, 
+            () -> userService.removeWatchlistItem(invalidItemDto)
+        );
+        assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());
+    }
+
+    @Test
+    void removeWatchlistItem_shouldThrowAccessException_onDataAccessException() throws AccessException {
+        // WHEN
+        when(mockResult.wasAcknowledged()).thenReturn(true);
+        when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
+            .thenReturn(mockResult);
+        UpdateResult result = userService.removeWatchlistItem(itemDTO);
         // THEN
         assertSame(mockResult, result);
     }
