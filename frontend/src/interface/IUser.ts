@@ -1,15 +1,16 @@
 export interface IUser {
-    email: any;
-    sub?: any;
-    gender?: any;
-    givenName: any;
-    familyName: any;
+    id?: string;
+    email: string;
+    sub?: string;
+    gender?: string;
+    givenName: string;
+    familyName: string;
     address?: {
-        street: any;
-        postalCode: any;
-        locality: any;
-        region: any;
-        country: any;
+        street: string;
+        postalCode: string;
+        locality: string;
+        region: string;
+        country: string;
     };
     watchlist: string[];
  }
