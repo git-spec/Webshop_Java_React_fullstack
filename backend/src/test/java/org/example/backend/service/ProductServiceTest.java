@@ -134,12 +134,14 @@ public class ProductServiceTest {
 
     @Test
     void getProductsByCategory_shouldThrowIllegalArgumentException_whenInvalidCategory() {
+        // GIVEN
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
         NotFoundException exception = assertThrows(
             NotFoundException.class, 
             () -> productService.getProductsByCategory("FEHLER")
         );
-        assertEquals("Seite nicht gefunden.", exception.getMessage());
+        assertEquals(expected, exception.getMessage());
     }
 
     @Test
@@ -168,7 +170,7 @@ public class ProductServiceTest {
     @Test
     void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
         // GIVEN
-        String expected = "Seite nicht gefunden.";
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
         NotFoundException result = assertThrows(
             NotFoundException.class, 
@@ -233,7 +235,7 @@ public class ProductServiceTest {
     @Test
     void getProductsByCategoryAndGroupAndFamily_shouldThrowNotFoundException_whenInvalidFamily() {
         // GIVEN
-        String expected = "Seite nicht gefunden.";
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
         NotFoundException result = assertThrows(
             NotFoundException.class, 

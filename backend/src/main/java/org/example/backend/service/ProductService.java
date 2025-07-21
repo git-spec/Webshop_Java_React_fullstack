@@ -41,7 +41,7 @@ public class ProductService {
             Category categoryEnum = Category.valueOf(category.toUpperCase());
             return productRepo.findAllByCategory(categoryEnum.toString());
         } catch(IllegalArgumentException e) {
-            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
+            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT);
         }
     }
 
@@ -58,7 +58,7 @@ public class ProductService {
             Group groupEnum = Group.valueOf(group.toUpperCase());
             return productRepo.findAllByCategoryAndGroup(categoryEnum.toString(), groupEnum.toString());
         } catch(IllegalArgumentException e) {
-            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
+            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT);
         }
     }
 
@@ -85,7 +85,7 @@ public class ProductService {
                 familyEnum.toString()
             );
         } catch(IllegalArgumentException e) {
-            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT, e);
+            throw new NotFoundException(NOT_FOUND_MESSAGE_FORMAT);
         }
     }
 
