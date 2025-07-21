@@ -9,16 +9,14 @@ import Profile from "./Profile";
 type Props = {
     user: IUser | null | undefined;
     products: IProduct[] | undefined;
-    watchlist: IProduct[] | undefined;
-    onDelete: (watchlist: IProduct[]) => void;
 };
 
 
-export default function Dashboard({user, products, watchlist, onDelete}: Readonly<Props>) {
+export default function Dashboard({user, products}: Readonly<Props>) {
     const tabsItems = [
         {
             label: "Merkliste",
-            children: <Watchlist watchlist={watchlist} onDelete={onDelete} />
+            children: <Watchlist />
         },
         {
             label: "Bestellungen",

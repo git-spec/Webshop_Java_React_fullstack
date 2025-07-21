@@ -33,18 +33,19 @@ export const getSelProducts = async ({request}: LoaderFunctionArgs) => {
 export default function Products({user}: Readonly<Props>) {
   const products: IProduct[] | undefined = useLoaderData();
 
-  // const addToWatchlist = (product: IProduct) => {
-  //       if (user?.email) {
-  //         const body = {
-  //           idToken: user.idToken,
-  //           productID: product.id
-  //         };
-  //         axios.post("/api/user/watchlist", body).then(res => {
-  //           console.log(res.data);
+  const addToWatchlist = (product: IProduct) => {
+        if (user?.id) {
+          const body = {
+            userID: user.id,
+            productID: product.id
+          };
+          axios.put("/api/user/watchlist", body).then(res => {
+            console.log(res.data);
             
-  //         });
-  //       }
-  // }
+            user.watchlist = [...user.watchlist, product.id];
+          });
+        }
+  }
 
   return (
     <LayoutContainer padding={true}>
@@ -63,7 +64,7 @@ export default function Products({user}: Readonly<Props>) {
                           iconButton={!!user}
                           icon={<StarsIcon sx={{color: "#D7B76F"}} />}
                           path={`/product/${product.id}`} 
-                          onAction={() => {}}
+                          onAction={() => {addToWatchlist(product)}}
                         />
                     </Grid>
                 })
