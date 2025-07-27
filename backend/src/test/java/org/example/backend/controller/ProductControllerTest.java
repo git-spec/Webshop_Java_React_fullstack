@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.example.backend.model.Product;
@@ -100,6 +100,8 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
+        // WHEN
+        when(mockService.getProducts()).thenReturn(expected);;
         // THEN
         mockMvc.perform(get("/api/products"))
             .andExpect(status().isOk())
@@ -112,7 +114,9 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategory(anyString())).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -136,7 +140,12 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategoryAndGroup(
+                anyString(),
+                anyString()
+            )).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture/seating"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -161,7 +170,14 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategoryAndGroupAndFamily(
+                anyString(),
+                anyString(),
+                anyString()
+            )
+        ).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture/seating/chair"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -186,7 +202,9 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         Optional<Product> expected = Optional.of(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductByID(id)).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/product/{id}", id))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -209,7 +227,9 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = List.of(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByID(List.of(id))).thenReturn(expected);
+        // THEN
         mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(
                 """
                     [
