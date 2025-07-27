@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
     
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(InvalidArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<String> handleIllegalArgumentException(InvalidArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
     

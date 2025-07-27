@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 import org.example.backend.exception.AccessException;
 import org.example.backend.exception.DuplicateException;
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.WatchlistItemDTO;
 import org.example.backend.model.dto.UserDTO;
@@ -72,7 +72,7 @@ public class UserControllerTest {
         userRepo.save(user);
         // WHEN
         when(mockService.getUser("INVALID"))
-            .thenThrow(new IllegalArgumentException("Invalid"));
+            .thenThrow(new InvalidArgumentException("Invalid"));
         // THEN
         mockMvc.perform(get("/api/user/{email}", "INVALID"))
             .andExpect(status().isBadRequest());
@@ -120,7 +120,7 @@ public class UserControllerTest {
     void addUser_shouldThrow400_whenGetNull() throws Exception {
         // WHEN
         when(mockService.addUser(any(UserDTO.class)))
-            .thenThrow(new IllegalArgumentException("Fehler"));
+            .thenThrow(new InvalidArgumentException("Fehler"));
         // THEN
         mockMvc.perform(post("/api/user")
             .contentType(MediaType.APPLICATION_JSON)
@@ -203,7 +203,7 @@ public class UserControllerTest {
         String jsonDTO = objectMapper.writeValueAsString(invalidItemDto);
         // WHEN 
         when(mockService.updateWatchlist(invalidItemDto))
-            .thenThrow(new IllegalArgumentException("Fehler"));
+            .thenThrow(new InvalidArgumentException("Fehler"));
         // THEN
         mockMvc.perform(put("/api/user/watchlist")
             .contentType(MediaType.APPLICATION_JSON)
@@ -242,7 +242,7 @@ public class UserControllerTest {
         String jsonDto = objectMapper.writeValueAsString(invalidItemDto);
         // WHEN 
         when(mockService.removeWatchlistItem(invalidItemDto))
-            .thenThrow(new IllegalArgumentException("Fehler"));
+            .thenThrow(new InvalidArgumentException("Fehler"));
         // THEN
         mockMvc.perform(post("/api/user/watchlist")
             .contentType(MediaType.APPLICATION_JSON)

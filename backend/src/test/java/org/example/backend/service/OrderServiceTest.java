@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 
 import org.example.backend.repository.OrderRepo;
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
@@ -46,7 +46,7 @@ public class OrderServiceTest {
     String BAD_REQUEST_MESSAGE_FORMAT = "Anfrage ist nicht korrekt.";
 
     @Test
-    void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws IllegalArgumentException {
+    void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws InvalidArgumentException {
         // GIVEN
         List<OrderCompleted> expected = List.of(orderCompleted);
         mockRepo.save(orderCompleted);
@@ -58,11 +58,11 @@ public class OrderServiceTest {
     }
 
     @Test
-    void getOrdersByEmail_shouldThrowBadRequest_whenGetInvalidEmail() throws IllegalArgumentException {
+    void getOrdersByEmail_shouldThrowBadRequest_whenGetInvalidEmail() throws InvalidArgumentException {
         // WHEN
         try {
             orderService.getOrdersByEmail("123");
-        } catch(IllegalArgumentException e) {
+        } catch(InvalidArgumentException e) {
             // THEN
             assertTrue(true);
         }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.example.backend.exception.BadRequestException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
@@ -54,7 +55,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/completed/{email}")
-    public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) throws IllegalArgumentException, NotFoundException {
+    public List<OrderCompleted> getOrdersByEmail(@PathVariable String email) throws InvalidArgumentException, NotFoundException {
         return orderService.getOrdersByEmail(email);
     }
 		    
@@ -66,7 +67,6 @@ public class OrderController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             throw new BadRequestException(BAD_REQUEST_MESSAGE_FORMAT);
         }
 

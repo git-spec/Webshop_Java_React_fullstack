@@ -13,7 +13,7 @@ import com.mongodb.client.result.UpdateResult;
 
 import lombok.RequiredArgsConstructor;
 
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.exception.DuplicateException;
 import org.example.backend.Utils;
 import org.example.backend.exception.AccessException;
@@ -34,7 +34,7 @@ public class UserService {
     static final String DUPLICATE = "Bereits in der Watchlist enthalten.";
     static final String INTERNAL_ERROR = "Es ist ein Fehelr aufgetreten. Versuchen Sie es später noch einmal.";
 
-    public User getUser(String email) throws IllegalArgumentException, AccessException {
+    public User getUser(String email) throws InvalidArgumentException, AccessException {
         if (Utils.isValidEmail(email)) {
             Optional<User> result = userRepo.findByEmail(email);
             if (!result.isEmpty()) {
@@ -43,7 +43,7 @@ public class UserService {
                 throw new AccessException(INTERNAL_ERROR);
             }
         } else {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+            throw new InvalidArgumentException(ILLEGAL_ARGUMENT);
         }
     }
 
@@ -61,7 +61,7 @@ public class UserService {
         user.setWatchlist(userDTO.getWatchlist());
         // Checks for nullWie kann ich das testen: 
         if (user.getEmail() == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+            throw new InvalidArgumentException(ILLEGAL_ARGUMENT);
         }
 
         // Checks for duplicate
@@ -81,10 +81,10 @@ public class UserService {
 
     public UpdateResult updateWatchlist(
         WatchlistItemDTO itemDto
-    ) throws IllegalArgumentException, DuplicateException, AccessException {
+    ) throws InvalidArgumentException, DuplicateException, AccessException {
         // Checks for null
         if (!Utils.isValidAlphanumeric(itemDto.userID()) || !Utils.isValidAlphanumeric(itemDto.productID())) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+            throw new InvalidArgumentException(ILLEGAL_ARGUMENT);
         }
         // Checks for duplicate
         Query query = new Query(Criteria.where("id").is(itemDto.userID()).and("watchlist").is(itemDto.productID()));
@@ -106,10 +106,10 @@ public class UserService {
         }
     }
 
-    public UpdateResult removeWatchlistItem(WatchlistItemDTO itemDto) throws IllegalArgumentException, AccessException {
+    public UpdateResult removeWatchlistItem(WatchlistItemDTO itemDto) throws InvalidArgumentException, AccessException {
         // Checks for null
         if (!Utils.isValidAlphanumeric(itemDto.userID()) || !Utils.isValidAlphanumeric(itemDto.productID())) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
+            throw new InvalidArgumentException(ILLEGAL_ARGUMENT);
         }
         // Checks result
         Query query = new Query(Criteria.where("_id").is(itemDto.userID()));

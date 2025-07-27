@@ -30,7 +30,7 @@ import com.mongodb.client.result.UpdateResult;
 import org.example.backend.Utils;
 import org.example.backend.exception.AccessException;
 import org.example.backend.exception.DuplicateException;
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
 import org.example.backend.model.dto.WatchlistItemDTO;
@@ -85,7 +85,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getUsert_shouldIllegalArgumentException_whenGetInvalidID() throws IllegalArgumentException {
+    void getUsert_shouldIllegalArgumentException_whenGetInvalidID() throws InvalidArgumentException {
         // GIVEN
         // WHEN
         Boolean result = Utils.isValidEmail("jondoe.io");
@@ -109,12 +109,12 @@ public class UserServiceTest {
     }
 
     @Test
-    void addUsert_shouldThrowIllegalArgumentException_whenGetNull() throws IllegalArgumentException {
+    void addUsert_shouldThrowIllegalArgumentException_whenGetNull() throws InvalidArgumentException {
         // WHEN
         UserDTO invalidDTO = new UserDTO(null, "Jon", "Doe");
         // THEN
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class, 
+        InvalidArgumentException exception = assertThrows(
+            InvalidArgumentException.class, 
             () -> userService.addUser(invalidDTO)
         );
         assertEquals(UserService.ILLEGAL_ARGUMENT, exception.getMessage());
@@ -165,7 +165,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateWatchlist_shouldThrowIllegalArgumentException_whenGetInvalidData() throws IllegalArgumentException {
+    void updateWatchlist_shouldThrowIllegalArgumentException_whenGetInvalidData() throws InvalidArgumentException {
         try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
             // WHEN
             mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(false);
@@ -173,8 +173,8 @@ public class UserServiceTest {
             Utils.isValidAlphanumeric(null);
             // THEN
             mockedStatic.verify(() -> Utils.isValidAlphanumeric(null));
-            IllegalArgumentException actual = assertThrows(
-                IllegalArgumentException.class, 
+            InvalidArgumentException actual = assertThrows(
+                InvalidArgumentException.class, 
                 () -> userService.updateWatchlist(invalidItemDto)
             );
             assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());
@@ -225,10 +225,10 @@ public class UserServiceTest {
     }
 
     @Test
-    void removeWatchlistItem_shouldThrowIllegalArgumentException_whenGetInvalidData() throws IllegalArgumentException {
+    void removeWatchlistItem_shouldThrowIllegalArgumentException_whenGetInvalidData() throws InvalidArgumentException {
         // THEN
-        IllegalArgumentException actual = assertThrows(
-            IllegalArgumentException.class, 
+        InvalidArgumentException actual = assertThrows(
+            InvalidArgumentException.class, 
             () -> userService.removeWatchlistItem(invalidItemDto)
         );
         assertEquals(UserService.ILLEGAL_ARGUMENT, actual.getMessage());

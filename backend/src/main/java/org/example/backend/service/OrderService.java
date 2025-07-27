@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import org.example.backend.exception.BadRequestException;
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.OrderCompleted;
 // import org.example.backend.model.PayPal;
 import org.example.backend.model.dto.OrderCompletedDTO;
@@ -47,7 +47,7 @@ public class OrderService {
             // String lastname = null;
             // Object payer = orderDTO.paypal().get("payer");
             // if (id == null) {
-            //     throw new IllegalArgumentException("PayPal id is missing.");
+            //     throw new InvalidArgumentException("PayPal id is missing.");
             // }
             // if (payer instanceof Map) {
             //     @SuppressWarnings("unchecked")
@@ -94,10 +94,10 @@ public class OrderService {
         }
     }
 
-    public List<OrderCompleted> getOrdersByEmail(String email) throws IllegalArgumentException {
+    public List<OrderCompleted> getOrdersByEmail(String email) throws InvalidArgumentException {
         boolean valid = isValidEmail(email);
         if (!valid) {
-            throw new IllegalArgumentException(BAD_REQUEST_MESSAGE_FORMAT);
+            throw new InvalidArgumentException(BAD_REQUEST_MESSAGE_FORMAT);
         } else {
             return orderRepo.findAllByPaypalPayerEmailAddress(email);
         }
