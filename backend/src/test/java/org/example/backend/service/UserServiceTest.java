@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -57,7 +58,7 @@ public class UserServiceTest {
     String id = "test123";
     User user = new User(id, "123@test.com", "Jon", "Doe", Instant.now());
     UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
-    WatchlistItemDTO itemDTO = new WatchlistItemDTO("test123", "prod1");
+    WatchlistItemDTO itemDTO = new WatchlistItemDTO(id, "prod1");
     WatchlistItemDTO invalidItemDto = new WatchlistItemDTO(null, "prod1");
 
     @Test
@@ -183,13 +184,32 @@ public class UserServiceTest {
 
     @Test
     void updateWatchlist_shouldThrowDuplicateException_whenProductExist() throws DuplicateException {
-        // WHEN
-        when(mockTemp.exists(any(Query.class),eq(User.class))).thenReturn(true);
-        // THEN
-        DuplicateException actual = assertThrows(DuplicateException.class, () -> 
-            userService.updateWatchlist(itemDTO)
-        );
-        assertEquals(UserService.DUPLICATE, actual.getMessage());
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // GIVEN
+            UpdateResult updateResult = mock(UpdateResult.class);
+            user.setWatchlist(List.of("prod1"));
+            mockTemp.save(user);
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
+            when(Utils.isValidAlphanumeric(any())).thenReturn(true);
+            Utils.isValidAlphanumeric(id);
+            when(
+                mockTemp.exists(
+                    new Query(Criteria.where("id")
+                        .is(itemDTO.userID())
+                        .and("watchlist").is(itemDTO.productID())), 
+                    User.class
+                )
+            
+            ).thenThrow(new DuplicateException(UserService.DUPLICATE));
+            // THEN
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(id));
+            DuplicateException actual = assertThrows(
+                DuplicateException.class, 
+                () -> userService.updateWatchlist(itemDTO)
+            );
+            assertEquals(UserService.DUPLICATE, actual.getMessage());
+        }
     }
 
     @Test
