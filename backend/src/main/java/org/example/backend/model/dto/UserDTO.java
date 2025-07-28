@@ -2,8 +2,6 @@ package org.example.backend.model.dto;
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -11,8 +9,7 @@ import org.example.backend.model.Address;
 
 
 @Getter
-@EqualsAndHashCode 
-@Document("users")
+@EqualsAndHashCode
 public class UserDTO {
     private String sub;
     private final String email; 
