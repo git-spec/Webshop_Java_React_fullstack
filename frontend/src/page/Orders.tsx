@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import type { IUserAuth } from "@/interface/IUserAuth";
 import type { IProduct } from "@/interface/IProduct";
+import type { IOrder } from "@/interface/IOrder";
+import type { IUser } from "@/interface/IUser";
 import CardOrder from "@/component/card/CardOrder";
 import CardContentOrder from "@/component/card/CardContentOrder";
-import type { IOrder } from "@/interface/IOrder";
 
 type Props = {
-    user: IUserAuth | null | undefined;
+    user: IUser | null | undefined;
     products: IProduct[] | undefined;
 };
 

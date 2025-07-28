@@ -5,5 +5,6 @@ export interface IUserAuth {
     familyName: string;
     givenName: string;
     name: string;
+    watchlist?: string[];
     [key: string]: any;
 }

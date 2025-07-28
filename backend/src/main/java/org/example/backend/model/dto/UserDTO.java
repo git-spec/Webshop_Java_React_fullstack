@@ -1,20 +1,16 @@
-package org.example.backend.model;
+package org.example.backend.model.dto;
 
 import java.util.List;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.time.Instant;
+import org.example.backend.model.Address;
 
 
 @Getter
-@EqualsAndHashCode 
-@Document("users")
-public class User {
-    private final String id;
+@EqualsAndHashCode
+public class UserDTO {
     private String sub;
     private final String email; 
     private String gender;
@@ -22,20 +18,16 @@ public class User {
     private final String familyName;
     private Address address;
     private List<String> watchlist;
-    private final Instant createdAt;
 
-    public User(
-        String id, 
+
+    public UserDTO( 
         String email, 
         String givenName, 
-        String familyName,  
-        Instant createdAt
+        String familyName
     ) {
-        this.id = id;
         this.email = email;
         this.givenName = givenName;
         this.familyName = familyName;
-        this.createdAt = createdAt;
     }
 
     public void setSub(String sub) {

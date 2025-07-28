@@ -16,29 +16,25 @@ import Home from "./page/Home.tsx";
 import Product from "./page/Product.tsx";
 import Cart from "./page/Cart.tsx";
 import type { CartContextType } from "./type/CartContextType.tsx";
+import type { UserContextType } from "./type/UserContextType.ts";
 import Checkout from "./page/Checkout.tsx";
 import Dashboard from "./page/Dashboard.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import type { IProduct } from "./interface/IProduct.ts";
-import type { IWatchlistItem } from "./interface/IWatchlistItem.ts";
 import NotFound from "./page/NotFound.tsx";
+import type { IUser } from "./interface/IUser.ts";
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
-export const UserContext = createContext<IUserAuth | null | undefined>(undefined);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 export const ProductsContext = createContext<IProduct[] | null | undefined>(undefined);
-
-type WatchlistItemDTO = {
-    userEmail: string;
-    product: IProduct;
-};
 
 
 export default function App() {
   const [products, setProducts] = useState<IProduct[]>();
   const [cart, setCart] = useState<IOrderItem[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
-  const [user, setUser] = useState<IUserAuth | null>(); 
-  const [listItems, setListItems] = useState<IWatchlistItem[]>();
+  const [userAuth, setUserAuth] = useState<IUserAuth | null>(); 
+  const [user, setUser] = useState<IUser | null>(); 
 
   useEffect(() => {
     handleUser();
@@ -48,11 +44,11 @@ export default function App() {
   //   getProducts();
   // }, [products]);
 
-  const getProducts = () => {
-    axios.get('/api/products').then(res => {
-      setProducts(res.data);
-    }).catch(err => console.log(err));
-  }
+  // const getProducts = () => {
+  //   axios.get('/api/products').then(res => {
+  //     setProducts(res.data);
+  //   }).catch(err => console.log(err));
+  // }
 
   const handleCart = (order: IOrderItem) => {
     const itemExsits = cart.find(article => article.productID === order.productID && article.color === order.color);
@@ -75,9 +71,9 @@ export default function App() {
     setCart(cart);
   }
 
-  // const updateUser = (user: IUserAuth) => {
-  //   setUser(user);
-  // }
+  const updateUser = (user: IUser | null | undefined) => {
+    setUser(user);
+  }
 
   function login() {
       const host: string = window.location.host === 'localhost:5173'
@@ -97,29 +93,46 @@ export default function App() {
       window.open(host + '/logout', '_self')
   }
 
-  // const loadUser = () => {
-  //     axios
-  //         .get('/api/auth').then(res => {
-  //           setUser(res.data);
-  //         })
-  //         .catch(err => setUser(null));
-  // }
-
-  // function getWatchlist() {
-  //     axios.get(`/api/watchlist/${user.email}`).then(res => {
-  //         setListItems(res.data);
-  //     }).catch(err => console.log(err));
-  // }
-
-  const handleUser = async () => {
-    try {
-      const user = await axios.get('/api/auth');
-      setUser(user.data);
-      const watchlist = await axios.get(`/api/watchlist/${user.data.email}`);
-      setListItems(watchlist.data);
-    } catch(err) {
-      console.error(err);
-    }
+  /**
+   * Gets user.
+   * @returns {void}
+   */
+  const handleUser = (): void => {
+    axios.get('/api/auth').then(
+      res => {
+        if (res.data) {
+          setUserAuth(res.data);
+          const user: IUser = {
+            email: res.data.email,
+            sub: res.data.claims.sub,
+            gender: res.data.gender,
+            givenName: res.data.givenName,
+            familyName: res.data.familyName,
+            address: {
+              street: res.data.address.street,
+              postalCode: res.data.address.postalCode,
+              locality: res.data.address.locality,
+              region: res.data.address.region,
+              country: res.data.address.country,
+            },
+            watchlist: [],
+          };
+          // Checks existing email address of user.
+          axios.get(`/api/user/${user.email}`).then(
+            res => {
+              if (res.data) {
+                setUser(res.data);
+              } else {
+                // Creates new user.
+                axios.post('api/user', user)
+                  .then(res => setUser(res.data))
+                  .catch(err => console.log(err));
+              }
+            }
+          ).catch(err => console.log(err));
+        }
+      }
+    ).catch(err => console.log(err));
   }
 
   // const updateCart = (product: IOrderItem) => {
@@ -140,7 +153,7 @@ export default function App() {
   // }
 
   const CartContextValue = useMemo(() => ({ cart, updateCart }), [cart, updateCart]);
-  const UserContextValue = useMemo(() => ({ user }), [user]);
+  const UserContextValue = useMemo(() => ({ user, updateUser }), [user, updateUser]);
   // const ProductsContextValue = useMemo(() => ({ products, updateProducts }), [products, updateProducts]);
 
   const router = createBrowserRouter(
@@ -149,26 +162,23 @@ export default function App() {
         <Route path="/" element={<RootLayout onLogin={login} onLogout={logout} />}>
             <Route 
               path={'products/:category/:group/:family'} 
-              element={<Products user={user} watchlist={listItems} />} 
+              element={<Products user={user} />} 
               loader={(request) => getSelProducts(request)}  
             />
             <Route 
               path={'products/:category/:group'} 
-              element={<Products user={user} watchlist={listItems} />} 
+              element={<Products user={user} />} 
               loader={(request) => getSelProducts(request)}  
             />
-            {/* <Route path={'products/:category/:group'} element={<Products products={products} user={user} watchlist={listItems} />} /> */}
             <Route path="product/:id" element={<Product addToCart={handleCart} />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route index element={<Home />} />
-            <Route element={<ProtectedRoute user={user?.idToken} />}>
+            <Route element={<ProtectedRoute user={userAuth?.idToken} />}>
               <Route path="dashboard" element={
                 <Dashboard 
                   user={user} 
-                  products={products} 
-                  watchlist={listItems} 
-                  onDelete={(watchlist) => (setListItems(watchlist))} 
+                  products={products}
                 />
               } />
             </Route>
@@ -180,7 +190,7 @@ export default function App() {
 
   return (
       <CartContext.Provider value={CartContextValue}>
-        <UserContext.Provider value={UserContextValue.user}>
+        <UserContext.Provider value={UserContextValue}>
           {/* <ProductsContextValue.Provider value={ProductsContextValue}> */}
             <RouterProvider router={router} />
           {/* </UProductsContextValue.Provider> */}

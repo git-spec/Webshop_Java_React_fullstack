@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.example.backend.exception.IllegalArgumentException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.Article;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.repository.OrderRepo;
@@ -57,7 +57,7 @@ public class OrderControllerTest {
         // WHEN // THEN
         mockMvc.perform(get("/api/orders/completed/{email}", "123"))
             .andExpect(status().isBadRequest())
-            .andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException()))
+            .andExpect(result -> assertInstanceOf(InvalidArgumentException.class, result.getResolvedException()))
             .andExpect(result -> assertEquals(BAD_REQUEST_MESSAGE_FORMAT, result.getResolvedException().getMessage()));
     }
 

@@ -3,9 +3,9 @@ package org.example.backend.exception;
 import lombok.Getter;
 
 @Getter
-public class NotFoundException extends Exception {
+public class AccessException extends RuntimeException {
 
-    public NotFoundException(String message) {
+    public AccessException(String message) {
         super(message);
     }
 }

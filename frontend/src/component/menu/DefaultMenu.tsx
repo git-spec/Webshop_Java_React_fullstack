@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,9 +13,11 @@ type Props = {
     onLogout: () => void;
 };
 
-function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>) {
+export default function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>) {
     const navigate = useNavigate();
-    const user = useContext(UserContext);
+    const context = useContext(UserContext);
+    if (!context) throw new Error("UserContext must be used within a UserProvider");
+    const {user} = context;
     const menuId = id;
     const isOpen = Boolean(anchorEl);
     const menuItems = [
@@ -43,7 +45,6 @@ function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>
             open={isOpen}
             onClose={handleMenuClose}
         >
-            {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
             { !user && <MenuItem onClick={() => {handleMenuClose(); onLogin()}}>Login</MenuItem>}
             {
                 user && menuItems
@@ -51,5 +52,3 @@ function DefaultMenu({id, anchorEl, onClose, onLogin, onLogout}: Readonly<Props>
         </Menu>
     );
 }
-
-export default DefaultMenu;

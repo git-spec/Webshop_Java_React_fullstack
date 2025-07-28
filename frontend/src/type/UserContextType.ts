@@ -1,7 +1,7 @@
-import type { IUserAuth } from "@/interface/IUserAuth";
+import type { IUser } from "@/interface/IUser";
 
 
 export type UserContextType = {
-  user: IUserAuth | null | undefined;
-  updateUser: (user: IUserAuth | null | undefined) => void;
+  user: IUser | null | undefined;
+  updateUser: (user: IUser | null | undefined) => void;
 };

@@ -14,18 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import org.example.backend.model.Product;
-import org.assertj.core.error.OptionalShouldBeEmpty;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
-import org.example.backend.model.Color;
 import org.example.backend.model.Currency;
 import org.example.backend.model.Dimension;
 import org.example.backend.model.Family;
@@ -36,6 +36,7 @@ import org.example.backend.model.Measure;
 import org.example.backend.model.ProductFeatures;
 import org.example.backend.model.Unit;
 import org.example.backend.repository.ProductRepo;
+import org.example.backend.service.ProductService;
 
 
 @SpringBootTest
@@ -48,6 +49,9 @@ public class ProductControllerTest {
     private ProductRepo prod1Repo;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
+    @MockitoBean
+    private  ProductService mockService;
+
     String id = "1536716";
     Measure width = new Measure(
                                     49,
@@ -96,6 +100,8 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
+        // WHEN
+        when(mockService.getProducts()).thenReturn(expected);;
         // THEN
         mockMvc.perform(get("/api/products"))
             .andExpect(status().isOk())
@@ -108,7 +114,9 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategory(anyString())).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -116,8 +124,10 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategory_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
+    void getProductsByCategory_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategory("invalid")).thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
         mockMvc.perform(get("/api/products/{category}", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
@@ -130,7 +140,12 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategoryAndGroup(
+                anyString(),
+                anyString()
+            )).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture/seating"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -138,8 +153,11 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategoryAndGroup_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
+    void getProductsByCategoryAndGroup_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategoryAndGroup("invalid", "invalid"))
+            .thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
         mockMvc.perform(get("/api/products/{category}/{group}", "invalid", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
@@ -152,7 +170,14 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         List<Product> expected = Collections.singletonList(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductsByCategoryAndGroupAndFamily(
+                anyString(),
+                anyString(),
+                anyString()
+            )
+        ).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/products/furniture/seating/chair"))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -160,9 +185,12 @@ public class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProductsByCategoryAndGroupAndFamily_shouldReturnNotFound_whenGetInvalidCategory() throws Exception {
-        // WHEN // THEN
-        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "furniture", "seating", "invald"))
+    void getProductsByCategoryAndGroupAndFamily_shouldReturn404_whenGetInvalidCategory() throws Exception {
+        // WHEN 
+        when(mockService.getProductsByCategoryAndGroupAndFamily("invalid", "invalid", "invalid"))
+            .thenThrow(new NotFoundException(NOT_FOUND_MESSAGE_FORMAT));
+        // THEN
+        mockMvc.perform(get("/api/products/{category}/{group}/{chair}", "invalid", "invalid", "invalid"))
             .andExpect(status().isNotFound())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
             .andExpect(content().string(NOT_FOUND_MESSAGE_FORMAT));
@@ -174,7 +202,9 @@ public class ProductControllerTest {
         // GIVEN
         prod1Repo.save(prod1);
         Optional<Product> expected = Optional.of(prod1);
-        // WHEN // THEN
+        // WHEN
+        when(mockService.getProductByID(id)).thenReturn(expected);
+        // THEN
         mockMvc.perform(get("/api/product/{id}", id))
             .andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -188,6 +218,25 @@ public class ProductControllerTest {
         // WHEN // THEN
         mockMvc.perform(get("/api/product/{id}", "123"))
             .andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @WithMockUser
+    void getProductsByID_shouldReturnProducts_whenGetIDs() throws Exception {
+        // GIVEN
+        prod1Repo.save(prod1);
+        List<Product> expected = List.of(prod1);
+        // WHEN
+        when(mockService.getProductsByID(List.of(id))).thenReturn(expected);
+        // THEN
+        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content(
+                """
+                    [
+                        "1536716"
+                    ]
+                """
+            )).andExpect(status().isOk())
             .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 }

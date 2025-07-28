@@ -1,63 +1,84 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-
-import type { IUserAuth } from "@/interface/IUserAuth";
-import type { IWatchlistItem } from "@/interface/IWatchlistItem";
-import type { IProduct } from "@/interface/IProduct";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+
+import type { IProduct } from "@/interface/IProduct";
+import { UserContext } from "@/App";
 import CardMain from "@/component/card/CardMain";
 import CardContentProduct from "@/component/card/CardContentProduct";
 import NoteBig from "@/component/share/NoteBig";
 
-type Props = {
-    watchlist: IWatchlistItem[] | undefined;
-    onDelete: (watchlist: IWatchlistItem[]) => void;
-};
 
-export default function Watchlist({watchlist, onDelete}: Readonly<Props>) {
+export default function Watchlist() {
     const message = "Die Merkliste ist leer.";
-    // const [listItems, setListItems] = useState<IWatchlistItem[]>();
+    const [listItems, setListItems] = useState<IProduct[]>();
+    const context = useContext(UserContext);
+    if (!context) throw new Error("UserContext must be used within a UserProvider");
+    const {user, updateUser} = context;
 
-    // function getWatchlist() {
-    //     axios.get(`/api/watchlist/${user.email}`).then(res => {
-    //         setListItems(res.data);
-    //     }).catch(err => console.log(err));
-    // }
+    useEffect(() => {
+        user && getWatchlistItems(user.watchlist);
+    }, [user]);
 
-    function deleteWatchlistItem(item: IWatchlistItem) {
-        axios.delete(`/api/watchlist/${item.id}`);
+    /**
+     * Gets products for watchlist.
+     * @param {Array<string>} watchlist - list of products
+     * @returns {void}
+     */
+    const getWatchlistItems = (watchlist: Array<string>): void => {
+        axios.post('/api/products', watchlist).then(res => setListItems(res.data));
     }
-  
-    const deleteFromWL = (item: IWatchlistItem) => {
-        const newListItems = watchlist?.filter(
-            (listItem: IWatchlistItem) => listItem.product.id !== item.product.id
-        );
-        // newListItems && setListItems(newListItems);
-        newListItems && deleteWatchlistItem(item);
-        newListItems && onDelete(newListItems);
-    };
 
-//   useEffect(() => {
-//     getWatchlist();
-//   }, []);
+    /**
+     * Removes product id from watchlist.
+     * @param {Array<string>} item - product
+     * @returns {void}
+     */
+    function removeWatchlistItem(item: IProduct): void {
+        const body = {
+            userID : user?.id,
+            productID: item.id
+        };
+        axios.post('/api/user/watchlist', body).then(
+            res => {
+                if (res.status === 200) {
+                    const newListItems = listItems?.filter(
+                        (listItem: IProduct) => listItem.id !== item.id
+                    );
+                    setListItems(newListItems);
+                    user?.watchlist.splice(user.watchlist.indexOf(item.id), 1);
+                    updateUser(user);
+                }
+            }
+        );
+    }
 
     return (
-        <Grid container columnSpacing={3} rowSpacing={4} sx={{justifyContent: !watchlist ? "center" : "", height: "100%"}}>
+        <Grid 
+            container 
+            columnSpacing={3} 
+            rowSpacing={4} 
+            sx={
+                {
+                    justifyContent: !listItems || listItems.length === 0 ? "center" : "", 
+                    height: "100%"
+                }
+            }
+        >
             {
-                watchlist && watchlist.length > 0 ?
-                    watchlist.map((item: IWatchlistItem) => {
+                listItems && listItems.length > 0 ?
+                    listItems.map((item: IProduct) => {
                         return <Grid
-                                key={item.product.id}                                   
+                                key={item.id}                                   
                                 size={{xs: 12, sm: 6, md: 4, lg: 3}}
                                 >
                                     <CardMain 
-                                        media={{name: item.product.name, path: item.product.images.large[0]}} 
-                                        content={<CardContentProduct {...item.product} />}
+                                        media={{name: item.name, path: item.images.large[0]}} 
+                                        content={<CardContentProduct {...item} />}
                                         state={item}
                                         deleteButton={true}
-                                        path={`/product/${item.product.id}`} 
-                                        onAction={(deleteFromWL)}
+                                        path={`/product/${item.id}`} 
+                                        onAction={(removeWatchlistItem)}
                                     />
                                 </Grid>
                         })

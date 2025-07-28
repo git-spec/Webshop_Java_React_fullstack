@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.backend.Utils;
+import org.example.backend.exception.AccessException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Currency;
@@ -21,13 +24,20 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -101,7 +111,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws NotFoundException {
+    void getProductsByCategory_shouldReturnListOfCategory_whenGetCategory() throws NotFoundException, AccessException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of(prod1));
         // WHEN
@@ -113,7 +123,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() throws NotFoundException {
+    void getProductsByCategory_shouldReturnEmptyArray_whenNoCategoryExist() throws NotFoundException, AccessException {
         // GIVEN
         when(productRepo.findAllByCategory(Category.FURNITURE.toString())).thenReturn(List.of());
         // WHEN
@@ -125,17 +135,45 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory_shouldThrowIllegalArgumentException_whenInvalidCategory() {
+    void getProductsByCategory_shouldThrowNotFoundException_whenInvalidParam() {
+        // GIVEN
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
-        NotFoundException exception = assertThrows(
+        NotFoundException result = assertThrows(
             NotFoundException.class, 
-            () -> productService.getProductsByCategory("FEHLER")
+            () -> productService.getProductsByCategory("fehler")
         );
-        assertEquals("Seite nicht gefunden.", exception.getMessage());
+        assertEquals(expected, result.getMessage());
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException {
+    void getProductsByCategory_shouldThrowAccessException_whenNoAccess() {
+        // GIVEN
+        String expected = ProductService.INTERNAL_ERROR;
+        // WHEN 
+        when(productRepo.findAllByCategory(anyString())).thenThrow(new AccessException(expected));
+        // THEN
+        AccessException exception = assertThrows(
+            AccessException.class, 
+            () -> productService.getProductsByCategory("furniture")
+        );
+        assertEquals(expected, exception.getMessage());
+    }
+
+    @Test
+    void getProductsByCategory_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategory(anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategory("fehler");
+        });
+        assertEquals("DB down", exception.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException, AccessException {
         // GIVEN
         when(productRepo.findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
         // WHEN
@@ -146,31 +184,75 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() throws NotFoundException {
+    void getProductsByCategoryAndGroup_shouldReturnEmptyArray_whenNoGroupExist() throws NotFoundException, AccessException {
         // GIVEN
-        when(productRepo.findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of());
+        when(
+            productRepo.findAllByCategoryAndGroup(
+                Category.FURNITURE.toString(), 
+                Group.SEATING.toString()
+                )
+            ).thenReturn(List.of());
         // WHEN
-        List<Product> actual = productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
+        List<Product> actual = productService.getProductsByCategoryAndGroup(
+            Category.FURNITURE.toString(), 
+            Group.SEATING.toString()
+        );
         // THEN
         verify(productRepo).findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString());
-        assertDoesNotThrow(() -> productService.getProductsByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString()));
+        assertDoesNotThrow(
+            () -> productService.getProductsByCategoryAndGroup(
+                Category.FURNITURE.toString(), 
+                Group.SEATING.toString()
+            )
+        );
         assertEquals(List.of(), actual);
     }
 
     @Test
-    void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidGroup() {
+    void getProductsByCategoryAndGroup_shouldThrowNotFoundException_whenInvalidParam() {
         // GIVEN
-        String expected = "Seite nicht gefunden.";
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
         NotFoundException result = assertThrows(
             NotFoundException.class, 
-            () -> productService.getProductsByCategoryAndGroup("FEHLER", "HAFT")
+            () -> productService.getProductsByCategoryAndGroup(
+                
+         
+                       "fehler", 
+                "fehler"
+            )
         );
         assertEquals(expected, result.getMessage());
     }
 
     @Test
-    void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfFamily_whenGetFamily() throws NotFoundException {
+    void getProductsByCategoryAndGroup_shouldThrowAccessException_whenNoAccess() {
+        // GIVEN
+        String expected = ProductService.INTERNAL_ERROR;
+        // WHEN 
+        when(productRepo.findAllByCategoryAndGroup(anyString(), anyString())).thenThrow(new AccessException(expected));
+        // THEN
+        AccessException result = assertThrows(
+            AccessException.class, 
+            () -> productService.getProductsByCategoryAndGroup("furniture", "seating")
+        );
+        assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategoryAndGroup(anyString(), anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategoryAndGroup("fehler", "fehler");
+        });
+        assertEquals("DB down", exception.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnListOfFamily_whenGetFamily() throws NotFoundException, AccessException {
         // GIVEN
         when(
             productRepo.findAllByCategoryAndGroupAndFamily(Category.FURNITURE.toString(), 
@@ -193,7 +275,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategoryAndGroupAndFamily_shouldReturnEmptyArray_whenNoFamilyExist() throws NotFoundException {
+    void getProductsByCategoryAndGroupAndFamily_shouldReturnEmptyArray_whenNoFamilyExist() throws NotFoundException, AccessException {
         // GIVEN
         when(productRepo.findAllByCategoryAndGroupAndFamily(
             Category.FURNITURE.toString(), 
@@ -223,15 +305,59 @@ public class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategoryAndGroupAndFamily_shouldThrowNotFoundException_whenInvalidFamily() {
+    void getProductsByCategoryAndGroupAndFamily_shouldThrowNotFoundException_whenInvalidParam() {
         // GIVEN
-        String expected = "Seite nicht gefunden.";
+        String expected = ProductService.NOT_FOUND_MESSAGE_FORMAT;
         // WHEN // THEN
         NotFoundException result = assertThrows(
             NotFoundException.class, 
-            () -> productService.getProductsByCategoryAndGroupAndFamily("FURNITURE", "SEATING", "FEHLER")
+            () -> productService.getProductsByCategoryAndGroupAndFamily(
+                "fehler", 
+                "fehler", 
+                "fehler"
+            )
         );
         assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldThrowAccessException_whenNoAccess() {
+        // GIVEN
+        String expected = ProductService.INTERNAL_ERROR;
+        // WHEN 
+        when(
+            productRepo.findAllByCategoryAndGroupAndFamily(
+                anyString(), 
+                anyString(), 
+                anyString()
+                )
+            ).thenThrow(new AccessException(expected));
+        // THEN
+        AccessException result = assertThrows(
+            AccessException.class, 
+            () -> productService.getProductsByCategoryAndGroupAndFamily(
+                "furniture", 
+                "seating", 
+                "chair"
+            )
+        );
+        assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategoryAndGroupAndFamily(anyString(), anyString(), anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategoryAndGroupAndFamily(
+                "fehler", 
+                "fehler", 
+                "fehler"
+            );
+        });
+        assertEquals("DB down", exception.getMessage());
     }
 
     @Test
@@ -261,12 +387,51 @@ public class ProductServiceTest {
         // GIVEN
         String id = null;
         // WHEN
-        when(productRepo.findById(id)).thenThrow(IllegalArgumentException.class);
+        when(productRepo.findById(id)).thenThrow(InvalidArgumentException.class);
         // THEN
-        IllegalArgumentException result = assertThrows(
-            IllegalArgumentException.class, 
+        InvalidArgumentException result = assertThrows(
+            InvalidArgumentException.class, 
             () -> productService.getProductByID(id)
         );
         assertNotNull(result);
+    }
+
+    @Test
+    void getProductsByID_shouldReturnProducts_whenGetIDs() {
+        // GIVEN
+        List<String> ids = List.of("1536716");
+        // WHEN
+        when(productRepo.findByIdIn(ids)).thenReturn(Optional.of(List.of(prod1)));
+        List<Product> actual = productService.getProductsByID(ids);
+        // THEN
+        assertEquals(List.of(prod1), actual);
+    }
+
+    @Test
+    void getProductsByID_shouldThrowIllegalArgumentException_whenGetInvalidIDs() {
+        // GIVEN
+        List<String> ids = List.of("1@$");
+        List<Boolean> validation = ids.stream().map(id -> Utils.isValidAlphanumeric(id)).toList();
+        // WHEN // THEN
+        assertTrue(validation.contains(false));
+        InvalidArgumentException exception = assertThrows(
+            InvalidArgumentException.class, 
+            () -> productService.getProductsByID(ids)
+        );
+        assertEquals(ProductService.ILLEGAL_ARGUMENT, exception.getMessage());
+    }
+
+    @Test
+    void getProductsByID_shouldThrowAccessException_whenGetInvalidIDs() {
+        //GIVEN
+        Optional<Object> optinal = Optional.empty();
+        // WHEN // THEN
+        AccessException exception = assertThrows(
+            AccessException.class, 
+            () -> optinal.orElseThrow(
+                () -> new AccessException(ProductService.NOT_FOUND_MESSAGE_FORMAT)
+            )
+        );
+        assertEquals(ProductService.NOT_FOUND_MESSAGE_FORMAT, exception.getMessage());
     }
 }
