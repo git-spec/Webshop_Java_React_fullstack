@@ -225,6 +225,7 @@ public class UserControllerTest {
         WatchlistItemDTO dto = new WatchlistItemDTO("test123", "prod2");
         String jsonDto = objectMapper.writeValueAsString(dto);
         List<String> updated = List.of("prod1", "prod3");
+        user.setAddress(address);
         user.setWatchlist(updated);
         userRepo.save(user);
         // WHEN 
