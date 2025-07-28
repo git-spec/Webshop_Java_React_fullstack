@@ -80,7 +80,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getUsert_shouldThrowAccessException_onDataAccessException() throws AccessException {
+    void getUser_shouldThrowAccessException_onDataAccessException() throws AccessException {
         // GIVEN
         String email = user.getEmail();
         // WHEN // THEN
@@ -92,7 +92,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getUsert_shouldIllegalArgumentException_whenGetInvalidID() throws InvalidArgumentException {
+    void getUser_shouldIllegalArgumentException_whenGetInvalidID() throws InvalidArgumentException {
         // GIVEN
         // WHEN
         Boolean result = Utils.isValidEmail("jondoe.io");
@@ -116,7 +116,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addUsert_shouldThrowIllegalArgumentException_whenGetNull() throws InvalidArgumentException {
+    void addUser_shouldThrowIllegalArgumentException_whenGetNull() throws InvalidArgumentException {
         // WHEN
         UserDTO invalidDTO = new UserDTO(null, "Jon", "Doe");
         // THEN
@@ -190,11 +190,10 @@ public class UserServiceTest {
 
     @Test
     void updateWatchlist_shouldThrowDuplicateException_whenProductExist() throws DuplicateException {
+        // GIVEN
+        user.setWatchlist(List.of("prod1"));
+        mockTemp.save(user);
         try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
-            // GIVEN
-            UpdateResult updateResult = mock(UpdateResult.class);
-            user.setWatchlist(List.of("prod1"));
-            mockTemp.save(user);
             // WHEN
             mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
             when(Utils.isValidAlphanumeric(any())).thenReturn(true);
@@ -220,21 +219,27 @@ public class UserServiceTest {
 
     @Test
     void updateWatchlist_shouldThrowAccessException_onDataAccessException() throws AccessException {
-        // WHEN
-        when(mockResult.wasAcknowledged()).thenReturn(true);
-        when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
-            .thenReturn(mockResult);
-        UpdateResult result = userService.updateWatchlist(itemDTO);
-        // THEN
-        assertSame(mockResult, result);
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
+            when(Utils.isValidAlphanumeric(any())).thenReturn(true);
+            Utils.isValidAlphanumeric(id);
+            when(mockResult.wasAcknowledged()).thenReturn(true);
+            when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
+                .thenReturn(mockResult);
+            UpdateResult result = userService.updateWatchlist(itemDTO);
+            // THEN
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(id), times(2));
+            assertSame(mockResult, result);
+        }
     }
 
     @Test
     void removeWatchlistItem_shouldRemoveWatchlistItem_whenGetUserIdAndProductId() {
         // GIVEN
-            UpdateResult updateResult = mock(UpdateResult.class);
-            user.setWatchlist(List.of("prod1", "prod2", "prod3"));
-            mockTemp.save(user);
+        UpdateResult updateResult = mock(UpdateResult.class);
+        user.setWatchlist(List.of("prod1", "prod2", "prod3"));
+        mockTemp.save(user);
         try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
             // WHEN
             mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
@@ -262,11 +267,10 @@ public class UserServiceTest {
 
     @Test
     void removeWatchlistItem_shouldThrowAccessException_onDataAccessException() throws AccessException {
+        // GIVEN
+        user.setWatchlist(List.of("prod1"));
+        mockTemp.save(user);
         try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
-            // GIVEN
-            UpdateResult updateResult = mock(UpdateResult.class);
-            user.setWatchlist(List.of("prod1"));
-            mockTemp.save(user);
             // WHEN
             mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
             when(Utils.isValidAlphanumeric(any())).thenReturn(true);
