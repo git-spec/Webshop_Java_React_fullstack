@@ -64,13 +64,19 @@ public class UserServiceTest {
     @Test
     void getUser_shoulReturnUser_whenGetEmail() {
         // GIVEN
+        user.setWatchlist(List.of());
         mockRepo.save(user);
-        // WHEN
-        when(mockRepo.findById(user.getEmail())).thenReturn(Optional.of(user));
-        User actual = userService.getUser(user.getEmail());
-        // THEN
-        assertEquals(user, actual);
-        verify(mockRepo, times(1)).findByEmail(user.getEmail());
+        String email = user.getEmail();
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidEmail(anyString())).thenReturn(true);
+            when(mockRepo.findByEmail(email)).thenReturn(Optional.of(user));
+            Utils.isValidEmail(user.getEmail());
+            User actual = userService.getUser(email);
+            // THEN
+            assertEquals(user, actual);
+            verify(mockRepo, times(1)).findByEmail(email);
+        }
     }
 
     @Test
@@ -256,12 +262,22 @@ public class UserServiceTest {
 
     @Test
     void removeWatchlistItem_shouldThrowAccessException_onDataAccessException() throws AccessException {
-        // WHEN
-        when(mockResult.wasAcknowledged()).thenReturn(true);
-        when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
-            .thenReturn(mockResult);
-        UpdateResult result = userService.removeWatchlistItem(itemDTO);
-        // THEN
-        assertSame(mockResult, result);
+        try (MockedStatic<Utils> mockedStatic = mockStatic(Utils.class)) {
+            // GIVEN
+            UpdateResult updateResult = mock(UpdateResult.class);
+            user.setWatchlist(List.of("prod1"));
+            mockTemp.save(user);
+            // WHEN
+            mockedStatic.when(() -> Utils.isValidAlphanumeric(anyString())).thenReturn(true);
+            when(Utils.isValidAlphanumeric(any())).thenReturn(true);
+            Utils.isValidAlphanumeric(id);
+            when(mockResult.wasAcknowledged()).thenReturn(true);
+            when(mockTemp.updateFirst(any(Query.class), any(Update.class), eq(User.class)))
+                .thenReturn(mockResult);
+            UpdateResult result = userService.removeWatchlistItem(itemDTO);
+            // THEN
+            mockedStatic.verify(() -> Utils.isValidAlphanumeric(id), times(2) );
+            assertSame(mockResult, result);
+        }
     }
 }

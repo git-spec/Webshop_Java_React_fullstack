@@ -87,7 +87,13 @@ public class UserService {
             throw new InvalidArgumentException(ILLEGAL_ARGUMENT);
         }
         // Checks for duplicate
-        Query query = new Query(Criteria.where("id").is(itemDto.userID()).and("watchlist").is(itemDto.productID()));
+        Query query = new Query(
+                Criteria.where("id")
+                .is(itemDto.userID())
+                .and("watchlist")
+                .is(itemDto.productID()
+            )
+        );
         boolean exists = mongoTemp.exists(query, User.class);
         if (exists) {
             throw new DuplicateException(DUPLICATE);
