@@ -1,7 +1,24 @@
 package org.example.backend.controller;
 
 
+import java.time.Instant;
+import java.util.List;
+
+import org.example.backend.exception.AccessException;
+import org.example.backend.exception.DuplicateException;
+import org.example.backend.exception.InvalidArgumentException;
+import org.example.backend.model.User;
+import org.example.backend.model.Address;
+import org.example.backend.model.dto.UserDTO;
+import org.example.backend.model.dto.WatchlistItemDTO;
+import org.example.backend.repository.UserRepo;
+import org.example.backend.service.UserService;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,31 +26,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.result.UpdateResult;
-
-import java.time.Instant;
-import java.util.List;
-
-import javax.swing.plaf.TreeUI;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.example.backend.exception.AccessException;
-import org.example.backend.exception.DuplicateException;
-import org.example.backend.exception.InvalidArgumentException;
-import org.example.backend.model.User;
-import org.example.backend.model.dto.WatchlistItemDTO;
-import org.example.backend.model.dto.UserDTO;
-import org.example.backend.repository.UserRepo;
-import org.example.backend.service.UserService;
 
 
 @SpringBootTest
@@ -50,6 +50,7 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     UpdateResult updateResult = mock(UpdateResult.class);
+    private final Address address = new Address("street", "postal", "locality", "region", "country");
     private final User user = new User("test123", "123@test.com", "Jon", "Doe", Instant.now());
     private final UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
     private final WatchlistItemDTO itemDto = new WatchlistItemDTO("test123", "prod1");
@@ -58,6 +59,7 @@ public class UserControllerTest {
     @Test
     void getUser_shouldReturnUser_whenGetEmail() throws Exception {
         // GIVEN
+        user.setAddress(address);
         userRepo.save(user);
         // WHEN
         when(mockService.getUser(user.getEmail())).thenReturn(user);
@@ -70,6 +72,7 @@ public class UserControllerTest {
     @Test
     void getUser_shouldThrow400_whenGetInvaldEmail() throws Exception {
         // GIVEN
+        user.setAddress(address);
         userRepo.save(user);
         // WHEN
         when(mockService.getUser("INVALID"))
@@ -92,6 +95,7 @@ public class UserControllerTest {
     @Test
     void addUser_shouldReturnUser_whenGetUser() throws Exception {
         // GIVEN
+        user.setAddress(address);
         userRepo.save(user);
         String jsonDTO = objectMapper.writeValueAsString(userDTO);
         // WHEN
@@ -151,6 +155,7 @@ public class UserControllerTest {
         String jsonDTO = objectMapper.writeValueAsString(itemDto);
         UpdateResult result = UpdateResult.acknowledged(1L, 1L, null);
         user.setWatchlist(List.of());
+        user.setAddress(address);
         userRepo.save(user);
         // WHEN 
         when(mockService.updateWatchlist(itemDto)).thenReturn(result); 
@@ -164,6 +169,7 @@ public class UserControllerTest {
             el.getEmail().equals("123@test.com") &&
             el.getGivenName().equals("Jon") &&
             el.getFamilyName().equals("Doe") &&
+            el.getAddress().street().equals("street") &&
             el.getWatchlist().isEmpty()
         ));
     }
@@ -233,6 +239,7 @@ public class UserControllerTest {
             el.getEmail().equals("123@test.com") &&
             el.getGivenName().equals("Jon") &&
             el.getFamilyName().equals("Doe") &&
+            el.getAddress().street().equals("street") &&
             el.getWatchlist().equals(updated)
         ));
     }

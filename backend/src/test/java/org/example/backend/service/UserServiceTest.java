@@ -32,6 +32,7 @@ import org.example.backend.Utils;
 import org.example.backend.exception.AccessException;
 import org.example.backend.exception.DuplicateException;
 import org.example.backend.exception.InvalidArgumentException;
+import org.example.backend.model.Address;
 import org.example.backend.model.User;
 import org.example.backend.model.dto.UserDTO;
 import org.example.backend.model.dto.WatchlistItemDTO;
@@ -55,15 +56,17 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
     
-    String id = "test123";
-    User user = new User(id, "123@test.com", "Jon", "Doe", Instant.now());
-    UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
-    WatchlistItemDTO itemDTO = new WatchlistItemDTO(id, "prod1");
-    WatchlistItemDTO invalidItemDto = new WatchlistItemDTO(null, "prod1");
+    private final String id = "test123";
+    private final Address address = new Address("street", "postal", "locality", "region", "country");
+    private final User user = new User(id, "123@test.com", "Jon", "Doe", Instant.now());
+    private final UserDTO userDTO = new UserDTO("123@test.com", "Jon", "Doe");
+    private final WatchlistItemDTO itemDTO = new WatchlistItemDTO(id, "prod1");
+    private final WatchlistItemDTO invalidItemDto = new WatchlistItemDTO(null, "prod1");
 
     @Test
     void getUser_shoulReturnUser_whenGetEmail() {
         // GIVEN
+        user.setAddress(address);
         user.setWatchlist(List.of());
         mockRepo.save(user);
         String email = user.getEmail();
@@ -75,6 +78,7 @@ public class UserServiceTest {
             User actual = userService.getUser(email);
             // THEN
             assertEquals(user, actual);
+            assertEquals(user.getAddress(), actual.getAddress());
             verify(mockRepo, times(1)).findByEmail(email);
         }
     }
