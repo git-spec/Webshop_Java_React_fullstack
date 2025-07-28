@@ -22,13 +22,7 @@ export default function Orders({user, products}: Readonly<Props>) {
     }, []);
 
     const getOrders = () => {
-
-        console.log('env_mail: ', apiEmail);
-        
         axios.get(`/api/orders/completed/${apiEmail}`).then(res => {
-
-        console.log('orders: ', res.data);
-        
             setOrders(res.data);
         }).catch(err => console.log(err));
     }
