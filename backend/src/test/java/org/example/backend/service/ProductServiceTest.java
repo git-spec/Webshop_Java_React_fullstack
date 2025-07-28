@@ -30,9 +30,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
 
 
 
@@ -157,6 +161,18 @@ public class ProductServiceTest {
     }
 
     @Test
+    void getProductsByCategory_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategory(anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategory("fehler");
+        });
+        assertEquals("DB down", exception.getMessage());
+    }
+
+    @Test
     void getProductsByCategoryAndGroup_shouldReturnListOfGroup_whenGetGroup() throws NotFoundException, AccessException {
         // GIVEN
         when(productRepo.findAllByCategoryAndGroup(Category.FURNITURE.toString(), Group.SEATING.toString())).thenReturn(List.of(prod1));
@@ -221,6 +237,18 @@ public class ProductServiceTest {
             () -> productService.getProductsByCategoryAndGroup("furniture", "seating")
         );
         assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroup_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategoryAndGroup(anyString(), anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategoryAndGroup("fehler", "fehler");
+        });
+        assertEquals("DB down", exception.getMessage());
     }
 
     @Test
@@ -314,6 +342,22 @@ public class ProductServiceTest {
             )
         );
         assertEquals(expected, result.getMessage());
+    }
+
+    @Test
+    void getProductsByCategoryAndGroupAndFamily_shouldThrowDataAccessException_whenNoAccess() {
+        // WHEN
+        when(productRepo.findAllByCategoryAndGroupAndFamily(anyString(), anyString(), anyString()))
+            .thenThrow(new DataAccessResourceFailureException("DB down"));        
+        // THEN
+        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
+            productRepo.findAllByCategoryAndGroupAndFamily(
+                "fehler", 
+                "fehler", 
+                "fehler"
+            );
+        });
+        assertEquals("DB down", exception.getMessage());
     }
 
     @Test

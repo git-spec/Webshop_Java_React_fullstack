@@ -2,11 +2,10 @@ package org.example.backend.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.example.backend.Utils;
-import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.exception.AccessException;
+import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.exception.NotFoundException;
 import org.example.backend.model.Category;
 import org.example.backend.model.Family;
