@@ -15,14 +15,20 @@ type Props = {
 
 export default function Orders({user, products}: Readonly<Props>) {
     const [orders, setOrders] = useState<IOrder[]>();
+    const apiEmail = import.meta.env.VITE_API_EMAIL;
 
     useEffect(() => {
         getOrders();
     }, []);
 
     const getOrders = () => {
-        // axios.get(`/api/orders/completed/${import.meta.dev.VITE_EMAIL}`).then(res => {
-        axios.get(`/api/orders/completed/${"ikfischer@yahoo.de"}`).then(res => {
+
+        console.log('env_mail: ', apiEmail);
+        
+        axios.get(`/api/orders/completed/${apiEmail}`).then(res => {
+
+        console.log('orders: ', res.data);
+        
             setOrders(res.data);
         }).catch(err => console.log(err));
     }
