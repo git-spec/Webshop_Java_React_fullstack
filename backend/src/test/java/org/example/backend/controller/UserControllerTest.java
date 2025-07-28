@@ -18,8 +18,9 @@ import com.mongodb.client.result.UpdateResult;
 import java.time.Instant;
 import java.util.List;
 
+import javax.swing.plaf.TreeUI;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -256,7 +257,7 @@ public class UserControllerTest {
         String jsonDto = objectMapper.writeValueAsString(itemDto);
         // WHEN 
         when(updateResult.wasAcknowledged()).thenReturn(false);
-        when(mockService.updateWatchlist(new WatchlistItemDTO(anyString(), anyString())))
+        when(mockService.removeWatchlistItem(any(WatchlistItemDTO.class)))
             .thenThrow(new AccessException("Fehler"));
         // THEN
         mockMvc.perform(post("/api/user/watchlist")
