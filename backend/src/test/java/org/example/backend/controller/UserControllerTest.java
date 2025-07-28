@@ -172,7 +172,7 @@ public class UserControllerTest {
         // WHEN 
         String jsonDTO = objectMapper.writeValueAsString(itemDto);
         when(updateResult.wasAcknowledged()).thenReturn(false);
-        when(mockService.updateWatchlist(new WatchlistItemDTO(anyString(), anyString())))
+        when(mockService.updateWatchlist(any(WatchlistItemDTO.class)))
             .thenThrow(new AccessException("Fehler"));
         // THEN
         mockMvc.perform(put("/api/user/watchlist")
