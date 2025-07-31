@@ -40,9 +40,24 @@ export default function TableBasic<T>({content, header}: Readonly<Props<T>>) {
           <TableRow>
             {header.map((el, i) => {
                 if (i <= 1) {
-                    return <StyledTableCell key={`${el[i]}_${i}`} sx={{px: 0, py: 0, pb: '.3rem', fontSize: '1rem', fontWeight: 500}}>{el}</StyledTableCell> 
+                    return (
+                      <StyledTableCell 
+                        key={`${el[i]}_${i}`} 
+                        sx={{px: 0, py: 0, pb: '.3rem', fontSize: '1rem', fontWeight: 500}}
+                      >
+                        {el}
+                      </StyledTableCell> 
+                    )
                 } else {
-                    return <StyledTableCell align="right" key={`${el[i]}_${i}`} sx={{px: 0, py: 0, pb: '.3rem', fontSize: '1rem', fontWeight: 500}}>{el}</StyledTableCell>
+                    return (
+                      <StyledTableCell 
+                        align="right" 
+                        key={`${el[i]}_${i}`} 
+                        sx={{px: 0, py: 0, pb: '.3rem', fontSize: '1rem', fontWeight: 500}}
+                      >
+                        {el}
+                      </StyledTableCell>
+                    )
                 }
             })}
           </TableRow>
@@ -54,14 +69,26 @@ export default function TableBasic<T>({content, header}: Readonly<Props<T>>) {
                         {
                             el.map((val, x) => {
                                 if (x <= 1) {
-                                return <StyledTableCell key={`${val}_${x}`} component="th" scope="row" sx={{fontSize: '1rem', fontWeight: 400, px: 0, py: 1}}>
+                                  return (
+                                    <StyledTableCell 
+                                      key={`${val}_${x}`} 
+                                      component="th" 
+                                      scope="row" 
+                                      sx={{fontSize: '1rem', fontWeight: 400, px: 0, py: 1}}
+                                    >
                                         {val}
                                     </StyledTableCell>
-
+                                  )
                                 } else {
-                                    return <StyledTableCell key={`${val}_${x}`} align="right" sx={{fontSize: '1rem', fontWeight: 400, px: 0, py: 1}}>
+                                  return (
+                                    <StyledTableCell 
+                                      key={`${val}_${x}`} 
+                                      align="right" 
+                                      sx={{fontSize: '1rem', fontWeight: 400, px: 0, py: 1}}
+                                    >
                                         {val}
                                     </StyledTableCell>
+                                  )
                                 }
                             })
                         }
