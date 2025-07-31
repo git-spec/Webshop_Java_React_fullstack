@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,10 +96,16 @@ public class OrderService {
     }
 
     public List<OrderCompleted> getOrdersByEmail(String email) throws InvalidArgumentException {
+
+            System.out.println("orders: " + email + Instant.now());
+            
         boolean valid = isValidEmail(email);
         if (!valid) {
             throw new InvalidArgumentException(BAD_REQUEST_MESSAGE_FORMAT);
         } else {
+
+            System.out.println("orders: " + email + Instant.now());
+
             return orderRepo.findAllByPaypalPayerEmailAddress(email);
         }
     }
