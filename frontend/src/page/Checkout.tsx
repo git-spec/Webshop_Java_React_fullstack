@@ -33,8 +33,10 @@ export default function Checkout() {
                         (item: IOrderItem) => {
                             return {
                                 productID: item.productID,
+                                productName: item.productName,
                                 color: item.color,
                                 amount: item.amount,
+                                currency: item.currency,
                                 price: item.price
                             }
                         }

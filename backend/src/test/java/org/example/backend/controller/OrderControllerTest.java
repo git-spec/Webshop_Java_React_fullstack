@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.Article;
+import org.example.backend.model.Currency;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.repository.OrderRepo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +41,9 @@ public class OrderControllerTest {
     void getOrdersByEmail_shouldReturnOrders_whenGetEmail() throws Exception {
         // GIVEN
         String email = "jon@doe.io";
-        List<Article> articles = List.of(new Article("123", "BLACK", 1, new BigDecimal("10.00")));
+        List<Article> articles = List.of(
+            new Article("123", "Lara", "BLACK", 1, Currency.EUR, new BigDecimal("10.00"))
+        );
         // PayPal paypal = PayPal.builder().id("123").email(email).firstname("Jon").lastname("Doe").build();
         Map<String, Object> paypal = new HashMap<>();
         OrderCompleted order = new OrderCompleted("123", articles, paypal);

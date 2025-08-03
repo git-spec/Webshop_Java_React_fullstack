@@ -8,11 +8,10 @@ import Profile from "./Profile";
 
 type Props = {
     user: IUser | null | undefined;
-    products: IProduct[] | undefined;
 };
 
 
-export default function Dashboard({user, products}: Readonly<Props>) {
+export default function Dashboard({user}: Readonly<Props>) {
     const tabsItems = [
         {
             label: "Merkliste",
@@ -20,7 +19,7 @@ export default function Dashboard({user, products}: Readonly<Props>) {
         },
         {
             label: "Bestellungen",
-            children: <Orders user={user} products={products} />
+            children: <Orders />
         },
         {
             label: "Profil",

@@ -33,16 +33,38 @@ export default function CardCart({header, media, content, state, deleteOrder}: R
         <>
             {
                 visible && <Card sx={{position: 'relative'}}>
-                            <Grid container columns={1} flexDirection={'row'} flexWrap={'nowrap'} spacing={0} justifyContent={'top'}>
+                            <Grid 
+                                container 
+                                columns={1} 
+                                flexDirection={{xs: 'column', sm: 'row'}} 
+                                flexWrap={'nowrap'} 
+                                spacing={0} 
+                                justifyContent={'top'} 
+                                pt={{xs: 6, sm: 0}}
+                            >
                                 <CardActionArea sx={{width: 'unset'}}>
                                     <Link 
                                         to={`/product/${state?.productID}`} 
                                         state={state} 
                                         style={{textDecoration: 'none'}}
                                     >
-                                            <Grid sx={{ maxWidth: {xs: '100%', sm: '8rem'}}}>
+                                            <Grid 
+                                                sx={{ maxWidth: {xs: '100%', sm: '8rem'}}} 
+                                                py={2} 
+                                                pl={2}
+                                                pr={{xs: 2, sm: 0}}
+                                            >
                                                 {header && <CardHeader>{header}</CardHeader>}
-                                                {media && <CardMedia component={'img'} alt={media.name} image={media.path} />}
+                                                {
+                                                    media && 
+                                                        <CardMedia 
+                                                            component={'img'} 
+                                                            alt={media.name} 
+                                                            image={media.path} 
+                                                            height={'100%'} 
+                                                            sx={{ objectFit: "cover" }} 
+                                                        />
+                                                }
                                             </Grid>
                                     </Link>
                                 </CardActionArea>

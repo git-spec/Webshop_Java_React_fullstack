@@ -14,6 +14,7 @@ import org.example.backend.repository.OrderRepo;
 import org.example.backend.exception.BadRequestException;
 import org.example.backend.exception.InvalidArgumentException;
 import org.example.backend.model.Article;
+import org.example.backend.model.Currency;
 import org.example.backend.model.OrderCompleted;
 import org.example.backend.model.dto.OrderCompletedDTO;
 // import org.example.backend.model.PayPal;
@@ -33,7 +34,9 @@ public class OrderServiceTest {
     OrderService orderService = new OrderService(mockRepo, mockID);
 
     String email = "test@email.com";
-    List<Article> cart = List.of(new Article("123", "ash", 1, new BigDecimal("10.00")));
+    List<Article> cart = List.of(
+        new Article("123", "Lara", "ash", 1, Currency.EUR, new BigDecimal("10.00"))
+    );
     // PayPal paypal = PayPal.builder()
     //     .id("1")
     //     .email(email)

@@ -1,29 +1,16 @@
-import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 import type { IOrder } from "@/interface/IOrder";
 import type { IOrderItem } from "@/interface/IOrderItem";
-import type { IProduct } from "@/interface/IProduct";
 import TableBasic from "../TableBasic";
 
 // context of cart
-type Props = {
-    order: IOrder;
-    products: IProduct[];
-};
+type Props = {order: IOrder};
 
-export default function CardContentOrder({order, products}: Readonly<Props>) {
-    const [newOrder, setNewOrder] = useState<IOrder>();
+export default function CardContentOrder({order}: Readonly<Props>) {
     const header = ['Name', 'Nummer', 'Farbe', 'Preis', 'Menge', 'Gesamt'];
-
-    useEffect(() => {
-        order.cart.forEach(el => {
-            const product = getProduct(el.productID);
-            product && (el.product = product);
-        });
-        setNewOrder(order);
-    }, [])
+    let currency = order.cart[0].currency ?? '';
     
     const initialValue = 0;
     const getTotal = (order: IOrder) => {
@@ -34,15 +21,10 @@ export default function CardContentOrder({order, products}: Readonly<Props>) {
         );
     };
 
-    const getProduct = (productID: string) => {
-        const product = products.find(el => el.id === productID);
-        return product;
-    }
-
-    const getTableContent = (order: IOrderItem[]) => {
-        return order.map(article => (
+    const getTableContent = (orderItem: IOrderItem[]) => {
+        return orderItem.map(article => (
             [
-                article.product.name, 
+                article.productName,
                 article.productID, 
                 article.color, 
                 article.price, 
@@ -55,9 +37,9 @@ export default function CardContentOrder({order, products}: Readonly<Props>) {
     return (
         <Stack height={'100%'} flexGrow={1}>
             {
-                newOrder && 
+                order && 
                     <>
-                        <TableBasic key={newOrder.id} header={header} content={getTableContent(newOrder.cart)} />
+                        <TableBasic key={order.id} header={header} content={getTableContent(order.cart)} />
                         <Stack flex={'flex'}  flexDirection={'row'} justifyContent={'end'} alignItems={'end'} gap={4} pt={1}>
                             <Stack flex={'flex'}  flexDirection={'row'} justifyContent={'end'} alignItems={'end'} gap={1}>
                                 <Typography 
@@ -67,7 +49,15 @@ export default function CardContentOrder({order, products}: Readonly<Props>) {
                                         fontSize={'.8rem'}
                                 >
                                     Währung:
-                                </Typography><Typography variant="body2" textAlign={'end'} fontWeight={200} fontSize={'.8rem'}>{newOrder.cart[0].product.currency}</Typography>
+                                </Typography>
+                                <Typography 
+                                    variant="body2" 
+                                    textAlign={'end'} 
+                                    fontWeight={200} 
+                                    fontSize={'.8rem'}
+                                >
+                                    {currency}
+                                </Typography>
                             </Stack>
                             <Stack flex={'flex'}  flexDirection={'row'} justifyContent={'end'} alignItems={'end'} gap={1}>
                                 <Typography 
@@ -76,7 +66,7 @@ export default function CardContentOrder({order, products}: Readonly<Props>) {
                                         fontSize={'.8rem'}
                                 >
                                     MwSt.:
-                                </Typography><Typography textAlign={'end'} fontWeight={200} fontSize={'.8rem'}>{(getTotal(newOrder) * .19).toFixed(2)}</Typography>
+                                </Typography><Typography textAlign={'end'} fontWeight={200} fontSize={'.8rem'}>{(getTotal(order) * .19).toFixed(2)}</Typography>
                             </Stack>
                             <Stack flex={'flex'}  flexDirection={'row'} justifyContent={'end'} alignItems={'end'} gap={1}>
                                 <Typography 
@@ -85,7 +75,7 @@ export default function CardContentOrder({order, products}: Readonly<Props>) {
                                     fontWeight={500}
                                 >
                                     Total:
-                                </Typography><Typography textAlign={'end'} fontWeight={500} fontSize={'1rem'}>{getTotal(newOrder).toFixed(2)}</Typography>
+                                </Typography><Typography textAlign={'end'} fontWeight={500} fontSize={'1rem'}>{getTotal(order).toFixed(2)}</Typography>
                             </Stack>
                         </Stack>
                     </>
