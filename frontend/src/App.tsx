@@ -176,10 +176,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route element={<ProtectedRoute user={userAuth?.idToken} />}>
               <Route path="dashboard" element={
-                <Dashboard 
-                  user={user} 
-                  products={products}
-                />
+                <Dashboard user={user} />
               } />
             </Route>
         </Route>
