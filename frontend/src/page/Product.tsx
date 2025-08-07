@@ -70,8 +70,10 @@ export default function Product({addToCart}: Readonly<Props>) {
     const handleCart = (product: IProduct) => {
         const cartEntry: IOrderItem = {
             productID: product.id,
+            productName: product.name,
             color: selColor ?? '',
             amount: +amount,
+            currency: product.currency,
             price: product.price,
             product: product
         };
