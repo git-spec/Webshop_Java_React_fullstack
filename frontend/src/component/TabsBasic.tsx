@@ -45,8 +45,7 @@ export default function TabsBasic(props: Readonly<Props>) {
     const [value, setValue] = useState(0);
 
     const handleChange = (event: SyntheticEvent, newValue: number) => {
-        event;
-        setValue(newValue);
+        event && setValue(newValue);
     };
 
     return(
