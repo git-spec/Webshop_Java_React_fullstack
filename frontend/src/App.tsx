@@ -30,7 +30,6 @@ export const ProductsContext = createContext<IProduct[] | null | undefined>(unde
 
 
 export default function App() {
-  const [products, setProducts] = useState<IProduct[]>();
   const [cart, setCart] = useState<IOrderItem[]>([]);
   //  const value = useMemo(() => ({ cart, setCart }), [cart, setCart]);
   const [userAuth, setUserAuth] = useState<IUserAuth | null>(); 
@@ -39,16 +38,6 @@ export default function App() {
   useEffect(() => {
     handleUser();
   }, []);
-
-  // useEffect(() => {
-  //   getProducts();
-  // }, [products]);
-
-  // const getProducts = () => {
-  //   axios.get('/api/products').then(res => {
-  //     setProducts(res.data);
-  //   }).catch(err => console.log(err));
-  // }
 
   const handleCart = (order: IOrderItem) => {
     const itemExsits = cart.find(article => article.productID === order.productID && article.color === order.color);

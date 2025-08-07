@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { responsiveFontSizes, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -8,21 +7,21 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-type Props<T> = {
+type Props = {
     header: string[];
     content: Array<string | number>[];
 };
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: 'transparent'
   },
   [`&.${tableCellClasses.body}`]: {
     
   },
-}));
+});
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)({
   '&:nth-of-type(odd)': {
     backgroundColor: 'transparent',
   },
@@ -30,9 +29,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
-}));
+});
 
-export default function TableBasic<T>({content, header}: Readonly<Props<T>>) {
+export default function TableBasic({content, header}: Readonly<Props>) {
   return (
     <TableContainer component={Paper} elevation={0}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

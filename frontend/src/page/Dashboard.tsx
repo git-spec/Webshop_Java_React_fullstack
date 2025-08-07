@@ -1,5 +1,4 @@
 import type { IUser } from "@/interface/IUser";
-import type { IProduct } from "@/interface/IProduct";
 import LayoutContainer from "@/component/share/LayoutContainer";
 import TabsBasic from "@/component/TabsBasic";
 import Watchlist from "./Watchlist";

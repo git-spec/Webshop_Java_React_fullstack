@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
-import PragraphContainer from './ParagraphContainer';
 import AvatarCaption from './AvatarCaption';
 import Button from '@mui/material/Button';
 
