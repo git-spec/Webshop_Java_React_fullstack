@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type SyntheticEvent } from "react";
+import { useState, type ReactNode } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from '@mui/material/Tab';
@@ -44,7 +44,7 @@ function a11yProps(index: number) {
 export default function TabsBasic(props: Readonly<Props>) {
     const [value, setValue] = useState(0);
 
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
+    const handleChange = (newValue: number) => {
         setValue(newValue);
     };
 
