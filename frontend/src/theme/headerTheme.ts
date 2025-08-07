@@ -10,7 +10,7 @@ export const headerTheme = createTheme({
           root: {
             backgroundColor: 'white',
             color: 'black',
-            borderBottom: '2px solid #D7B76F',
+            // borderBottom: '2px solid #D7B76F',
             boxShadow: '1px 2px 6px rgba(0, 0, 0, .2)'
           }
         }
