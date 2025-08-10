@@ -5,7 +5,7 @@ export default function Home() {
 
     return (
         <>
-            <img alt="house in nature" src="/public/img/30b.jpg" style={{width: "100vw", objectFit: 'cover', display: 'block'}}></img>
+            <img alt="house in nature" src="/img/30b.jpg" style={{width: "100vw", objectFit: 'cover', display: 'block'}}></img>
             <div style={{marginTop: "2rem"}}>
                 <LayoutContainer>
                 <Typography component={'h1'} sx={{textAlign: 'center'}} fontFamily={'SourceSans3'} fontWeight={'600'} fontSize={'3rem'} color="primary">Leben mit der Natur, statt entgegen.</Typography>

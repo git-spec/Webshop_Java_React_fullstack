@@ -4,7 +4,7 @@ import type { IColor } from "../src/interface/IColor";
 export const colorItems: IColor[] = [
     {
         name: "ASH_BLACK",
-        image: "/public/img/thumb/wood_ash.jpg",
+        image: "/img/thumb/wood_ash.jpg",
         caption: "ash stained black",
         size: "2rem",
         filter: {
@@ -14,7 +14,7 @@ export const colorItems: IColor[] = [
     },
     {
         name: "ASH",
-        image: "/public/img/thumb/wood_ash.jpg",
+        image: "/img/thumb/wood_ash.jpg",
         caption: "ash",
         size: "2rem"
     }

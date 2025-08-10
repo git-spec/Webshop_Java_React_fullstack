@@ -84,7 +84,7 @@ public class ProductControllerTest {
                 .info("Info")
                 .description("Description")
                 .images(new Images(
-                    List.of("/public/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"),
+                    List.of("/small/lara/Lara--1990--chair--cutoutAngle-2--Ash--CM.jpg"),
                     List.of("http://imag)e2.test"),
                     List.of("/large/lara/Lara--1990--chair--cutoutAngle-2--Ash-)-CM.jpg")
                 ))
